@@ -1,4 +1,4 @@
-package Platzhalter;
+package Sinking;
 
 public class Main {
     public static void main(String[] args) {
