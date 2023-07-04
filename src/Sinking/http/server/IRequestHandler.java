@@ -1,6 +1,6 @@
-package Platzhalter.http.server;
+package Sinking.http.server;
 
-import Platzhalter.http.HttpHandler;
+import Sinking.http.HttpHandler;
 
 public interface IRequestHandler extends HttpHandler<IConnection> {
     void handle(IConnection connection);

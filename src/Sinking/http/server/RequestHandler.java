@@ -1,8 +1,8 @@
-package Platzhalter.http.server;
+package Sinking.http.server;
 
+import Sinking.http.Json;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import Platzhalter.http.Json;
 
 import java.io.IOException;
 import java.util.HashMap;

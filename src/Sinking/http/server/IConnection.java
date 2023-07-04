@@ -1,7 +1,7 @@
-package Platzhalter.http.server;
+package Sinking.http.server;
 
+import Sinking.http.Json;
 import com.sun.net.httpserver.Headers;
-import Platzhalter.http.Json;
 
 import java.io.IOException;
 import java.util.List;

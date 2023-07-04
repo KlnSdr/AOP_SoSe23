@@ -1,4 +1,4 @@
-package Platzhalter.http.server;
+package Sinking.http.server;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;

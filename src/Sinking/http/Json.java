@@ -1,4 +1,4 @@
-package Platzhalter.http;
+package Sinking.http;
 
 import java.util.HashMap;
 import java.util.Map;

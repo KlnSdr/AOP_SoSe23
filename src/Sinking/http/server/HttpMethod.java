@@ -1,4 +1,4 @@
-package Platzhalter.http.server;
+package Sinking.http.server;
 
 public enum HttpMethod {
     GET, POST, UNSUPPORTED_METHOD;
