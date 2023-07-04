@@ -1,6 +1,6 @@
-package Platzhalter.http.client;
+package Sinking.http.client;
 
-import Platzhalter.http.HttpHandler;
+import Sinking.http.HttpHandler;
 
 public interface IResponseHandler extends HttpHandler<Response> {
     void handle(Response response);

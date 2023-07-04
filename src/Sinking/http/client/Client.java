@@ -1,4 +1,4 @@
-package Platzhalter.http.client;
+package Sinking.http.client;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

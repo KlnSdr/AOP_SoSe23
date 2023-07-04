@@ -1,6 +1,6 @@
-package Platzhalter.http.client;
+package Sinking.http.client;
 
-import Platzhalter.http.Json;
+import Sinking.http.Json;
 
 import java.net.http.HttpHeaders;
 import java.net.http.HttpResponse;
