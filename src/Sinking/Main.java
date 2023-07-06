@@ -9,6 +9,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.print("How old are you? ");
         int age = scanner.nextInt();
-        System.out.println(21 - age + " years left until you are 21.");
+        System.out.println(18 - age + " years left until you are 18.");
     }
 }
