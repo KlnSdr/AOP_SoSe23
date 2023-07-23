@@ -3,8 +3,10 @@ package Sinking.http.client;
 import Sinking.http.Json;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class Request {
@@ -89,7 +91,7 @@ public class Request {
 
         StringBuilder rawQuery = new StringBuilder();
         for (String key : query.keySet()) {
-            rawQuery.append(key).append("=").append(query.get(key)).append("&");
+            rawQuery.append(URLEncoder.encode(key, StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(query.get(key), StandardCharsets.UTF_8)).append("&");
         }
         if (rawQuery.length() > 0) {
             rawQuery = new StringBuilder(rawQuery.substring(0, rawQuery.length() - 1));
