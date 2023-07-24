@@ -1,5 +1,6 @@
 package Sinking.UI;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -66,9 +67,13 @@ public class ViewLoader {
                 this.window.getContentPane().removeAll();
 
                 currentView = views.get(name).getConstructor().newInstance();
-                currentView.load(this.window);
+                SwingUtilities.invokeLater(() -> {
+                    currentView.load(this.window);
 
-                this.window.repaint();
+                    this.window.invalidate();
+                    this.window.validate();
+                    this.window.repaint();
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
