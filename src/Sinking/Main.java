@@ -1,8 +1,7 @@
 package Sinking;
 
+import Sinking.Game.Data.Board;
 import Sinking.UI.ViewLoader;
-
-import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {

@@ -6,4 +6,10 @@ public class ShipTile extends Tile {
         this.state = TileState.HIT;
         return true;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Ship";
+    }
 }
