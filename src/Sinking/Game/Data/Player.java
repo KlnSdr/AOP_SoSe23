@@ -1,7 +1,7 @@
 package Sinking.Game.Data;
 
 public class Player {
-    private final String name;
+    private String name;
     private int hitEnemyShips = 0;
 
     public Player(String name) {
@@ -10,6 +10,9 @@ public class Player {
 
     public String getName() {
         return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getHitEnemyShips() {
