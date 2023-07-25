@@ -2,6 +2,7 @@ package Sinking;
 
 import Sinking.UI.ViewLoader;
 import Sinking.http.Json;
+import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class Main {
         System.out.println("Starting server on port " + port + "...");
         try {
             Server server = new Server(port);
+            HttpRouteLoader.loadRoutes("Sinking.http.routes", server);
             server.run();
         } catch (IOException e) {
             System.out.println("Failed to start server: " + e.getMessage());

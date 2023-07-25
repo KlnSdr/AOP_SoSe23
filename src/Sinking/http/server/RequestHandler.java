@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,13 @@ class RequestHandler implements HttpHandler {
         HttpMethod method = HttpMethod.fromString(methodString);
 
         if (connection.getPath().equalsIgnoreCase(this.path) && this.handlers.containsKey(method)) {
-            this.handlers.get(method).handle(connection);
+            try {
+                this.handlers.get(method).handle(connection);
+            } catch (InvocationTargetException | IllegalAccessException | InstantiationException |
+                     NoSuchMethodException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } else {
             connection.setResponseCode(ResponseCode.NOT_FOUND);
             Json responsePayload = new Json();
