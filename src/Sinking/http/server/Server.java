@@ -57,7 +57,6 @@ public class Server {
     public void run() {
         if (!running) {
             server.start();
-            System.out.println("server running on port " + port + "...");
             running = true;
         }
     }
@@ -67,7 +66,6 @@ public class Server {
      */
     public void stop() {
         if (running) {
-            System.out.println("stopping server...");
             this.server.stop(5);
         }
     }
