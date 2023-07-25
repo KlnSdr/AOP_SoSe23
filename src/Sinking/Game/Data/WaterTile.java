@@ -6,4 +6,10 @@ public class WaterTile extends Tile {
         this.state = TileState.MISS;
         return false;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Water";
+    }
 }
