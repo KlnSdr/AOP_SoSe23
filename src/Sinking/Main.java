@@ -6,6 +6,7 @@ import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
 
 import java.io.IOException;
+import Sinking.http.client.Consistency;
 
 public class Main {
     public static void main(String[] args) {
@@ -45,5 +46,11 @@ public class Main {
 
     private static void startInClientMode() {
         ViewLoader.getInstance().loadView("MainMenu");
+
+        Consistency.getInstance().checkConnection(() -> {
+            System.out.println("success");
+        }, () -> {
+            System.out.println("failure");
+        });
     }
 }
