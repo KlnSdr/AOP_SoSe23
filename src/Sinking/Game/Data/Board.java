@@ -17,23 +17,34 @@ public class Board {
         }
     }
 
-    public void printBoard() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                System.out.print(board[i][j] + "\t");
-            }
-            System.out.print("\n");
+    public boolean setShip(int x, int y) {
+        boolean status = bounces(x,y);
+        if (status) {
+            board[x][y] = new ShipTile();
         }
-        System.out.println(board[5][5].getState());
+        return status;
     }
 
-    public void setShip(int x, int y) {
-        board[x][y] = new ShipTile();
+    public boolean fire(int x, int y) {
+        boolean status = bounces(x,y);
+        if (status){
+            board[x][y].shoot();
+        }
+        return status;
     }
 
-    public void fire(int x, int y) {
-        System.out.println("Schieß spieß");
-        board[x][y].shoot();
-        System.out.println(board[x][y].getState());
+    public boolean bounces(int x, int y){
+        boolean status = false;
+
+        if (x >= 11 || x < 0) {
+            System.out.println(" Deine Eingabe (x) ist nicht mehr in den Grenzen des Spielfeldes.");
+            return status;
+        }
+        if (y >= 11 || y < 0) {
+            System.out.println(" Deine Eingabe (y) ist nicht mehr in den Grenzen des Spielfeldes.");
+            return status;
+        }
+        status = true;
+        return status;
     }
 }
