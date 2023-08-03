@@ -14,10 +14,8 @@ public class Main {
         int x = eingabe.nextInt() -1;
        // ViewLoader.getInstance().loadView("Example1");
         Board gameboard = new Board();
-        gameboard.printBoard();
         gameboard.setShip(x, y);
-        System.out.println("====================================================");
-        gameboard.printBoard();
+
         y = 1;
         x= 1;
         gameboard.fire(x,y);
