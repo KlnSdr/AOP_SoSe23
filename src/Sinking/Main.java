@@ -1,6 +1,5 @@
 package Sinking;
 
-import Sinking.Game.Data.Board;
 import Sinking.UI.ViewLoader;
 
 public class Main {

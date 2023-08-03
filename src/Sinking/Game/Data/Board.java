@@ -2,6 +2,7 @@ package Sinking.Game.Data;
 
 public class Board {
     private Tile[][] board;
+    private static boolean status;
 
     public Board() {
         createBoard();
@@ -17,8 +18,12 @@ public class Board {
         }
     }
 
+    public Tile[][] getBoard() {
+        return board;
+    }
+
     public boolean setShip(int x, int y) {
-        boolean status = bounces(x,y);
+        status = bounces(x,y);
         if (status) {
             board[x][y] = new ShipTile();
         }
@@ -26,7 +31,7 @@ public class Board {
     }
 
     public boolean fire(int x, int y) {
-        boolean status = bounces(x,y);
+        status = bounces(x,y);
         if (status){
             board[x][y].shoot();
         }
@@ -34,14 +39,14 @@ public class Board {
     }
 
     public boolean bounces(int x, int y){
-        boolean status = false;
-
         if (x >= 11 || x < 0) {
             System.out.println(" Deine Eingabe (x) ist nicht mehr in den Grenzen des Spielfeldes.");
+            status= false;
             return status;
         }
         if (y >= 11 || y < 0) {
             System.out.println(" Deine Eingabe (y) ist nicht mehr in den Grenzen des Spielfeldes.");
+            status = false;
             return status;
         }
         status = true;
