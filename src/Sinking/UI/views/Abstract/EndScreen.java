@@ -37,7 +37,7 @@ public abstract class EndScreen implements IView {
         JButton backHome = new JButton("Zurück zum Hauptmenü");
         backHome.setBounds(0, 100, 300, 20);
         backHome.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backHome.addActionListener(e -> ViewLoader.getInstance().loadView("DevScreen"));
+        backHome.addActionListener(e -> ViewLoader.getInstance().loadView("MainMenu"));
         container.add(backHome);
 
         centerContainer.add(container);
