@@ -19,7 +19,8 @@ public class MainMenu implements IView {
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(centerContainer);
 
-        JButton newLocalGameButton = new JButton("New Local Game");
+        JButton newLocalGameButton = new JButton("Neues lokales Spiel");
+        newLocalGameButton.setPreferredSize(new Dimension(200, 20));
         GridBagConstraints gbcNewLocalGame = new GridBagConstraints();
         gbcNewLocalGame.gridx = 0;
         gbcNewLocalGame.gridy = 0;
@@ -31,7 +32,8 @@ public class MainMenu implements IView {
         });
         centerContainer.add(newLocalGameButton, gbcNewLocalGame);
 
-        JButton newOnlineGameButton = new JButton("New Online Game");
+        JButton newOnlineGameButton = new JButton("Neues online Spiel");
+        newOnlineGameButton.setPreferredSize(new Dimension(200, 20));
         GridBagConstraints gbcNewOnlineGame = new GridBagConstraints();
         gbcNewOnlineGame.gridx = 0;
         gbcNewOnlineGame.gridy = 1;
@@ -43,7 +45,8 @@ public class MainMenu implements IView {
         });
         centerContainer.add(newOnlineGameButton, gbcNewOnlineGame);
 
-        JButton joinGameButton = new JButton("Join Online Game");
+        JButton joinGameButton = new JButton("Online Spiel beitreten");
+        joinGameButton.setPreferredSize(new Dimension(200, 20));
         GridBagConstraints gbcJoinGame = new GridBagConstraints();
         gbcJoinGame.gridx = 1;
         gbcJoinGame.gridy = 0;
