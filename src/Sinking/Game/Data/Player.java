@@ -19,9 +19,10 @@ public class Player {
         return hitEnemyShips;
     }
 
-    public boolean shoot(int x, int y) {
+    public boolean shoot(int x, int y, Board gameboard) {
         // todo call the board's shoot method
         boolean didHitShip = false;
+       didHitShip= gameboard.fire(x,y);
         if (didHitShip) {
             hitEnemyShips++;
         }

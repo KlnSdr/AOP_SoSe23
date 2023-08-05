@@ -19,7 +19,8 @@ public class Board {
     }
 
     public Tile[][] getBoard() {
-        return board;
+        Tile[][] board1 = board.clone();
+        return board1;
     }
 
     public boolean setShip(int x, int y) {
@@ -41,15 +42,12 @@ public class Board {
     public boolean bounces(int x, int y){
         if (x >= 11 || x < 0) {
             System.out.println(" Deine Eingabe (x) ist nicht mehr in den Grenzen des Spielfeldes.");
-            status= false;
-            return status;
+            return false;
         }
         if (y >= 11 || y < 0) {
             System.out.println(" Deine Eingabe (y) ist nicht mehr in den Grenzen des Spielfeldes.");
-            status = false;
-            return status;
+            return false;
         }
-        status = true;
-        return status;
+        return true;
     }
 }
