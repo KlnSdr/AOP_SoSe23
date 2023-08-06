@@ -2,29 +2,24 @@ package Sinking.Game.Data;
 
 public class Board {
     private Tile[][] board;
-    private static boolean status;
 
-    public Board() {
-        createBoard();
-    }
+    public Board() {createBoard();}
 
     private void createBoard() {
         board = new Tile[10][10];
-        Tile waterTile = new WaterTile();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                board[i][j] = waterTile;
+                board[i][j] = new WaterTile();
             }
         }
     }
 
     public Tile[][] getBoard() {
-        Tile[][] board1 = board.clone();
-        return board1;
+        return board.clone();
     }
 
     public boolean setShip(int x, int y) {
-        status = bounces(x,y);
+       boolean status = bounces(x,y);
         if (status) {
             board[x][y] = new ShipTile();
         }
@@ -32,7 +27,7 @@ public class Board {
     }
 
     public boolean fire(int x, int y) {
-        status = bounces(x,y);
+        boolean status = bounces(x,y);
         if (status){
             board[x][y].shoot();
         }
