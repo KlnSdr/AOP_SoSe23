@@ -60,13 +60,13 @@ public class JoinOnlineGame implements IView {
         gbcConfirmButton.anchor = GridBagConstraints.EAST;
         confirmButton.addActionListener(e -> {
             String url = linkField.getText();
-            String nickname = nicknameField.getText();
+            String nickname = nicknameField.getText().trim();
             if (inputVerification(url, nickname)) {
                 System.out.println("Server URL: " + url);
                 System.out.println("Nickname: " + nickname);
                 System.out.println("Loading Game");
                 ViewLoader.getInstance().loadView("DevScreen"); //Link to WaitingScreen
-                //joinOnlineGame();
+                joinOnlineGame(url, nickname);
             }
         });
         centerContainer.add(confirmButton, gbcConfirmButton);
@@ -103,7 +103,7 @@ public class JoinOnlineGame implements IView {
         return true;
     }
 
-    protected void joinOnlineGame() {
+    protected void joinOnlineGame(String url, String nickname) {
         //code for joining the online game
     }
 
