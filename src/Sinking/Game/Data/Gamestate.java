@@ -6,7 +6,7 @@ public class Gamestate {
     Scanner eingabe = new Scanner(System.in);
     Player spieler1 = new Player();
     Player spieler2 = new Player();
-    
+
     Player winner;
 
     Board gameboardSpieler1 = new Board();
@@ -64,7 +64,7 @@ public class Gamestate {
     }
 
     public boolean winner(){
-        
+
         if(spieler1.getHitEnemyShips() == 2|| spieler2.getHitEnemyShips() == 2 ){
             if(spieler1.getHitEnemyShips() == 2){
                 winner = spieler1;
@@ -76,7 +76,7 @@ public class Gamestate {
         }
         return false;
     }
-    
+
     public void ausgabe(){
         System.out.println(winner);
     }
