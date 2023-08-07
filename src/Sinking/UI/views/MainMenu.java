@@ -54,7 +54,7 @@ public class MainMenu implements IView {
         gbcJoinGame.insets = new Insets(0, 0, 10, 0);
         joinGameButton.addActionListener(e -> {
             System.out.println("Loading Join Game");
-            ViewLoader.getInstance().loadView("DevScreen");
+            ViewLoader.getInstance().loadView("JoinOnlineGame");
         });
         centerContainer.add(joinGameButton, gbcJoinGame);
 
