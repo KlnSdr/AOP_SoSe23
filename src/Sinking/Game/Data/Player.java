@@ -16,12 +16,16 @@ public class Player {
     }
 
     public boolean shoot(int x, int y, Board gameboard) {
-        // todo call the board's shoot method
         boolean didHitShip = false;
-       didHitShip= gameboard.fire(x,y);
+        gameboard.fire(x,y);
+       didHitShip= gameboard.hit(x,y);
         if (didHitShip) {
             hitEnemyShips++;
         }
         return didHitShip;
+    }
+    @Override
+    public String toString(){
+        return (name);
     }
 }
