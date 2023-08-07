@@ -76,7 +76,7 @@ public class GameRepository {
         Gamestate gamestate = game.getGame();
         // todo get board for player from gamestate and pass it to player.shoot
 
-        return player.shoot(x, y);
+        return player.shoot(x, y, null);
     }
 
     public void deleteGame(UUID id) {
