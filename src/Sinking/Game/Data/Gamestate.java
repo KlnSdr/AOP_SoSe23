@@ -43,7 +43,6 @@ public class Gamestate {
         }
     }
 
-    
     public boolean winner(){
         
         if(spieler1.getHitEnemyShips() == 2|| spieler2.getHitEnemyShips() == 2 ){
