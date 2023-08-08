@@ -43,6 +43,14 @@ public class Gamestate {
         }
     }
 
+    public boolean ishit( int x, int y, Board gameboard){
+        if(gameboard.hit(x,y)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public boolean winner(){
         
         if(spieler1.getHitEnemyShips() == 2|| spieler2.getHitEnemyShips() == 2 ){
