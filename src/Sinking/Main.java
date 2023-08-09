@@ -1,6 +1,8 @@
 package Sinking;
 
+import Sinking.Game.Data.Board;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Tupel;
 import Sinking.http.Json;
 import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
@@ -9,6 +11,22 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        Board board = new Board();
+        board.setShip(0, 0);
+        board.setShip(0, 1);
+        board.setShip(0, 2);
+        board.setShip(6, 6);
+        board.setShip(7, 6);
+        board.setShip(8, 6);
+
+        IAi ai = AiLoader.getInstance().getInstanceOf("Admiral Glückskoordinate");
+
+        for (int i = 0; i < 11; i++) {
+            Tupel<Integer, Integer> coord = ai.nextMove(board);
+            board.fire(coord._1(), coord._2());
+        }
+
+        System.exit(0);
         Json config = ArgsLoader.load(args);
 
         if (config.get("server").isPresent()) {
