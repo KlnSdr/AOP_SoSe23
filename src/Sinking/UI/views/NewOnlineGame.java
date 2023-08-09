@@ -2,6 +2,7 @@ package Sinking.UI.views;
 
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import static Sinking.UI.Window.baseTitle;
 
 public class NewOnlineGame implements IView {
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         window.setTitle(baseTitle);
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
@@ -47,7 +48,9 @@ public class NewOnlineGame implements IView {
             if (inputVerification(url)) {
                 System.out.println("Server URL: " + url);
                 System.out.println("Loading Game");
-                ViewLoader.getInstance().loadView("WaitingScreen"); //Link to WaitingScreen
+                Json args = new Json();
+                args.set("gameUrl", url);
+                ViewLoader.getInstance().loadView("WaitingScreen", args); //Link to WaitingScreen
             }
         });
         centerContainer.add(confirmButton, gbcConfirmButton);
