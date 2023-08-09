@@ -11,8 +11,6 @@ public class Main {
          Scanner eingabe = new Scanner(System.in);
 
         Gamestate spiel = new Gamestate();
-        spiel.playthrough();
-        spiel.ausgabe();
 
     }
 }

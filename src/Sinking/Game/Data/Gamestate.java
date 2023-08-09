@@ -16,7 +16,7 @@ public class Gamestate {
     int move = 0;
 
 
-    public Board getGameboardSpieler1() {
+    public Board getGameboardSpieler1(Player spieler) {
         return gameboardSpieler1;
     }
 
@@ -24,7 +24,7 @@ public class Gamestate {
         this.gameboardSpieler1 = gameboardSpieler1;
     }
 
-    public Board getGameboardSpieler2() {
+    public Board getGameboardSpieler2(Player spieler) {
         return gameboardSpieler2;
     }
 
@@ -32,7 +32,7 @@ public class Gamestate {
         this.gameboardSpieler2 = gameboardSpieler2;
     }
 
-    public Player order(){
+    public Player sequence(){
         if (move%2 == 0){
             move++;
             return spieler1;
