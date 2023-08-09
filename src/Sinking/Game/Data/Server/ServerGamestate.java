@@ -7,14 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ServerGamestate {
-    private final Gamestate game;
+    private Gamestate game;
     private ServerPlayerWrapper playerA;
     private ServerPlayerWrapper playerB;
-
-    public ServerGamestate() {
-        this.game = new Gamestate();
-        // todo initialize game with functions of Gamestate
-    }
 
     public Gamestate getGame() {
         return game;
@@ -35,7 +30,9 @@ public class ServerGamestate {
             playerB.setPlayer(player);
             playerB.setAccessToken(token);
         }
-        // todo save player to game
+        if (playerA != null && playerB != null) {
+            this.game = new Gamestate(playerA.getPlayer(), playerB.getPlayer());
+        }
         return token;
     }
 

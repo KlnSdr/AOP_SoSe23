@@ -1,5 +1,6 @@
 package Sinking.Game.Data.Server;
 
+import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
 import Sinking.Game.Data.Server.Exceptions.GameFinishedException;
@@ -13,8 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*
- * not really a repository because it's not an abstraction of storage, but storage itself
- * but hey who cares about etymologie and design patterns
+ * not really a repository because it's not an abstraction of storage, but storage itself,
+ * and it's more of a game *controller*
+ * but hey who cares about etymologie and design patterns, this sounds way better. fight me!
  */
 public class GameRepository {
     private final ConcurrentHashMap<UUID, ServerGamestate> games;
@@ -46,9 +48,7 @@ public class GameRepository {
         ServerGamestate game = optGame.get();
         Gamestate gameState = game.getGame();
 
-        // todo check if gameState was finished using gameState
-        boolean gameFinished = false;
-        if (gameFinished) {
+        if (gameState.hasWinner()) {
             throw new GameFinishedException(id);
         }
 
@@ -56,7 +56,6 @@ public class GameRepository {
             throw new NoPlayerNeededException(id);
         }
 
-        // todo add player to game
         return game.addPlayer(player);
     }
 
@@ -74,9 +73,21 @@ public class GameRepository {
 
         Player player = optPlayer.get();
         Gamestate gamestate = game.getGame();
-        // todo get board for player from gamestate and pass it to player.shoot
+        Board gameBoard = gamestate.getspecificBoard(player);
+        if (gameBoard == null) {
+            throw new PlayerNotFoundException(gameId, playerToken);
+        }
 
-        return player.shoot(x, y, null);
+        return player.shoot(x, y, gameBoard);
+    }
+
+    public boolean hasWinner(UUID gameId) throws GameNotFoundException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+        return game.getGame().hasWinner();
     }
 
     public void deleteGame(UUID id) {
@@ -94,11 +105,12 @@ public class GameRepository {
         if (optPlayer.isEmpty()) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
+        Player player = optPlayer.get();
 
-        // todo get and return board for player
-
-        return null;
+        Gamestate gamestate = game.getGame();
+        return gamestate.getspecificBoard(player).getBoard();
     }
+
     private static class Holder {
         public static GameRepository instance = new GameRepository();
     }
