@@ -1,16 +1,12 @@
 package Sinking.Game.Data;
 
-import java.util.Scanner;
-
 public class Gamestate {
-    Scanner eingabe = new Scanner(System.in);
-    Player spieler1 = new Player();
-    Player spieler2 = new Player();
+    Player spieler1;
+    Player spieler2;
 
     Player winner;
 
     Board gameboardSpieler1 = new Board();
-
 
     Board gameboardSpieler2 = new Board();
     int move = 0;
@@ -56,14 +52,10 @@ public class Gamestate {
     }
 
     public boolean ishit( int x, int y, Board gameboard){
-        if(gameboard.hit(x,y)){
-            return true;
-        }else{
-            return false;
-        }
+        return gameboard.hit(x, y);
     }
 
-    public boolean winner(){
+    public boolean hasWinner(){
 
         if(spieler1.getHitEnemyShips() == 2|| spieler2.getHitEnemyShips() == 2 ){
             if(spieler1.getHitEnemyShips() == 2){
