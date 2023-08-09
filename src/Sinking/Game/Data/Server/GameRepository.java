@@ -90,6 +90,22 @@ public class GameRepository {
         return game.getGame().hasWinner();
     }
 
+    public boolean isPlayerNext(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+
+        Optional<Player> optPlayer = game.getPlayerByToken(playerToken);
+        if (optPlayer.isEmpty()) {
+            throw new PlayerNotFoundException(gameId, playerToken);
+        }
+
+        Player player = optPlayer.get();
+        return game.getGame().isNext(player);
+    }
+
     public void deleteGame(UUID id) {
         this.games.remove(id);
     }
