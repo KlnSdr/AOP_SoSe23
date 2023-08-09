@@ -26,7 +26,6 @@ public class Json {
         Matcher matcher = regex.matcher(raw);
 
         if (!matcher.find()) {
-            System.out.println("malformed json");
             return new Json();
         }
 

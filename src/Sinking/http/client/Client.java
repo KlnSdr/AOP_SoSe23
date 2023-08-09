@@ -20,6 +20,17 @@ public class Client {
     }
 
     /**
+     * Creates a new Http Client with the given url and the given timeout in ms.
+     *
+     * @param url     the base url to which requests will be sent
+     * @param timeout the request timeout in ms
+     */
+    public Client(String url, int timeout) {
+        httpClient = HttpClient.newBuilder().connectTimeout(java.time.Duration.ofMillis(timeout)).build();
+        this.url = url;
+    }
+
+    /**
      * Sends a GET request to the given route.
      *
      * @param request the {@link Request} object containing the request to be sent
@@ -27,6 +38,9 @@ public class Client {
      */
     public void get(Request request, IResponseHandler handler) {
         sendRequest(request.buildGet(), handler);
+    }
+    public void get(Request request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
+        sendRequest(request.buildGet(), handler, errorHandler);
     }
 
     /**
@@ -38,14 +52,24 @@ public class Client {
     public void post(Request request, IResponseHandler handler) {
         sendRequest(request.buildPost(), handler);
     }
+    public void post(Request request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
+        sendRequest(request.buildPost(), handler, errorHandler);
+    }
 
     private void sendRequest(HttpRequest request, IResponseHandler handler) {
-        CompletableFuture<HttpResponse<String>> responseFuture = this.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-
-        responseFuture.thenAccept(response -> {
-            Response res = Response.buildResponse(response);
-            handler.handle(res);
-        }).join();
+        sendRequest(request, handler, error -> Consistency.getInstance().reportFailedRequest());
+    }
+    private void sendRequest(HttpRequest request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
+        Consistency.getInstance().incrementRequestCount();
+        try {
+            CompletableFuture<HttpResponse<String>> responseFuture = this.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+            responseFuture.thenAccept(response -> {
+                Response res = Response.buildResponse(response);
+                handler.handle(res);
+            }).join();
+        } catch (Exception e) {
+            errorHandler.handle(e);
+        }
     }
 
     /**
