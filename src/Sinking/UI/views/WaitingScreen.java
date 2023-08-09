@@ -3,6 +3,7 @@ package Sinking.UI.views;
 import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 
@@ -22,7 +23,7 @@ public class WaitingScreen implements IView {
     private JLabel waitLabel;
     private JFrame window;
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         this.window = window;
         window.setTitle(baseTitle);
         JPanel centerContainer = new JPanel();

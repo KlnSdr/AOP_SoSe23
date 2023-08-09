@@ -3,6 +3,7 @@ package Sinking.UI.views;
 import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 import Sinking.common.Tupel;
 import Sinking.http.client.Client;
 import Sinking.http.client.Request;
@@ -16,7 +17,7 @@ import static Sinking.UI.Window.baseTitle;
 
 public class JoinOnlineGame implements IView {
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         window.setTitle(baseTitle);
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());

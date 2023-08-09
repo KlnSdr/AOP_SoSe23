@@ -1,6 +1,7 @@
 package Sinking.UI;
 
 import Sinking.common.Classloader;
+import Sinking.common.Json;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -38,6 +39,10 @@ public class ViewLoader extends Classloader<IView> {
     }
 
     public void loadView(String name) {
+        loadView(name, new Json());
+    }
+
+    public void loadView(String name, Json data) {
         if (views.containsKey(name)) {
             try {
                 if (currentView != null) {
@@ -47,7 +52,7 @@ public class ViewLoader extends Classloader<IView> {
 
                 currentView = views.get(name).getConstructor().newInstance();
                 SwingUtilities.invokeLater(() -> {
-                    currentView.load(this.window);
+                    currentView.load(this.window, data);
 
                     this.window.invalidate();
                     this.window.validate();
