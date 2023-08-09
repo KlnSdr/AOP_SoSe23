@@ -15,8 +15,11 @@ public class Gamestate {
     Board gameboardSpieler2 = new Board();
     int move = 0;
 
-
-    public Board getGameboardSpieler1(Player spieler) {
+    public Gamestate( Player s1, Player s2){
+        this.spieler1 = s1;
+        this.spieler2 = s2;
+    }
+    public Board getGameboardSpieler1() {
         return gameboardSpieler1;
     }
 
@@ -24,12 +27,21 @@ public class Gamestate {
         this.gameboardSpieler1 = gameboardSpieler1;
     }
 
-    public Board getGameboardSpieler2(Player spieler) {
+    public Board getGameboardSpieler2() {
         return gameboardSpieler2;
     }
 
     public void setGameboardSpieler2(Board gameboardSpieler2) {
         this.gameboardSpieler2 = gameboardSpieler2;
+    }
+
+    public Board getspecificBoard(Player spieler){
+        if (spieler.equals(spieler1)){
+            return gameboardSpieler1;
+        } else if (spieler.equals(spieler2)){
+            return gameboardSpieler2;
+        }
+        return null;
     }
 
     public Player sequence(){
