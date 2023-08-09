@@ -41,7 +41,7 @@ public class MainMenu implements IView {
         gbcNewOnlineGame.insets = new Insets(0, 0, 10, 10);
         newOnlineGameButton.addActionListener(e -> {
             System.out.println("Loading New Online Game");
-            ViewLoader.getInstance().loadView("WaitingScreen");
+            ViewLoader.getInstance().loadView("NewOnlineGame");
         });
         centerContainer.add(newOnlineGameButton, gbcNewOnlineGame);
 
