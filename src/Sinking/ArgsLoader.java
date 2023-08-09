@@ -1,6 +1,6 @@
 package Sinking;
 
-import Sinking.http.Json;
+import Sinking.common.Json;
 
 import java.util.ArrayList;
 import java.util.Arrays;

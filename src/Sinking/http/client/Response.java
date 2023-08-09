@@ -1,6 +1,6 @@
 package Sinking.http.client;
 
-import Sinking.http.Json;
+import Sinking.common.Json;
 
 import java.net.http.HttpHeaders;
 import java.net.http.HttpResponse;

@@ -1,6 +1,6 @@
 package Sinking.http.server;
 
-import Sinking.http.Json;
+import Sinking.common.Json;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
