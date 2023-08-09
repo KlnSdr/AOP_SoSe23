@@ -13,6 +13,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 import static Sinking.UI.Window.baseTitle;
 
@@ -32,7 +33,7 @@ public class WaitingScreen implements IView {
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(centerContainer);
 
-        createNewOnlineGame();
+        String url = getGameUrl(data);
 
         JLabel linkLabel = new JLabel(url);
         GridBagConstraints gbcLinkLabel = new GridBagConstraints();
@@ -141,9 +142,9 @@ public class WaitingScreen implements IView {
         dialog.setVisible(true);
         System.out.println("Text wurde in den Zwischenspeicher kopiert.");
     }
-    private void createNewOnlineGame() {
-        //creates the link for joining the online game
-        url = "www.placeholder.de/AOP_SoSe23";
+    private String getGameUrl(Json data) {
+        Optional<String> url = data.get("gameUrl");
+        return url.orElse("https://placeholder.de/join?id={gameId}");
     }
 
     @Override
