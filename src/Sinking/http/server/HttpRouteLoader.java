@@ -14,7 +14,7 @@ public class HttpRouteLoader extends Classloader<Object> {
 
     public static void loadRoutes(String packageName, Server server) {
         HttpRouteLoader loader = new HttpRouteLoader(packageName);
-        loader.loadClasses(packageName).forEach(clazz -> loader.analyzeClassAndMethods(clazz, server));
+        loader.loadClasses().forEach(clazz -> loader.analyzeClassAndMethods(clazz, server));
     }
 
     private void analyzeClassAndMethods(Class<?> clazz, Server server) {

@@ -27,18 +27,14 @@ public class ViewLoader extends Classloader<IView> {
 
     // https://www.baeldung.com/java-find-all-classes-in-package
     private void discoverViews() {
-        Set<Class<? extends IView>> clazzes = loadClasses(packageName);
+        Set<Class<? extends IView>> clazzes = loadClasses();
         clazzes.forEach(clazz -> {
             views.put(clazz.getSimpleName(), clazz);
         });
     }
 
     protected Class<? extends IView> filterClasses(String line) {
-        Class<?> clazz = defaultClassFilter(line);
-        if (IView.class.isAssignableFrom(clazz)) {
-            return clazz.asSubclass(IView.class);
-        }
-        return null;
+        return defaultImplementsFilter(line, IView.class);
     }
 
     public void loadView(String name) {

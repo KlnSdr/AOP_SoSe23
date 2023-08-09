@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public abstract class Classloader<T> {
     protected String packageName;
 
-    protected Set<Class<? extends T>> loadClasses(String packageName) {
+    protected Set<Class<? extends T>> loadClasses() {
         InputStream istream = ClassLoader.getSystemClassLoader().getResourceAsStream(packageName.replace(".", "/"));
         if (istream == null) {
             throw new RuntimeException("Could not load views. Package " + packageName + " not found.");
@@ -29,6 +29,14 @@ public abstract class Classloader<T> {
             return Class.forName(packageName + "." + line.substring(0, line.lastIndexOf('.')/*remove ".class" from line*/));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected Class<? extends T> defaultImplementsFilter(String line, Class<T> interfaceToImplement) {
+        Class<?> clazz = defaultClassFilter(line);
+        if (interfaceToImplement.isAssignableFrom(clazz)) {
+            return clazz.asSubclass(interfaceToImplement);
         }
         return null;
     }
