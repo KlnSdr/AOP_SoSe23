@@ -3,6 +3,7 @@ package Sinking.Game.Data;
 public class Player {
     private String name;
     private int hitEnemyShips = 0;
+    protected boolean isHuman = false;
 
     public String getName() {
         return name;
@@ -27,5 +28,9 @@ public class Player {
     @Override
     public String toString(){
         return (name);
+    }
+
+    public boolean isHuman() {
+        return this.isHuman;
     }
 }
