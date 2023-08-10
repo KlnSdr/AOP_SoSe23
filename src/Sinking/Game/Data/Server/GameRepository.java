@@ -37,7 +37,7 @@ public class GameRepository {
     }
 
     private Optional<ServerGamestate> get(UUID id) {
-        return Optional.of(this.games.get(id));
+        return Optional.ofNullable(this.games.get(id));
     }
 
     public String addPlayer(UUID id, Player player) throws GameNotFoundException, GameFinishedException, NoPlayerNeededException {
@@ -48,12 +48,14 @@ public class GameRepository {
         ServerGamestate game = optGame.get();
         Gamestate gameState = game.getGame();
 
-        if (gameState.hasWinner()) {
-            throw new GameFinishedException(id);
-        }
+        if (gameState != null) {
+            if (gameState.hasWinner()) {
+                throw new GameFinishedException(id);
+            }
 
-        if (!game.needsPlayer()) {
-            throw new NoPlayerNeededException(id);
+            if (!game.needsPlayer()) {
+                throw new NoPlayerNeededException(id);
+            }
         }
 
         return game.addPlayer(player);
