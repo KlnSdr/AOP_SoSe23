@@ -1,24 +1,21 @@
 package Sinking.Game.Data;
 
-import java.util.Scanner;
-
 public class Gamestate {
-    Scanner eingabe = new Scanner(System.in);
-    Player spieler1 = new Player();
-    Player spieler2 = new Player();
-    
+    Player spieler1;
+    Player spieler2;
+
     Player winner;
 
     Board gameboardSpieler1 = new Board();
 
-
     Board gameboardSpieler2 = new Board();
     int move = 0;
 
-    public Gamestate( Player s1, Player s2){
+    public Gamestate(Player s1, Player s2) {
         this.spieler1 = s1;
         this.spieler2 = s2;
     }
+
     public Board getGameboardSpieler1() {
         return gameboardSpieler1;
     }
@@ -35,49 +32,49 @@ public class Gamestate {
         this.gameboardSpieler2 = gameboardSpieler2;
     }
 
-    public Board getspecificBoard(Player spieler){
-        if (spieler.equals(spieler1)){
+    public Board getspecificBoard(Player spieler) {
+        if (spieler.equals(spieler1)) {
             return gameboardSpieler1;
-        } else if (spieler.equals(spieler2)){
+        } else if (spieler.equals(spieler2)) {
             return gameboardSpieler2;
         }
         return null;
     }
 
-    public Player sequence(){
-        if (move%2 == 0){
+    public Player sequence() {
+        if (move % 2 == 0) {
             move++;
             return spieler1;
-        }
-        else{
+        } else {
             move++;
             return spieler2;
         }
     }
 
-    public boolean ishit( int x, int y, Board gameboard){
-        if(gameboard.hit(x,y)){
-            return true;
-        }else{
-            return false;
-        }
+    public boolean isNext(Player player) {
+        // move check inverse to what is checked in sequence because the move count is incremented *after* the check,
+        // so at this point right now it is offset by one
+        return (player.equals(spieler1) && move % 2 == 1) || (player.equals(spieler2) && move % 2 == 0);
     }
 
-    public boolean winner(){
-        
-        if(spieler1.getHitEnemyShips() == 2|| spieler2.getHitEnemyShips() == 2 ){
-            if(spieler1.getHitEnemyShips() == 2){
+    public boolean ishit(int x, int y, Board gameboard) {
+        return gameboard.hit(x, y);
+    }
+
+    public boolean hasWinner() {
+
+        if (spieler1.getHitEnemyShips() == 2 || spieler2.getHitEnemyShips() == 2) {
+            if (spieler1.getHitEnemyShips() == 2) {
                 winner = spieler1;
-            }
-            else{
+            } else {
                 winner = spieler2;
             }
             return true;
         }
         return false;
     }
-    
-    public void ausgabe(){
+
+    public void ausgabe() {
         System.out.println(winner);
     }
 
