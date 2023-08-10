@@ -11,7 +11,7 @@ import java.util.UUID;
 public class GameSetup {
 
     @Get(route = "/Schiffeversenken/Titanic/Ahoi")
-    public void SpielErstellen(IConnection verbindung){
+    public void SpielErstellen(IConnection verbindung) throws IOException {
         Json msg = new Json();
         msg.set("Spiel", "Schiffeversenken");
 
