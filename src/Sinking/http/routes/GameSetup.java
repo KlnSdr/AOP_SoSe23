@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class GameSetup {
 
-    @Get(route = "/newGame/Schiffeversenken")
+    @Get(route = "/newGame")
     public void SpielErstellen(IConnection verbindung) throws IOException {
         Json msg = new Json();
 
@@ -18,7 +18,7 @@ public class GameSetup {
         UUID gameId= spielstand.newGame();
 
 
-        msg.set("UUID", gameId.toString());
+        msg.set("Game UUID ", gameId.toString());
 
 
         verbindung.sendResponse(msg);
