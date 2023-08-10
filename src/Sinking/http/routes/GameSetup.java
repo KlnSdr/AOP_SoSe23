@@ -18,7 +18,7 @@ public class GameSetup {
         UUID gameId= spielstand.newGame();
 
 
-        msg.set("GameUUID", gameId.toString());
+        msg.set("gameUUID", gameId.toString());
 
 
         verbindung.sendResponse(msg);
