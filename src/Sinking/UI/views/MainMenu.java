@@ -28,7 +28,7 @@ public class MainMenu implements IView {
         gbcNewLocalGame.insets = new Insets(0, 0, 10, 10);
         newLocalGameButton.addActionListener(e -> {
             System.out.println("Loading New Local Game");
-            ViewLoader.getInstance().loadView("DevScreen");
+            ViewLoader.getInstance().loadView("MainScreen");
         });
         centerContainer.add(newLocalGameButton, gbcNewLocalGame);
 
