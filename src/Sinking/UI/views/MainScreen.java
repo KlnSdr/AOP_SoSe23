@@ -23,7 +23,7 @@ public class MainScreen implements IView {
         JLabel player1Label = new JLabel("Eigene Flotte");
         GridBagConstraints gbcPlayer1Label = new GridBagConstraints();
         gbcPlayer1Label.gridx = 0;
-        gbcPlayer1Label.gridy = 0;
+        gbcPlayer1Label.gridy = 1;
 //        gbcPlayer1Label.gridwidth = 10;
         gbcPlayer1Label.anchor = GridBagConstraints.CENTER;
         gbcPlayer1Label.insets = new Insets(0, 0, 10, 10);
@@ -34,29 +34,33 @@ public class MainScreen implements IView {
         buttonPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbcButtonPanel = new GridBagConstraints();
         gbcButtonPanel.gridx = 0;
-        gbcButtonPanel.gridy = 1;
+        gbcButtonPanel.gridy = 0;
+        gbcButtonPanel.insets = new Insets(10, 10, 10, 10);
+        GridBagConstraints gbcButton = new GridBagConstraints();
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
-//                gbcbutton.insets = new Insets(0, 0, 0, 0);
-                gbcButtonPanel.gridx = col;
-                gbcButtonPanel.gridy = row;
+
+                gbcButton.insets = new Insets(0, 0, 0, 0);
+                gbcButton.gridx = col;
+                gbcButton.gridy = row;
                 final int finalRow = row;
                 final int finalCol = col;
                 button.addActionListener(e -> {
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     //fire(finalRow, finalCol);
                 });
-                buttonPanel.add(button, gbcButtonPanel);
+                buttonPanel.add(button, gbcButton);
             }
+            gbcButtonPanel.insets = new Insets(0, 0, 0, 10);
         }
         centerContainer.add(buttonPanel);
 
         JLabel player2Label = new JLabel("Gegnerische Flotte");
         GridBagConstraints gbcPlayer2Label = new GridBagConstraints();
         gbcPlayer2Label.gridx = 1;
-        gbcPlayer2Label.gridy = 0;
+        gbcPlayer2Label.gridy = 1;
         gbcPlayer2Label.anchor = GridBagConstraints.CENTER;
         gbcPlayer2Label.insets = new Insets(0, 0, 10, 10);
         centerContainer.add(player2Label, gbcPlayer2Label);
@@ -66,7 +70,8 @@ public class MainScreen implements IView {
         buttonPanelPlayer2.setLayout(new GridBagLayout());
         GridBagConstraints gbcButtonPanelPlayer2 = new GridBagConstraints();
         gbcButtonPanelPlayer2.gridx = 1;
-        gbcButtonPanelPlayer2.gridy = 1;
+        gbcButtonPanelPlayer2.gridy = 0;
+        gbcButtonPanelPlayer2.insets = new Insets(10, 10, 10, 10);
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 JButton button = new JButton();
@@ -86,23 +91,23 @@ public class MainScreen implements IView {
         }
         centerContainer.add(buttonPanelPlayer2);
 
-        JLabel chatLabel = new JLabel("Chat");
-        GridBagConstraints gbcChatLabel = new GridBagConstraints();
-        gbcChatLabel.gridx = 2;
-        gbcChatLabel.gridy = 0;
-        gbcChatLabel.anchor = GridBagConstraints.CENTER;
-        gbcChatLabel.insets = new Insets(0, 0, 10, 10);
-        centerContainer.add(chatLabel, gbcChatLabel);
-
-        JTextField chatField = new JTextField();
-        GridBagConstraints gbcChatField = new GridBagConstraints();
-        chatField.setPreferredSize(new Dimension(120, chatField.getPreferredSize().height)); // Breite anpassen
-        chatField.setColumns(20); // Höhe anpassen
-        gbcChatField.gridx = 2;
-        gbcChatField.gridy = 1;
-        gbcChatField.anchor = GridBagConstraints.CENTER;
-        gbcChatField.insets = new Insets(0, 0, 10, 10);
-        centerContainer.add(chatField, gbcChatField);
+//        JLabel chatLabel = new JLabel("Chat");
+//        GridBagConstraints gbcChatLabel = new GridBagConstraints();
+//        gbcChatLabel.gridx = 2;
+//        gbcChatLabel.gridy = 0;
+//        gbcChatLabel.anchor = GridBagConstraints.CENTER;
+//        gbcChatLabel.insets = new Insets(0, 0, 10, 10);
+//        centerContainer.add(chatLabel, gbcChatLabel);
+//
+//        JTextField chatField = new JTextField();
+//        GridBagConstraints gbcChatField = new GridBagConstraints();
+//        chatField.setPreferredSize(new Dimension(120, chatField.getPreferredSize().height)); // Breite anpassen
+//        chatField.setColumns(20); // Höhe anpassen
+//        gbcChatField.gridx = 2;
+//        gbcChatField.gridy = 1;
+//        gbcChatField.anchor = GridBagConstraints.CENTER;
+//        gbcChatField.insets = new Insets(0, 0, 10, 10);
+//        centerContainer.add(chatField, gbcChatField);
 
 
     }
