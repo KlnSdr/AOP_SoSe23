@@ -23,7 +23,6 @@ public class GameUpdateFire {
     int x;
     int y;
     UUID gameId;
-    Map<String, List<String>> query;
     String playertoken;
     @Post(route = "/fireAt")
     public void fire(IConnection connection) throws PlayerNotFoundException, GameNotFoundException, IOException {
