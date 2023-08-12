@@ -35,7 +35,8 @@ public class MainScreen implements IView {
         GridBagConstraints gbcButtonPanel = new GridBagConstraints();
         gbcButtonPanel.gridx = 0;
         gbcButtonPanel.gridy = 0;
-        gbcButtonPanel.insets = new Insets(10, 10, 10, 10);
+//        gbcButtonPanel.insets = new Insets(20, 20, 10, 10);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder( 20, 20, 20, 20));
         GridBagConstraints gbcButton = new GridBagConstraints();
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
@@ -71,7 +72,8 @@ public class MainScreen implements IView {
         GridBagConstraints gbcButtonPanelPlayer2 = new GridBagConstraints();
         gbcButtonPanelPlayer2.gridx = 1;
         gbcButtonPanelPlayer2.gridy = 0;
-        gbcButtonPanelPlayer2.insets = new Insets(10, 10, 10, 10);
+//        gbcButtonPanelPlayer2.insets = new Insets(10, 10, 10, 10);
+        buttonPanelPlayer2.setBorder(BorderFactory.createEmptyBorder( 20, 20, 20, 20));
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 JButton button = new JButton();
