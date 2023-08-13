@@ -51,7 +51,7 @@ public class GameUpdate {
             responsePayload.set("board", boardToString(board));
         } catch (PlayerNotFoundException e) {
             resCode = ResponseCode.NOT_FOUND;
-            responsePayload.set("msg", String.format("player with id '%s' not found", gameId));
+            responsePayload.set("msg", String.format("player with id '%s' not found", playerToken));
         } catch (GameNotFoundException e) {
             resCode = ResponseCode.NOT_FOUND;
             responsePayload.set("msg", String.format("game with id '%s' not found", gameId));
