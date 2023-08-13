@@ -1,5 +1,7 @@
 package Sinking.Game.Data;
 
+import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
+
 public class Board {
     private Tile[][] board;
 
@@ -28,12 +30,14 @@ public class Board {
         return status;
     }
 
-    public boolean fire(int x, int y) {
+    public boolean fire(int x, int y) throws CoordinatesOutOfBoundsException {
         boolean status = bounces(x, y);
         if (status) {
             board[x][y].shoot();
+        } else {
+            throw new CoordinatesOutOfBoundsException(x, y);
         }
-        return status;
+        return true;
     }
 
     public boolean hit(int x, int y) {
@@ -45,11 +49,11 @@ public class Board {
     }
 
     public boolean bounces(int x, int y) {
-        if (x >= 11 || x < 0) {
+        if (x >= 10 || x < 0) {
             System.out.println(" Deine Eingabe (x) ist nicht mehr in den Grenzen des Spielfeldes.");
             return false;
         }
-        if (y >= 11 || y < 0) {
+        if (y >= 10 || y < 0) {
             System.out.println(" Deine Eingabe (y) ist nicht mehr in den Grenzen des Spielfeldes.");
             return false;
         }

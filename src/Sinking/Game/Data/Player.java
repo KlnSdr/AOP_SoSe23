@@ -1,5 +1,7 @@
 package Sinking.Game.Data;
 
+import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
+
 public class Player {
     private String name;
     private int hitEnemyShips = 0;
@@ -16,7 +18,7 @@ public class Player {
         return hitEnemyShips;
     }
 
-    public boolean shoot(int x, int y, Board gameboard) {
+    public boolean shoot(int x, int y, Board gameboard) throws CoordinatesOutOfBoundsException {
         boolean didHitShip = false;
         gameboard.fire(x,y);
        didHitShip= gameboard.hit(x,y);

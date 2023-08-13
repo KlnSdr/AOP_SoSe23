@@ -3,11 +3,12 @@ package Sinking.Game.Data.Server;
 import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
-import Sinking.Game.Data.Server.Exceptions.GameFinishedException;
-import Sinking.Game.Data.Server.Exceptions.GameNotFoundException;
-import Sinking.Game.Data.Server.Exceptions.NoPlayerNeededException;
-import Sinking.Game.Data.Server.Exceptions.PlayerNotFoundException;
+import Sinking.common.Exceptions.GameFinishedException;
+import Sinking.common.Exceptions.GameNotFoundException;
+import Sinking.common.Exceptions.NoPlayerNeededException;
+import Sinking.common.Exceptions.PlayerNotFoundException;
 import Sinking.Game.Data.Tile;
+import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class GameRepository {
         return game.addPlayer(player);
     }
 
-    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
+    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, CoordinatesOutOfBoundsException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);

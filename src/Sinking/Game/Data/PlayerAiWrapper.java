@@ -2,6 +2,7 @@ package Sinking.Game.Data;
 
 import Sinking.AiLoader;
 import Sinking.IAi;
+import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 import Sinking.common.Tupel;
 
 public class PlayerAiWrapper extends Player {
@@ -20,7 +21,7 @@ public class PlayerAiWrapper extends Player {
         this.isHuman = false;
     }
 
-    public void nextMove(Board board) {
+    public void nextMove(Board board) throws CoordinatesOutOfBoundsException {
         Tupel<Integer, Integer> coordinates = this.aiBackbone.nextMove(board);
         this.shoot(coordinates._1(), coordinates._2(), board);
     }

@@ -1,8 +1,9 @@
 package Sinking.http.routes;
 
-import Sinking.Game.Data.Server.Exceptions.GameNotFoundException;
-import Sinking.Game.Data.Server.Exceptions.PlayerNotFoundException;
+import Sinking.common.Exceptions.GameNotFoundException;
+import Sinking.common.Exceptions.PlayerNotFoundException;
 import Sinking.Game.Data.Server.GameRepository;
+import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 import Sinking.http.Json;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.IConnection;
@@ -59,10 +60,11 @@ public class GameUpdate {
 
             try {
                 boolean status = GameRepository.getInstance().fireAt(x, y, gameId, playertoken);
+                connection.setResponseCode(ResponseCode.SUCCESS);
                 if (status == true /*uh ich bin sebastian und ich mache das so weil ich will und das schöner finde*/) {
-                    connection.setResponseCode(ResponseCode.SUCCESS);
+                    msg.set("hitShip", "true");
                 } else{
-                    connection.setResponseCode(ResponseCode.INTERNAL_ERROR);
+                    msg.set("hitShip", "false");
                 }
             } catch (GameNotFoundException e) {
                 connection.setResponseCode(ResponseCode.NOT_FOUND);
@@ -70,9 +72,12 @@ public class GameUpdate {
             } catch (PlayerNotFoundException e) {
                 connection.setResponseCode(ResponseCode.NOT_FOUND);
                 msg.set("msg", "player not found with token" + playertoken);
+            } catch (CoordinatesOutOfBoundsException e) {
+                connection.setResponseCode(ResponseCode.INTERNAL_ERROR);
+                msg.set("msg", "\uD83D\uDD95 invalid coordinates (" +x+ ", " +y+ ")");
             }
 
-            connection.sendResponse(msg);
+        connection.sendResponse(msg);
     }
     private boolean correctRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()){

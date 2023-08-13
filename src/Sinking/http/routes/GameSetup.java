@@ -1,9 +1,9 @@
 package Sinking.http.routes;
 
 import Sinking.Game.Data.Player;
-import Sinking.Game.Data.Server.Exceptions.GameFinishedException;
-import Sinking.Game.Data.Server.Exceptions.GameNotFoundException;
-import Sinking.Game.Data.Server.Exceptions.NoPlayerNeededException;
+import Sinking.common.Exceptions.GameFinishedException;
+import Sinking.common.Exceptions.GameNotFoundException;
+import Sinking.common.Exceptions.NoPlayerNeededException;
 import Sinking.Game.Data.Server.GameRepository;
 import Sinking.http.Json;
 import Sinking.http.server.Annotations.Post;
