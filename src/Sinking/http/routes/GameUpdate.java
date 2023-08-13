@@ -30,7 +30,7 @@ public class GameUpdate {
         }
 
         String gameIdStr = query.get("id").get(0);
-        String playerToken = body.get("accessToken").orElse("");
+        String playerToken = body.get("playerToken").orElse("");
 
         UUID gameId;
         try {
@@ -169,6 +169,6 @@ public class GameUpdate {
         if (!query.containsKey("id") || query.get("id").isEmpty()) {
             return false;
         }
-        return body.hasKey("accessToken");
+        return body.hasKey("playerToken");
     }
 }
