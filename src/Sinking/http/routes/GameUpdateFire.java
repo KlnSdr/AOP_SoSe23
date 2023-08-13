@@ -74,6 +74,8 @@ public class GameUpdateFire {
 
             try {
                 GameRepository.getInstance().fireAt(x, y, gameId, playertoken);
+                connection.setResponseCode(ResponseCode.SUCCESS);
+
             } catch (GameNotFoundException e) {
                 Json msg = new Json();
                 connection.setResponseCode(ResponseCode.NOT_FOUND);
