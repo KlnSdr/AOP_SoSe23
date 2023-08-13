@@ -3,12 +3,8 @@ package Sinking.Game.Data.Server;
 import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
-import Sinking.common.Exceptions.GameFinishedException;
-import Sinking.common.Exceptions.GameNotFoundException;
-import Sinking.common.Exceptions.NoPlayerNeededException;
-import Sinking.common.Exceptions.PlayerNotFoundException;
+import Sinking.common.Exceptions.*;
 import Sinking.Game.Data.Tile;
-import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -62,7 +58,7 @@ public class GameRepository {
         return game.addPlayer(player);
     }
 
-    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, CoordinatesOutOfBoundsException {
+    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, CoordinatesOutOfBoundsException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
@@ -76,6 +72,9 @@ public class GameRepository {
 
         Player player = optPlayer.get();
         Gamestate gamestate = game.getGame();
+        if (gamestate == null) {
+            throw new NeedsPlayerException(gameId);
+        }
         Board gameBoard = gamestate.getspecificBoard(player);
         if (gameBoard == null) {
             throw new PlayerNotFoundException(gameId, playerToken);
@@ -113,7 +112,7 @@ public class GameRepository {
         this.games.remove(id);
     }
 
-    public Tile[][] getBoard(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
+    public Tile[][] getBoard(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
@@ -127,6 +126,9 @@ public class GameRepository {
         Player player = optPlayer.get();
 
         Gamestate gamestate = game.getGame();
+        if (gamestate == null) {
+            throw new NeedsPlayerException(gameId);
+        }
         return gamestate.getspecificBoard(player).getBoard();
     }
 

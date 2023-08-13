@@ -41,9 +41,9 @@ public class ServerGamestate {
     }
 
     public Optional<Player> getPlayerByToken(String token) {
-        if (playerA.getAccessToken().equals(token)) {
+        if (playerA != null && playerA.getAccessToken().equals(token)) {
             return Optional.of(playerA.getPlayer());
-        } else if (playerB.getAccessToken().equals(token)) {
+        } else if (playerB != null && playerB.getAccessToken().equals(token)) {
             return Optional.of(playerB.getPlayer());
         }
         return Optional.empty();
