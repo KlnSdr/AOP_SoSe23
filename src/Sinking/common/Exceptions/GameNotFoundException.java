@@ -1,4 +1,4 @@
-package Sinking.Game.Data.Server.Exceptions;
+package Sinking.common.Exceptions;
 
 import java.util.UUID;
 
