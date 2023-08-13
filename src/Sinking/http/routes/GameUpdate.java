@@ -1,14 +1,9 @@
 package Sinking.http.routes;
 
-import Sinking.Game.Data.Server.Exceptions.GameNotFoundException;
-import Sinking.Game.Data.Server.Exceptions.NeedsPlayerException;
-import Sinking.Game.Data.Server.Exceptions.PlayerNotFoundException;
 import Sinking.Game.Data.Server.GameRepository;
 import Sinking.Game.Data.Tile;
 import Sinking.Game.Data.TileState;
-import Sinking.common.Exceptions.GameNotFoundException;
-import Sinking.common.Exceptions.PlayerNotFoundException;
-import Sinking.Game.Data.Server.GameRepository;
+import Sinking.common.Exceptions.*;
 import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 import Sinking.http.Json;
 import Sinking.http.server.Annotations.Post;
@@ -150,6 +145,9 @@ public class GameUpdate {
         } catch (CoordinatesOutOfBoundsException e) {
             connection.setResponseCode(ResponseCode.INTERNAL_ERROR);
             msg.set("msg", "\uD83D\uDD95 invalid coordinates (" +x+ ", " +y+ ")");
+        } catch (NeedsPlayerException e) {
+            connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
+            msg.set("msg", String.format("game with id '%s' needs another player", gameId));
         }
 
         connection.sendResponse(msg);

@@ -3,12 +3,8 @@ package Sinking.Game.Data.Server;
 import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
-import Sinking.common.Exceptions.GameFinishedException;
-import Sinking.common.Exceptions.GameNotFoundException;
-import Sinking.common.Exceptions.NoPlayerNeededException;
-import Sinking.common.Exceptions.PlayerNotFoundException;
+import Sinking.common.Exceptions.*;
 import Sinking.Game.Data.Tile;
-import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 
 import java.util.Optional;
 import java.util.UUID;
