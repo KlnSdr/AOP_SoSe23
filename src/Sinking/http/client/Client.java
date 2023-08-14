@@ -39,6 +39,7 @@ public class Client {
     public void get(Request request, IResponseHandler handler) {
         sendRequest(request.buildGet(), handler);
     }
+
     public void get(Request request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
         sendRequest(request.buildGet(), handler, errorHandler);
     }
@@ -52,13 +53,16 @@ public class Client {
     public void post(Request request, IResponseHandler handler) {
         sendRequest(request.buildPost(), handler);
     }
+
     public void post(Request request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
         sendRequest(request.buildPost(), handler, errorHandler);
     }
 
     private void sendRequest(HttpRequest request, IResponseHandler handler) {
-        sendRequest(request, handler, error -> Consistency.getInstance().reportFailedRequest());
+        sendRequest(request, handler, error -> {
+        });
     }
+
     private void sendRequest(HttpRequest request, IResponseHandler handler, IRequestErrorHandler errorHandler) {
         Consistency.getInstance().incrementRequestCount();
         try {
@@ -68,6 +72,7 @@ public class Client {
                 handler.handle(res);
             }).join();
         } catch (Exception e) {
+            Consistency.getInstance().reportFailedRequest();
             errorHandler.handle(e);
         }
     }
