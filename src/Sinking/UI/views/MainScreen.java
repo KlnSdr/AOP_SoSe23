@@ -1,6 +1,8 @@
 package Sinking.UI.views;
 
 import Sinking.UI.IView;
+import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 import Sinking.http.client.Consistency;
 
 
@@ -24,7 +26,7 @@ public class MainScreen implements IView {
     private JLabel whosNextLabel;
 
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         this.window = window;
         window.setTitle(baseTitle);
 
