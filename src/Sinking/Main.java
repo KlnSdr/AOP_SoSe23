@@ -39,7 +39,7 @@ public class Main {
             System.out.println("[WARN]: using default port 3000");
         }
 
-        System.out.println("Starting server on port " + port + "...");
+        System.out.printf("Starting server on port %d...\n", port);
         try {
             Server server = new Server(port);
             HttpRouteLoader.loadRoutes("Sinking.http.routes", server);
