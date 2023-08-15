@@ -1,7 +1,11 @@
 package Sinking.UI.views;
 
+import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Tupel;
+import Sinking.http.client.Client;
+import Sinking.http.client.Request;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +69,6 @@ public class JoinOnlineGame implements IView {
                 System.out.println("Server URL: " + url);
                 System.out.println("Nickname: " + nickname);
                 System.out.println("Loading Game");
-                ViewLoader.getInstance().loadView("DevScreen"); //Link to WaitingScreen
                 joinOnlineGame(url, nickname);
             }
         });
@@ -104,9 +107,82 @@ public class JoinOnlineGame implements IView {
     }
 
     protected void joinOnlineGame(String url, String nickname) {
-        //code for joining the online game
+        ClientStore clientStore = ClientStore.getInstance();
+        Tupel<String, String> gameUrlAndId = splitJoinUrl(url);
+        clientStore.setServerUrl(gameUrlAndId._1());
+        clientStore.setGameId(gameUrlAndId._2());
+        clientStore.setNickname(nickname);
+
+        Client httpClient = new Client(gameUrlAndId._1(), 5000);
+        clientStore.setClient(httpClient);
+
+        Request joinRequest = httpClient.newRequest("/join");
+        joinRequest.setQuery("id", gameUrlAndId._2());
+        joinRequest.setBody("nickname", nickname);
+
+        httpClient.post(joinRequest, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            if (response.getStatusCode() == 200) {
+                System.out.println("Joined game");
+                clientStore.setPlayerToken(response.getBody().get("playerToken").orElse(""));
+                ViewLoader.getInstance().loadView("WaitingScreen");
+            } else {
+                System.out.println("Failed to join game");
+                ViewLoader.getInstance().loadView("MainMenu");
+            }
+        }, error -> {
+            System.out.println("Failed to join game");
+            ViewLoader.getInstance().loadView("MainMenu");
+        });
+    }
+
+    private Tupel<String, String> splitJoinUrl(String url) {
+        String[] splitUrl = url.split("\\?");
+
+        if (splitUrl.length != 2) {
+            System.out.println("Invalid join URL");
+            return new Tupel<>("", "");
+        }
+
+        String serverUrl = splitUrl[0];
+        String[] splitServerUrl = serverUrl.split("/");
+        if (splitServerUrl.length < 3) {
+            System.out.println("Invalid join URL");
+            return new Tupel<>("", "");
+        }
+        serverUrl = splitServerUrl[0] + "//" + splitServerUrl[2];
+
+        String query = splitUrl[1];
+
+        String[] queryParts = query.split("&");
+        String gameId = findIdInQuery(queryParts);
+
+        if (gameId == null) {
+            System.out.println("Invalid join URL");
+            return new Tupel<>("", "");
+        }
+
+        System.out.println("Server URL: " + serverUrl);
+        System.out.println("Game ID: " + gameId);
+        return new Tupel<>(serverUrl, gameId);
+    }
+
+    private String findIdInQuery(String[] query) {
+        for (String queryPart : query) {
+            String[] queryPartSplit = queryPart.split("=");
+            if (queryPartSplit.length != 2) {
+                continue;
+            }
+            if (queryPartSplit[0].equals("id")) {
+                return queryPartSplit[1];
+            }
+        }
+        return null;
     }
 
     @Override
-    public void unload() {System.out.println("Unloading JoinOnlineGame Screen");}
+    public void unload() {
+        System.out.println("Unloading JoinOnlineGame Screen");
+    }
 }
