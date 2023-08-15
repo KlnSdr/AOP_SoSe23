@@ -1,19 +1,31 @@
 package Sinking.UI.views;
 
 import Sinking.UI.IView;
-import Sinking.UI.ViewLoader;
+import Sinking.http.client.Consistency;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.RGBImageFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static Sinking.UI.Window.baseTitle;
 
 
 public class MainScreen implements IView {
+
+    private String player1;
+    private String player2;
+    private String url;
+    private String whosNext;
+    private JButton testConnectionButton;
+    private JFrame window;
+    private JPanel upperContainer;
+    private JLabel whosNextLabel;
+
     @Override
     public void load(JFrame window) {
+        this.window = window;
         window.setTitle(baseTitle);
 
         JPanel container = new JPanel();
@@ -23,9 +35,9 @@ public class MainScreen implements IView {
         window.add(container);
 
         //Statusleiste
-        JPanel upperContainer = new JPanel();
+        upperContainer = new JPanel();
         upperContainer.setLayout(new GridBagLayout());
-        upperContainer.setBackground(Color.LIGHT_GRAY);
+        upperContainer.setBackground(Color.WHITE);
         upperContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbcUpperContainer = new GridBagConstraints();
         gbcUpperContainer.gridx = 0;
@@ -43,7 +55,7 @@ public class MainScreen implements IView {
         gbcPlayingAgainstLabel.insets = new Insets(10, 10, 10, 10);
         upperContainer.add(playingAgainstLabel, gbcPlayingAgainstLabel);
 
-        JLabel whosNextLabel = new JLabel(getWhosNext());
+        whosNextLabel = new JLabel(getWhosNext());
         GridBagConstraints gbcWhosNextLabel = new GridBagConstraints();
         gbcWhosNextLabel.gridx = 1;
         gbcWhosNextLabel.gridy = 0;
@@ -52,7 +64,7 @@ public class MainScreen implements IView {
         gbcWhosNextLabel.insets = new Insets(10, 10, 10, 10);
         upperContainer.add(whosNextLabel, gbcWhosNextLabel);
 
-        JButton testConnectionButton = new JButton("Verbindung prüfen");
+        testConnectionButton = new JButton("Verbindung prüfen");
         testConnectionButton.setPreferredSize(new Dimension(140, 20));
         GridBagConstraints gbcTestConnectionButton = new GridBagConstraints();
         gbcTestConnectionButton.gridx = 2;
@@ -62,7 +74,7 @@ public class MainScreen implements IView {
         gbcTestConnectionButton.insets = new Insets(10, 10, 10, 10);
         testConnectionButton.addActionListener(e -> {
             System.out.println("Test Connection");
-            testConnection();
+            checkConnection();
         });
         upperContainer.add(testConnectionButton, gbcTestConnectionButton);
 
@@ -79,7 +91,7 @@ public class MainScreen implements IView {
         //Spielfelder
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
-        centerContainer.setBackground(Color.BLUE);
+        centerContainer.setBackground(Color.WHITE);
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbcCenterContainer = new GridBagConstraints();
         gbcCenterContainer.gridx = 0;
@@ -195,20 +207,55 @@ public class MainScreen implements IView {
 
     }
 
+    private void setServerUrl(String url) {
+        this.url = url;
+    }
     private String getServerUrl() {
-        return "[Placeholder]";
+        return url;
     }
-
+    private void setWhosNext(String name) {
+        whosNext = name;
+        whosNextLabel.setText(whosNext);
+        window.repaint();
+    }
     private String getWhosNext() {
-        return "[Placeholder]";
+        return whosNext;
     }
 
-    private void testConnection() {
-        //vllt den Punkt rechts grün machen, wenn Test erfolgreich war?
+    private void checkConnection() {
+        Consistency.getInstance().checkConnection(() -> {
+            System.out.println("success");
+            setResetButtonTestColor(Color.GREEN);
+        }, () -> {
+            System.out.println("failure");
+            setResetButtonTestColor(Color.RED);
+        });
     }
 
+    private void setResetButtonTestColor(Color color) {
+        testConnectionButton.setForeground(color);
+        this.window.repaint();
+
+        ActionListener timerAction = e -> {
+            testConnectionButton.setForeground(Color.BLACK);
+            window.repaint();
+        };
+        Timer timer = new Timer(2000, timerAction);
+        timer.setRepeats(false);
+        timer.start();
+    }
+
+    private void setPlayer2(String name) {
+        player2 = name;
+    }
     private String getPlayer2() {
-        return "[Placeholder]";
+        return player2;
+    }
+    private void setPlayer1(String name) {
+        player1 = name;
+    }
+    private String getPlayer1() {
+        return player1;
     }
 
     @Override
