@@ -24,6 +24,7 @@ public class TestRunner extends Classloader<Object> {
     private final ArrayList<Tripel<Class<?>, String, Method>> tests = new ArrayList<>();
     private int executedTests = 0;
     private int passedTests = 0; // don't track failed test, think positive and track passed tests
+    private int longestTestName = -1;
 
     private TestRunner(String packageName) {
         this.packageName = packageName;
@@ -37,19 +38,29 @@ public class TestRunner extends Classloader<Object> {
     public void run() {
         setUpServerAndClient();
         loadTests();
+
+        if (longestTestName % 2 == 1) {
+            longestTestName++;
+        }
+        System.out.printf("\n%s[TEST]%s\n", "=".repeat(longestTestName / 2 - 2), "=".repeat(longestTestName / 2 - 2));
         executeTest(0);
     }
 
     private void executeTest(int index) {
         if (index >= tests.size()) {
-            System.out.printf("Executed tests: %d\nPASSED: %d\nFAILED: %d\n", executedTests, passedTests, executedTests - passedTests);
-            System.out.println("=========");
+            System.out.println("=".repeat(longestTestName + 2));
+            System.out.println("Tests:\t" + executedTests);
+            System.out.println("PASSED:\t" + passedTests + "\t(" + (passedTests * 100 / executedTests) + "%)");
+            System.out.println("FAILED:\t" + (executedTests - passedTests) + "\t(" + ((executedTests - passedTests) * 100 / executedTests) + "%)");
+            System.out.println("=".repeat(longestTestName + 2));
+            System.out.println();
             System.out.println("stopping server...");
             server.stop();
             return;
         }
         Tripel<Class<?>, String, Method> test = tests.get(index);
-        System.out.printf("[%s -> %s]", test._1().getSimpleName(), test._2());
+        String title = test._1().getSimpleName() + " -> " + test._2();
+        System.out.printf("[%s%s]", title, " ".repeat(longestTestName - title.length()));
 
         Method actualTest = test._3();
         executedTests++;
@@ -109,6 +120,11 @@ public class TestRunner extends Classloader<Object> {
 
             Test annotation = method.getAnnotation(Test.class);
             String testTitle = annotation.name();
+
+            int testTitleLength = testTitle.length() + 4 /* -> */ + clazz.getSimpleName().length();
+            if (testTitleLength > longestTestName) {
+                longestTestName = testTitleLength;
+            }
 
             tests.add(new Tripel<>(clazz, testTitle, method));
         }

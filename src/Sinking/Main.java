@@ -12,7 +12,6 @@ public class Main {
     public static void main(String[] args) {
         Json config = ArgsLoader.load(args);
         if (config.get("test").isPresent()) {
-            System.out.println("Running tests...");
             TestRunner.runTests();
             return;
         }
