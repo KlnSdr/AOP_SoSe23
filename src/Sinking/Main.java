@@ -4,12 +4,18 @@ import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
 import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
+import Sinking.http.test.TestRunner;
 
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
         Json config = ArgsLoader.load(args);
+        if (config.get("test").isPresent()) {
+            System.out.println("Running tests...");
+            TestRunner.runTests();
+            return;
+        }
 
         if (config.get("server").isPresent()) {
             startInServerMode(config);
