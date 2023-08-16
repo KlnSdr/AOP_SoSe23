@@ -1,14 +1,16 @@
 package Sinking.UI.views;
 
+import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
+import Sinking.http.client.Client;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
 import Sinking.http.client.Consistency;
+import Sinking.http.client.Request;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static Sinking.UI.Window.baseTitle;
@@ -163,7 +165,10 @@ public class MainScreen implements IView {
                 final int finalRow = row;
                 final int finalCol = col;
                 button.addActionListener(e -> {
+                    JButton source = ((JButton)e.getSource());
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
+                    source.setText("⌛");
+                    shootAt(finalRow, finalCol, source);
                     //fire(finalRow, finalCol);
                 });
                 buttonPanelPlayer2.add(button, gbcButtonPlayer2);
@@ -245,6 +250,25 @@ public class MainScreen implements IView {
         Timer timer = new Timer(2000, timerAction);
         timer.setRepeats(false);
         timer.start();
+    }
+
+    private void shootAt(int x, int y, JButton src) {
+        ClientStore store = ClientStore.getInstance();
+        Client client = store.getClient();
+        String gameId = store.getGameId();
+        String token = store.getPlayerToken();
+
+        Request req = client.newRequest("/fireAt");
+        req.setQuery("id", gameId);
+        req.setBody("playertoken", token);
+        req.setBody("x", Integer.toString(x));
+        req.setBody("y", Integer.toString(y));
+
+        client.post(req, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            src.setText("");
+        });
     }
 
     private void setPlayer2(String name) {
