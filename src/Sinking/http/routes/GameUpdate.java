@@ -90,7 +90,7 @@ public class GameUpdate {
             return;
         }
 
-        playertoken = body.get("playertoken").orElse("");
+        playertoken = body.get("playerToken").orElse("");
 
         try {
             x = Integer.parseInt(body.get("x").orElse(""));
@@ -207,10 +207,10 @@ public class GameUpdate {
         if (!query.containsKey("id") || query.get("id").isEmpty()){
             return false;
         }
-        if (!body.hasKey("playertoken") || !body.hasKey("x") || !body.hasKey("y")){
+            if (!body.hasKey("playerToken") || !body.hasKey("x") || !body.hasKey("y")){
             return false;
         }
-        if(body.get("x").isEmpty() || body.get("y").isEmpty() || body.get("playertoken").isEmpty()){
+        if(body.get("x").isEmpty() || body.get("y").isEmpty() || body.get("playerToken").isEmpty()){
             return false;
         }
         return true;
