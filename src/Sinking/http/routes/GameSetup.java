@@ -117,7 +117,7 @@ public class GameSetup {
 
         try {
             boolean needsPlayer = GameRepository.getInstance().needsPlayer(gameId);
-            // 201 -> no player needed -> start game
+            // 204 -> no player needed -> start game
             // 202 -> player needed -> wait for player
             resCode = needsPlayer ? ResponseCode.ACCEPTED : ResponseCode.NO_CONTENT;
         } catch (GameNotFoundException e) {

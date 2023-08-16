@@ -1,11 +1,13 @@
 package Sinking.UI.views;
 
+import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.http.client.Client;
+import Sinking.http.client.Request;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -14,8 +16,14 @@ import java.awt.event.ActionListener;
 import static Sinking.UI.Window.baseTitle;
 
 public class WaitingScreen implements IView {
+
+    private String url;
+    private int dotCount = 0;
+    private JLabel waitLabel;
+    private JFrame window;
     @Override
     public void load(JFrame window) {
+        this.window = window;
         window.setTitle(baseTitle);
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
@@ -23,7 +31,7 @@ public class WaitingScreen implements IView {
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(centerContainer);
 
-        String url = createNewOnlineGame();
+        createNewOnlineGame();
 
         JLabel linkLabel = new JLabel(url);
         GridBagConstraints gbcLinkLabel = new GridBagConstraints();
@@ -47,11 +55,11 @@ public class WaitingScreen implements IView {
         });
         centerContainer.add(copyButton, gbcCopyButton);
 
-        JLabel waitLabel = new JLabel("... Warten auf 2. Spieler ...");
+        waitLabel = new JLabel("Warten auf 2. Spieler");
         GridBagConstraints gbcWaitLabel = new GridBagConstraints();
         gbcWaitLabel.gridx = 0;
         gbcWaitLabel.gridy = 2;
-        gbcWaitLabel.gridwidth = 2; // Spannend über 2 Spalten
+        gbcWaitLabel.gridwidth = 2;
         gbcWaitLabel.anchor = GridBagConstraints.CENTER;
         gbcWaitLabel.insets = new Insets(0, 0, 15, 0);
         centerContainer.add(waitLabel, gbcWaitLabel);
@@ -68,6 +76,36 @@ public class WaitingScreen implements IView {
             ViewLoader.getInstance().loadView("MainMenu");
         });
         centerContainer.add(backButton, gbcBackButton);
+
+        startWaitingForPlayers();
+
+    }
+
+    private void startWaitingForPlayers() {
+        Timer timer = new Timer(1000, null);
+
+        ActionListener taskPerformer = evt -> {
+            ClientStore store = ClientStore.getInstance();
+
+            String gameId = store.getGameId();
+            Client client = store.getClient();
+
+            Request request = client.newRequest("/gameReady");
+            request.setQuery("id", gameId);
+            client.get(request, response -> {
+                int resCode = response.getStatusCode();
+                if (resCode == 204) {
+                    timer.stop();
+                    ViewLoader.getInstance().loadView("MainScreen");
+                }
+                dotCount = (dotCount + 1) % 4;
+                waitLabel.setText(".".repeat(dotCount) + "Warten auf 2. Spieler" + ".".repeat(dotCount));
+                window.repaint();
+            });
+        };
+        timer.addActionListener(taskPerformer);
+
+        timer.start();
     }
 
     //https://stackoverflow.com/questions/6710350/copying-text-to-the-clipboard-using-java
@@ -102,9 +140,9 @@ public class WaitingScreen implements IView {
         dialog.setVisible(true);
         System.out.println("Text wurde in den Zwischenspeicher kopiert.");
     }
-    private String createNewOnlineGame() {
+    private void createNewOnlineGame() {
         //creates the link for joining the online game
-        return "www.placeholder.de/AOP_SoSe23";
+        url = "www.placeholder.de/AOP_SoSe23";
     }
 
     @Override
