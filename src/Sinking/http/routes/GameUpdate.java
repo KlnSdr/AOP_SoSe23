@@ -64,28 +64,6 @@ public class GameUpdate {
         connection.sendResponse(responsePayload);
     }
 
-    private String boardToString(Tile[][] board) {
-        StringBuilder out = new StringBuilder();
-        for (Tile[] row : board) {
-            for (Tile tile : row) {
-                TileState state = tile.getState();
-                switch (state) {
-                    case UNKNOWN:
-                        out.append("U");
-                        break;
-                    case HIT:
-                        out.append("H");
-                        break;
-                    case MISS:
-                        out.append("M");
-                        break;
-                }
-            }
-            out.append(";");
-        }
-        return out.toString();
-    }
-
     @Post(route = "/fireAt")
     public void fire(IConnection connection) throws IOException {
         int x;
@@ -151,6 +129,28 @@ public class GameUpdate {
         }
 
         connection.sendResponse(msg);
+    }
+
+    private String boardToString(Tile[][] board) {
+        StringBuilder out = new StringBuilder();
+        for (Tile[] row : board) {
+            for (Tile tile : row) {
+                TileState state = tile.getState();
+                switch (state) {
+                    case UNKNOWN:
+                        out.append("U");
+                        break;
+                    case HIT:
+                        out.append("H");
+                        break;
+                    case MISS:
+                        out.append("M");
+                        break;
+                }
+            }
+            out.append(";");
+        }
+        return out.toString();
     }
     private boolean correctRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()){
