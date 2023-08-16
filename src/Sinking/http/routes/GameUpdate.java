@@ -6,14 +6,13 @@ import Sinking.Game.Data.TileState;
 import Sinking.common.Exceptions.*;
 import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 import Sinking.common.Json;
+import Sinking.common.Tupel;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.IConnection;
 import Sinking.http.server.ResponseCode;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GameUpdate {
     @Post(route = "/getBoard")
@@ -131,6 +130,58 @@ public class GameUpdate {
         connection.sendResponse(msg);
     }
 
+    @Post(route = "/setShips")
+    public void batchSetShips(IConnection connection) throws IOException {
+        Map<String, List<String>> query = connection.getUriParams();
+        Json body = connection.getRequestBody();
+
+        if (!isValidSetShipsRequest(query, body)) {
+            connection.setResponseCode(ResponseCode.BAD_REQUEST);
+            Json responsePayload = new Json();
+            responsePayload.set("msg", "malformed request object. missing gameId, player access token or ship coordinates");
+            connection.sendResponse(responsePayload);
+            return;
+        }
+
+        String gameIdStr = query.get("id").get(0);
+        UUID gameId;
+        try {
+            gameId = UUID.fromString(gameIdStr);
+        } catch (IllegalArgumentException e) {
+            Json responsePayload = new Json();
+            responsePayload.set("msg", String.format("invalid game id '%s'", gameIdStr));
+            connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
+            connection.sendResponse(responsePayload);
+            return;
+        }
+
+        String playerToken = body.get("playerToken").orElse("");
+        String shipCoordinates = body.get("ships").orElse("");
+        Tupel<Integer, Integer>[] coordinates = getCoordinatesFromString(shipCoordinates);
+
+        Json resBody = new Json();
+        ResponseCode resCode;
+        try {
+            GameRepository.getInstance().setShips(gameId, playerToken, coordinates);
+            resCode = ResponseCode.SUCCESS;
+        } catch (GameNotFoundException e) {
+            resCode = ResponseCode.NOT_FOUND;
+            resBody.set("msg", String.format("game with id '%s' not found", gameId));
+        } catch (PlayerNotFoundException e) {
+            resCode = ResponseCode.NOT_FOUND;
+            resBody.set("msg", String.format("player with token '%s' not found", playerToken));
+        } catch (NeedsPlayerException e) {
+            resCode = ResponseCode.UNPROCESSABLE_ENTITY;
+            resBody.set("msg", String.format("game with id '%s' needs another player", gameId));
+        } catch (InternalError e) {
+            resCode = ResponseCode.INTERNAL_ERROR;
+            resBody.set("msg", "internal error");
+        }
+
+        connection.setResponseCode(resCode);
+        connection.sendResponse(resBody);
+    }
+
     private String boardToString(Tile[][] board) {
         StringBuilder out = new StringBuilder();
         for (Tile[] row : board) {
@@ -170,5 +221,38 @@ public class GameUpdate {
             return false;
         }
         return body.hasKey("playerToken");
+    }
+
+    private boolean isValidSetShipsRequest(Map<String, List<String>> query, Json body) {
+        if (!query.containsKey("id") || query.get("id").isEmpty()) {
+            return false;
+        }
+        if (!body.hasKey("playerToken") || !body.hasKey("ships")) {
+            return false;
+        }
+        return body.get("playerToken").isPresent() && body.get("ships").isPresent();
+    }
+
+    private Tupel<Integer, Integer>[] getCoordinatesFromString(String raw) {
+        ArrayList<Tupel<Integer, Integer>> coordinates = new ArrayList<>();
+        String[] rawCoordinates = raw.split("\\|");
+
+        for (String rawCoordinate : rawCoordinates) {
+            String[] xy = rawCoordinate.split(",");
+            if (xy.length != 2) {
+                continue;
+            }
+            int x;
+            int y;
+            try {
+                x = Integer.parseInt(xy[0]);
+                y = Integer.parseInt(xy[1]);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            coordinates.add(new Tupel<>(x, y));
+        }
+
+        return coordinates.toArray(new Tupel[0]);
     }
 }
