@@ -108,6 +108,15 @@ public class GameRepository {
         return game.getGame().isNext(player);
     }
 
+    public boolean needsPlayer(UUID gameId) throws GameNotFoundException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+        return game.needsPlayer();
+    }
+
     public void deleteGame(UUID id) {
         this.games.remove(id);
     }

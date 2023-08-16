@@ -87,10 +87,55 @@ public class GameSetup {
         connection.sendResponse(responsePayload);
     }
 
+    @Get(route = "/gameReady")
+    public void checkIfAnotherPlayerIsNeeded(IConnection connection) throws IOException {
+        Map<String, List<String>> query = connection.getUriParams();
+
+        if (!isValidCheckGameStartStatusRequest(query)) {
+            connection.setResponseCode(ResponseCode.BAD_REQUEST);
+            Json responsePayload = new Json();
+            responsePayload.set("msg", "malformed request object. missing gameId or player access token");
+            connection.sendResponse(responsePayload);
+            return;
+        }
+
+        String gameIdStr = query.get("id").get(0);
+
+        UUID gameId;
+        try {
+            gameId = UUID.fromString(gameIdStr);
+        } catch (IllegalArgumentException e) {
+            Json responsePayload = new Json();
+            responsePayload.set("msg", String.format("invalid game id '%s'", gameIdStr));
+            connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
+            connection.sendResponse(responsePayload);
+            return;
+        }
+
+        Json responsePayload = new Json();
+        ResponseCode resCode;
+
+        try {
+            boolean needsPlayer = GameRepository.getInstance().needsPlayer(gameId);
+            // 201 -> no player needed -> start game
+            // 202 -> player needed -> wait for player
+            resCode = needsPlayer ? ResponseCode.ACCEPTED : ResponseCode.NO_CONTENT;
+        } catch (GameNotFoundException e) {
+            resCode = ResponseCode.NOT_FOUND;
+            responsePayload.set("msg", String.format("game with id '%s' not found", gameId));
+        }
+
+        connection.setResponseCode(resCode);
+        connection.sendResponse(responsePayload);
+    }
+
     private boolean isValidJoinRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()) {
             return false;
         }
         return body.hasKey("nickname");
+    }
+    private boolean isValidCheckGameStartStatusRequest(Map<String, List<String>> query) {
+        return query.containsKey("id") && !query.get("id").isEmpty();
     }
 }
