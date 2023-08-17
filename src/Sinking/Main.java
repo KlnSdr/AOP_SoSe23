@@ -4,12 +4,17 @@ import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
 import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
+import Sinking.http.test.TestRunner;
 
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
         Json config = ArgsLoader.load(args);
+        if (config.get("test").isPresent()) {
+            TestRunner.runTests();
+            return;
+        }
 
         if (config.get("server").isPresent()) {
             startInServerMode(config);
@@ -33,7 +38,7 @@ public class Main {
             System.out.println("[WARN]: using default port 3000");
         }
 
-        System.out.println("Starting server on port " + port + "...");
+        System.out.printf("Starting server on port %d...\n", port);
         try {
             Server server = new Server(port);
             HttpRouteLoader.loadRoutes("Sinking.http.routes", server);
