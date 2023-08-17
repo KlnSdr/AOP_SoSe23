@@ -209,7 +209,7 @@ public class GameUpdate {
     public void win(IConnection connection) throws IOException {
         connection.setResponseCode(ResponseCode.PAYMENT_REQUIRED);
         Json payload = new Json();
-        payload.set("tradeoffer", "you pay me 1000€ and i give you the win");
+        payload.set("tradeoffer", "you pay me 1000€ and i give you the W");
 
         connection.sendResponse(payload);
     }
