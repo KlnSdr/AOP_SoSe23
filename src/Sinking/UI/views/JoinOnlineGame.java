@@ -16,6 +16,7 @@ import java.net.URL;
 import static Sinking.UI.Window.baseTitle;
 
 public class JoinOnlineGame implements IView {
+    protected String linkLabelText = "Einladungslink:";
     @Override
     public void load(JFrame window, Json data) {
         window.setTitle(baseTitle);
@@ -25,7 +26,7 @@ public class JoinOnlineGame implements IView {
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(centerContainer);
 
-        JLabel linkLabel = new JLabel("ServerURL/Einladungslink:");
+        JLabel linkLabel = new JLabel(this.linkLabelText);
         GridBagConstraints gbcLinkLabel = new GridBagConstraints();
         gbcLinkLabel.gridx = 0;
         gbcLinkLabel.gridy = 0;
@@ -70,7 +71,7 @@ public class JoinOnlineGame implements IView {
                 System.out.println("Server URL: " + url);
                 System.out.println("Nickname: " + nickname);
                 System.out.println("Loading Game");
-                joinOnlineGame(url, nickname);
+                startJoinSequence(url, nickname);
             }
         });
         centerContainer.add(confirmButton, gbcConfirmButton);
@@ -107,7 +108,12 @@ public class JoinOnlineGame implements IView {
         return true;
     }
 
-    protected void joinOnlineGame(String url, String nickname) {
+    private void startJoinSequence(String url, String nickname) {
+        setUpClientStore(url, nickname);
+        onBeforeJoin();
+    }
+
+    private void setUpClientStore(String url, String nickname) {
         ClientStore clientStore = ClientStore.getInstance();
         Tupel<String, String> gameUrlAndId = splitJoinUrl(url);
         clientStore.setServerUrl(gameUrlAndId._1());
@@ -116,18 +122,39 @@ public class JoinOnlineGame implements IView {
 
         Client httpClient = new Client(gameUrlAndId._1(), 5000);
         clientStore.setClient(httpClient);
+    }
 
-        Request joinRequest = httpClient.newRequest("/join");
-        joinRequest.setQuery("id", gameUrlAndId._2());
-        joinRequest.setBody("nickname", nickname);
+    /**
+     * Override to execute custom code before joining the game.
+     * This method is called after the client store has been set up.
+     * To join the game call {@link #joinOnlineGame()} at the end.
+     */
+    protected void onBeforeJoin() {
+        joinOnlineGame();
+    }
 
-        httpClient.post(joinRequest, response -> {
+    protected void joinOnlineGame() {
+        ClientStore store = ClientStore.getInstance();
+
+        if (store.getGameId() == null) {
+            System.out.println("Failed to join game");
+            ViewLoader.getInstance().loadView("MainMenu");
+            return;
+        }
+
+        Request joinRequest = store.getClient().newRequest("/join");
+        joinRequest.setQuery("id", store.getGameId());
+        joinRequest.setBody("nickname", store.getNickname());
+
+        store.getClient().post(joinRequest, response -> {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
             if (response.getStatusCode() == 200) {
                 System.out.println("Joined game");
-                clientStore.setPlayerToken(response.getBody().get("playerToken").orElse(""));
-                ViewLoader.getInstance().loadView("WaitingScreen");
+                store.setPlayerToken(response.getBody().get("playerToken").orElse(""));
+                Json payload = new Json();
+                payload.set("gameUrl", store.getServerUrl() + "/join?id=" + store.getGameId());
+                ViewLoader.getInstance().loadView("WaitingScreen", payload);
             } else {
                 System.out.println("Failed to join game");
                 ViewLoader.getInstance().loadView("MainMenu");
@@ -141,7 +168,7 @@ public class JoinOnlineGame implements IView {
     private Tupel<String, String> splitJoinUrl(String url) {
         String[] splitUrl = url.split("\\?");
 
-        if (splitUrl.length != 2) {
+        if (splitUrl.length < 1) {
             System.out.println("Invalid join URL");
             return new Tupel<>("", "");
         }
@@ -154,6 +181,10 @@ public class JoinOnlineGame implements IView {
         }
         serverUrl = splitServerUrl[0] + "//" + splitServerUrl[2];
 
+        if (splitUrl.length < 2) {
+            return new Tupel<>(serverUrl, null);
+        }
+
         String query = splitUrl[1];
 
         String[] queryParts = query.split("&");
@@ -161,7 +192,7 @@ public class JoinOnlineGame implements IView {
 
         if (gameId == null) {
             System.out.println("Invalid join URL");
-            return new Tupel<>("", "");
+            return new Tupel<>(serverUrl, null);
         }
 
         System.out.println("Server URL: " + serverUrl);
