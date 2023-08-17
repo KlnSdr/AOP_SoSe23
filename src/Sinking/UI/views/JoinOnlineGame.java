@@ -152,7 +152,9 @@ public class JoinOnlineGame implements IView {
             if (response.getStatusCode() == 200) {
                 System.out.println("Joined game");
                 store.setPlayerToken(response.getBody().get("playerToken").orElse(""));
-                ViewLoader.getInstance().loadView("WaitingScreen");
+                Json payload = new Json();
+                payload.set("gameUrl", store.getServerUrl() + "/join?id=" + store.getGameId());
+                ViewLoader.getInstance().loadView("WaitingScreen", payload);
             } else {
                 System.out.println("Failed to join game");
                 ViewLoader.getInstance().loadView("MainMenu");
