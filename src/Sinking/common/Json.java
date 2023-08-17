@@ -1,4 +1,4 @@
-package Sinking.http;
+package Sinking.common;
 
 import java.util.HashMap;
 import java.util.Map;

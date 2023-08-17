@@ -1,6 +1,6 @@
 package Sinking.http.client;
 
-import Sinking.http.Json;
+import Sinking.common.Json;
 
 import java.net.URI;
 import java.net.URLEncoder;

@@ -5,7 +5,7 @@ import Sinking.Game.Data.Tile;
 import Sinking.Game.Data.TileState;
 import Sinking.common.Exceptions.*;
 import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
-import Sinking.http.Json;
+import Sinking.common.Json;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.IConnection;
 import Sinking.http.server.ResponseCode;

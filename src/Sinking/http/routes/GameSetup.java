@@ -5,7 +5,7 @@ import Sinking.common.Exceptions.GameFinishedException;
 import Sinking.common.Exceptions.GameNotFoundException;
 import Sinking.common.Exceptions.NoPlayerNeededException;
 import Sinking.Game.Data.Server.GameRepository;
-import Sinking.http.Json;
+import Sinking.common.Json;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.Annotations.Get;
 import Sinking.http.server.IConnection;

@@ -1,7 +1,7 @@
 package Sinking;
 
 import Sinking.UI.ViewLoader;
-import Sinking.http.Json;
+import Sinking.common.Json;
 import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
 

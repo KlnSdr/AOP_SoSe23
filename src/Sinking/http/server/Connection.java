@@ -2,7 +2,7 @@ package Sinking.http.server;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import Sinking.http.Json;
+import Sinking.common.Json;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -2,13 +2,14 @@ package Sinking.UI.views;
 
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DevScreen implements IView {
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         window.setTitle("Dev Screen");
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));

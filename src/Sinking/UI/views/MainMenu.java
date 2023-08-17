@@ -2,6 +2,7 @@ package Sinking.UI.views;
 
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
 
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import static Sinking.UI.Window.baseTitle;
 
 public class MainMenu implements IView {
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         window.setTitle(baseTitle);
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());

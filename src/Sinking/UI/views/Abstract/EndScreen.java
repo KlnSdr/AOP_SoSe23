@@ -3,6 +3,7 @@ package Sinking.UI.views.Abstract;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
 import Sinking.UI.Window;
+import Sinking.common.Json;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ public abstract class EndScreen implements IView {
     protected Color backgroundColor;
     protected Color textColor;
     @Override
-    public void load(JFrame window) {
+    public void load(JFrame window, Json data) {
         System.out.println("Loading EndScreen");
         window.setTitle(Window.baseTitle);
 
