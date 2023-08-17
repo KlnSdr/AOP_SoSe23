@@ -1,5 +1,6 @@
 package Sinking.UI.views;
 
+import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
@@ -651,5 +652,10 @@ public class PlacingShips implements IView {
                 shipCoords.add(new Tupel<>(x, y));
             }
         }
+        Tupel<Integer, Integer>[] ships = new Tupel[shipCoords.size()];
+        for (int i = 0; i < shipCoords.size(); i++) {
+            ships[i] = shipCoords.get(i);
+        }
+        ClientStore.getInstance().setShips(ships);
     }
 }

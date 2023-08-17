@@ -1,5 +1,6 @@
 package Sinking.Game.Data;
 
+import Sinking.common.Tupel;
 import Sinking.http.client.Client;
 
 public class ClientStore {
@@ -9,6 +10,7 @@ public class ClientStore {
     private String nickname;
     private String playerToken;
     private Client client;
+    private Tupel<Integer, Integer>[] ships;
 
     private ClientStore() {
     }
@@ -18,6 +20,14 @@ public class ClientStore {
             instance = new ClientStore();
         }
         return instance;
+    }
+
+    public Tupel<Integer, Integer>[] getShips() {
+        return ships;
+    }
+
+    public void setShips(Tupel<Integer, Integer>[] ships) {
+        this.ships = ships;
     }
 
     public String getPlayerToken() {
