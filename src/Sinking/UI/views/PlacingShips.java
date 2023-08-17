@@ -1,24 +1,23 @@
 package Sinking.UI.views;
 
+import Sinking.UI.IView;
+import Sinking.UI.ViewLoader;
+import Sinking.common.Json;
+
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class PlacingShips {
+public class PlacingShips implements IView {
     static int state = 0;
     private JButton[] buttons;
-    public JPanel createShips(JPanel buttonPanel){
-        Window window = new Sinking.UI.Window();
+    public void load(JFrame window, Json data) {
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
         centerContainer.setBackground(Color.WHITE);
         centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(centerContainer);
-        window.setVisible(true);
 
         String[] shipList = {"Schiffe", "Schlachtschiff", "Kreuzer", "Zerstoerer", "U-Boot"};
         JComboBox<String> ships = new JComboBox<>(shipList);
@@ -76,13 +75,9 @@ public class PlacingShips {
 
         JButton bttn = new JButton("zurueck");
         bttn.addActionListener(e -> {
-            window.dispose();
+            ViewLoader.getInstance().loadView("MainScreen");
         });
         centerContainer.add(bttn);
-
-        buttonPanel = gameboard;
-        return buttonPanel;
-
     }
 
 
@@ -641,6 +636,10 @@ public class PlacingShips {
         }
       return false;
     }
+
+    @Override
+    public void unload() {
+        // todo save ships
+        System.out.println("save ships");
+    }
 }
-
-

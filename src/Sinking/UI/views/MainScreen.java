@@ -197,7 +197,6 @@ public class MainScreen implements IView {
         gbcPlayer2Label.insets = new Insets(0, 0, 10, 10);
         bottomContainer.add(player2Label, gbcPlayer2Label);
 
-        PlacingShips s = new PlacingShips();
         JButton shipPlacingButton = new JButton("Schiffe plazieren");
         shipPlacingButton.setPreferredSize(new Dimension(200, 20));
         GridBagConstraints gbcshipPlacingButton = new GridBagConstraints();
@@ -207,8 +206,7 @@ public class MainScreen implements IView {
         gbcshipPlacingButton.insets = new Insets(20, 0, 10, 10);
         shipPlacingButton.addActionListener(e -> {
             System.out.println("Ship placement");
-            window.repaint();
-            s.createShips(buttonPanel);
+            ViewLoader.getInstance().loadView("PlacingShips");
         });
         
         centerContainer.add(shipPlacingButton, gbcshipPlacingButton);
