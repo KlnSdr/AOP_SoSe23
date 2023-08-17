@@ -208,8 +208,9 @@ public class MainScreen implements IView {
         shipPlacingButton.addActionListener(e -> {
             System.out.println("Ship placement");
             window.repaint();
-            s.createShips();
+            s.createShips(buttonPanel);
         });
+        
         centerContainer.add(shipPlacingButton, gbcshipPlacingButton);
 
 

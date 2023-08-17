@@ -5,13 +5,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlacingShips {
-
     static int state = 0;
-
-    public JPanel createShips(){
+    private JButton[] buttons;
+    public JPanel createShips(JPanel buttonPanel){
         Window window = new Sinking.UI.Window();
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
@@ -33,7 +33,7 @@ public class PlacingShips {
         gbcButtonPanel.gridy = 0;
         gameboard.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbcButton = new GridBagConstraints();
-        JButton[] buttons =  new JButton[100];
+        buttons = new JButton[100];
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
@@ -47,7 +47,6 @@ public class PlacingShips {
                 int finalRow = row;
                 int finalCol = col;
                 int n = (10 * finalRow + finalCol);
-                ships.addActionListener(e -> {
                     button.addActionListener(e1 -> {
                         System.out.println("Player clicked on " + finalRow + " " + finalCol);
                         if (state% 2 == 0) {
@@ -64,7 +63,6 @@ public class PlacingShips {
                             state++;
                         }
                     });
-                });
 
                 gameboard.add(button, gbcButton);
 
@@ -75,7 +73,15 @@ public class PlacingShips {
             gameboard.getComponent(i).setBackground(Color.BLUE);
         }
         centerContainer.add(gameboard);
-        return gameboard;
+
+        JButton bttn = new JButton("zurueck");
+        bttn.addActionListener(e -> {
+            window.dispose();
+        });
+        centerContainer.add(bttn);
+
+        buttonPanel = gameboard;
+        return buttonPanel;
 
     }
 
@@ -86,19 +92,19 @@ public class PlacingShips {
         }
         boolean status = false;
         if (selectedItem.equals("U-Boot")) {
-            if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
+            if (isGrey(p,n)) {
                 p.getComponent(n).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && !(p.getComponent(n + 1).getBackground() == Color.GRAY)) {
+            if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && isGrey(p,n+1)) {
                 p.getComponent(n + 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 10) && !(p.getComponent(n - 10).getBackground() == Color.GRAY)) {
+            if (boundscheck(p, n - 10) && isGrey(p,n-10)) {
                 p.getComponent(n - 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 10) && !(p.getComponent(n + 10).getBackground() == Color.GRAY)) {
+            if (boundscheck(p, n + 10) && isGrey(p,n+10)) {
                 p.getComponent(n + 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && !(p.getComponent(n - 1).getBackground() == Color.GRAY)) {
+            if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && isGrey(p,n-1)) {
                 p.getComponent(n - 1).setBackground(Color.GREEN);
             }
             confirm(p, n, selectedItem);
@@ -209,7 +215,6 @@ public class PlacingShips {
                         p.getComponent(n + 1).setEnabled(false);
                         p.getComponent(n).setEnabled(false);
                         activate(p);
-
                     }
                 });
             }
@@ -535,13 +540,11 @@ public class PlacingShips {
         }
         return false;
     }
-
     public void deactivate(JPanel gameboard) {
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             gameboard.getComponent(i).setEnabled(false);
         }
     }
-
     public void activate(JPanel gameboard) {
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             if (gameboard.getComponent(i).getBackground() == Color.BLUE) {
@@ -590,7 +593,7 @@ public class PlacingShips {
             }
         }
         if (selectedItem.equals("Schlachtschiff")){
-            if ((n-4) % 10 == 0 && (n1 % 10 == 0)) {
+            if ((n+4) % 10 == 0 && (n1 % 10 == 0)) {
                 return false;
             }
             if (((n1+4) % 10 == 0 && ((n) % 10 == 0))) {
