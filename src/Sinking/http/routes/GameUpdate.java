@@ -5,6 +5,7 @@ import Sinking.Game.Data.Tile;
 import Sinking.Game.Data.TileState;
 import Sinking.common.Exceptions.*;
 import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
+import Sinking.http.server.Annotations.Get;
 import Sinking.common.Json;
 import Sinking.common.Tupel;
 import Sinking.http.server.Annotations.Post;
@@ -202,6 +203,15 @@ public class GameUpdate {
             out.append(";");
         }
         return out.toString();
+    }
+
+    @Get(route = "/win")
+    public void win(IConnection connection) throws IOException {
+        connection.setResponseCode(ResponseCode.PAYMENT_REQUIRED);
+        Json payload = new Json();
+        payload.set("tradeoffer", "you pay me 1000€ and i give you the W");
+
+        connection.sendResponse(payload);
     }
     private boolean correctRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()){
