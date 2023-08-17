@@ -11,6 +11,7 @@ import Sinking.http.client.Request;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.awt.event.ActionListener;
 
 import static Sinking.UI.Window.baseTitle;
@@ -29,6 +30,7 @@ public class MainScreen implements IView {
 
     @Override
     public void load(JFrame window, Json data) {
+
         this.window = window;
         window.setTitle(baseTitle);
 
@@ -135,13 +137,14 @@ public class MainScreen implements IView {
                 gbcButton.insets = new Insets(0, 0, 0, 0);
                 gbcButton.gridx = col;
                 gbcButton.gridy = row;
-                final int finalRow = row;
-                final int finalCol = col;
+                int finalRow = row;
+                int finalCol = col;
                 button.addActionListener(e -> {
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     //fire(finalRow, finalCol);
                 });
                 buttonPanel.add(button, gbcButton);
+
             }
             gbcButtonPanel.insets = new Insets(0, 0, 0, 10);
         }
@@ -162,8 +165,8 @@ public class MainScreen implements IView {
                 GridBagConstraints gbcButtonPlayer2 = new GridBagConstraints();
                 gbcButtonPlayer2.gridx = col;
                 gbcButtonPlayer2.gridy = row;
-                final int finalRow = row;
-                final int finalCol = col;
+                int finalRow = row;
+                int finalCol = col;
                 button.addActionListener(e -> {
                     JButton source = ((JButton)e.getSource());
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
@@ -193,6 +196,23 @@ public class MainScreen implements IView {
         gbcPlayer2Label.anchor = GridBagConstraints.CENTER;
         gbcPlayer2Label.insets = new Insets(0, 0, 10, 10);
         bottomContainer.add(player2Label, gbcPlayer2Label);
+
+        PlacingShips s = new PlacingShips();
+        JButton shipPlacingButton = new JButton("Schiffe plazieren");
+        shipPlacingButton.setPreferredSize(new Dimension(200, 20));
+        GridBagConstraints gbcshipPlacingButton = new GridBagConstraints();
+        gbcshipPlacingButton.gridx = 0;
+        gbcshipPlacingButton.gridy = 2;
+        gbcshipPlacingButton.anchor = GridBagConstraints.CENTER;
+        gbcshipPlacingButton.insets = new Insets(20, 0, 10, 10);
+        shipPlacingButton.addActionListener(e -> {
+            System.out.println("Ship placement");
+            window.repaint();
+            s.createShips();
+        });
+        centerContainer.add(shipPlacingButton, gbcshipPlacingButton);
+
+
 
 //        JLabel chatLabel = new JLabel("Chat");
 //        GridBagConstraints gbcChatLabel = new GridBagConstraints();
@@ -284,6 +304,15 @@ public class MainScreen implements IView {
         return player1;
     }
 
+    /*public int placingship(JPanel p, int r, int c){
+        int n = r*10 +c;
+       /* p.getComponent(n).setBackground(Color.GREEN);
+        p.getComponent(n+1).setBackground(Color.GREEN);
+        p.getComponent(n+2).setBackground(Color.GREEN);
+        System.out.println(n);
+        return n;*/
+
+    //}
     @Override
     public void unload() {System.out.println("Unloading MainScreen"); }
 
