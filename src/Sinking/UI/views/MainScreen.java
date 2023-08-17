@@ -279,7 +279,7 @@ public class MainScreen implements IView {
 
         Request req = client.newRequest("/fireAt");
         req.setQuery("id", gameId);
-        req.setBody("playertoken", token);
+        req.setBody("playerToken", token);
         req.setBody("x", Integer.toString(x));
         req.setBody("y", Integer.toString(y));
 

@@ -5,6 +5,7 @@ import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
 import Sinking.common.Exceptions.*;
 import Sinking.Game.Data.Tile;
+import Sinking.common.Tupel;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -139,6 +140,35 @@ public class GameRepository {
             throw new NeedsPlayerException(gameId);
         }
         return gamestate.getspecificBoard(player).getBoard();
+    }
+
+    public void setShips(UUID gameId, String playerToken, Tupel<Integer, Integer>[] coordinates) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, InternalError {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+
+        ServerGamestate game = optGame.get();
+
+        Optional<Player> optPlayer = game.getPlayerByToken(playerToken);
+        if (optPlayer.isEmpty()) {
+            throw new PlayerNotFoundException(gameId, playerToken);
+        }
+        Player player = optPlayer.get();
+
+        Gamestate gamestate = game.getGame();
+        if (gamestate == null) {
+            throw new NeedsPlayerException(gameId);
+        }
+
+        Board board = gamestate.getspecificBoard(player);
+        if (board == null) {
+            throw new InternalError();
+        }
+
+        for (Tupel<Integer, Integer> coordinate : coordinates) {
+            board.setShip(coordinate._1(), coordinate._2());
+        }
     }
 
     private static class Holder {
