@@ -3,15 +3,18 @@ package Sinking.UI.views;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
+import Sinking.common.Tupel;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class PlacingShips implements IView {
     static int state = 0;
     private JButton[] buttons;
+    private JPanel gameboard;
     public void load(JFrame window, Json data) {
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new GridBagLayout());
@@ -25,7 +28,7 @@ public class PlacingShips implements IView {
 
         centerContainer.add(ships, 0);
 
-        JPanel gameboard = new JPanel();
+        gameboard = new JPanel();
         gameboard.setLayout(new GridBagLayout());
         GridBagConstraints gbcButtonPanel = new GridBagConstraints();
         gbcButtonPanel.gridx = 0;
@@ -47,6 +50,7 @@ public class PlacingShips implements IView {
                 int finalCol = col;
                 int n = (10 * finalRow + finalCol);
                     button.addActionListener(e1 -> {
+                        System.out.println(n);
                         System.out.println("Player clicked on " + finalRow + " " + finalCol);
                         if (state% 2 == 0) {
                             placingship(gameboard, n, ships.getSelectedItem());
@@ -87,19 +91,19 @@ public class PlacingShips implements IView {
         }
         boolean status = false;
         if (selectedItem.equals("U-Boot")) {
-            if (isGrey(p,n)) {
+            if (isNotGrey(n)) {
                 p.getComponent(n).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && isGrey(p,n+1)) {
+            if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n+1)) {
                 p.getComponent(n + 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 10) && isGrey(p,n-10)) {
+            if (boundscheck(p, n - 10) && isNotGrey(n-10)) {
                 p.getComponent(n - 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 10) && isGrey(p,n+10)) {
+            if (boundscheck(p, n + 10) && isNotGrey(n+10)) {
                 p.getComponent(n + 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && isGrey(p,n-1)) {
+            if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n-1)) {
                 p.getComponent(n - 1).setBackground(Color.GREEN);
             }
             confirm(p, n, selectedItem);
@@ -110,22 +114,22 @@ public class PlacingShips implements IView {
             if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
                 p.getComponent(n).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 3) && rightplacement(n, n + 3, selectedItem) && isGrey(p,n+3) && isGrey(p,n+2) && isGrey(p,n+1)) {
+            if (boundscheck(p, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)) {
                 p.getComponent(n + 3).setBackground(Color.GREEN);
                 p.getComponent(n + 2).setBackground(Color.GREEN);
                 p.getComponent(n + 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 3) && rightplacement(n, n - 3, selectedItem) && isGrey(p,n-3) && isGrey(p,n-2) && isGrey(p,n-1)) {
+            if (boundscheck(p, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
                 p.getComponent(n - 3).setBackground(Color.GREEN);
                 p.getComponent(n - 2).setBackground(Color.GREEN);
                 p.getComponent(n - 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 30) && isGrey(p,n-30) && isGrey(p,n-20) && isGrey(p,n-10)) {
+            if (boundscheck(p, n - 30) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
                 p.getComponent(n - 30).setBackground(Color.GREEN);
                 p.getComponent(n - 20).setBackground(Color.GREEN);
                 p.getComponent(n - 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 30) && isGrey(p,n+30) && isGrey(p,n+20) && isGrey(p,n+10)) {
+            if (boundscheck(p, n + 30) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
                 p.getComponent(n + 30).setBackground(Color.GREEN);
                 p.getComponent(n + 20).setBackground(Color.GREEN);
                 p.getComponent(n + 10).setBackground(Color.GREEN);
@@ -138,25 +142,25 @@ public class PlacingShips implements IView {
             if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
                 p.getComponent(n).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 4) && rightplacement(n, n + 4, selectedItem) && isGrey(p,n+4) && isGrey(p,n+3) && isGrey(p,n+2) && isGrey(p,n+1)){
+            if (boundscheck(p, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n+4) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)){
                 p.getComponent(n + 4).setBackground(Color.GREEN);
                 p.getComponent(n + 3).setBackground(Color.GREEN);
                 p.getComponent(n + 2).setBackground(Color.GREEN);
                 p.getComponent(n + 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 4) && rightplacement(n, n-4, selectedItem) && isGrey(p,n-4) && isGrey(p,n-3) && isGrey(p,n-2) && isGrey(p,n-1)) {
+            if (boundscheck(p, n - 4) && rightplacement(n, n-4, selectedItem) && isNotGrey(n-4) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
                 p.getComponent(n - 4).setBackground(Color.GREEN);
                 p.getComponent(n - 3).setBackground(Color.GREEN);
                 p.getComponent(n - 2).setBackground(Color.GREEN);
                 p.getComponent(n - 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 40) && isGrey(p,n-40) && isGrey(p,n-30) && isGrey(p,n-20) && isGrey(p,n-10)) {
+            if (boundscheck(p, n - 40) && isNotGrey(n-40) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
                 p.getComponent(n - 40).setBackground(Color.GREEN);
                 p.getComponent(n - 30).setBackground(Color.GREEN);
                 p.getComponent(n - 20).setBackground(Color.GREEN);
                 p.getComponent(n - 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 40) && isGrey(p,n+40) && isGrey(p,n+30) && isGrey(p,n+20) && isGrey(p,n+10)) {
+            if (boundscheck(p, n + 40) && isNotGrey(n+40) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
                 p.getComponent(n + 40).setBackground(Color.GREEN);
                 p.getComponent(n + 30).setBackground(Color.GREEN);
                 p.getComponent(n + 20).setBackground(Color.GREEN);
@@ -170,19 +174,19 @@ public class PlacingShips implements IView {
             if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
                 p.getComponent(n).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 2) && rightplacement(n, n + 2, selectedItem) && isGrey(p,n+2) && isGrey(p,n+1)) {
+            if (boundscheck(p, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n+2) && isNotGrey(n+1)) {
                 p.getComponent(n + 2).setBackground(Color.GREEN);
                 p.getComponent(n + 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 2) && rightplacement(n, n - 2, selectedItem) && isGrey(p,n-2) && isGrey(p,n-1)) {
+            if (boundscheck(p, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n-2) && isNotGrey(n-1)) {
                 p.getComponent(n - 2).setBackground(Color.GREEN);
                 p.getComponent(n - 1).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n - 20) && isGrey(p,n-20) && isGrey(p,n-10)) {
+            if (boundscheck(p, n - 20) && isNotGrey(n-20) && isNotGrey(n-10)) {
                 p.getComponent(n - 20).setBackground(Color.GREEN);
                 p.getComponent(n - 10).setBackground(Color.GREEN);
             }
-            if (boundscheck(p, n + 20) && isGrey(p,n+20) && isGrey(p,n+10)) {
+            if (boundscheck(p, n + 20) && isNotGrey(n+20) && isNotGrey(n+10)) {
                 p.getComponent(n + 20).setBackground(Color.GREEN);
                 p.getComponent(n + 10).setBackground(Color.GREEN);
             }
@@ -197,7 +201,7 @@ public class PlacingShips implements IView {
 
         if (selectedItem.equals("U-Boot")) {
             deactivate(p);
-            if (boundscheck(p, n + 1) && isGrey(p, n+1) && rightplacement(n, n + 1, selectedItem)) {
+            if (boundscheck(p, n + 1) && isNotGrey(n+1) && rightplacement(n, n + 1, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 1);
                 p.getComponent(n + 1).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -213,7 +217,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 1) && isGrey(p,n-1) && rightplacement(n, n -1, selectedItem)) {
+            if (boundscheck(p, n - 1) && isNotGrey(n-1) && rightplacement(n, n -1, selectedItem)) {
                 JButton b2 = (JButton) p.getComponent(n - 1);
                 p.getComponent(n - 1).setEnabled(true);
                 b2.addActionListener(e -> {
@@ -229,7 +233,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n + 10) && isGrey(p,n+10)) {
+            if (boundscheck(p, n + 10) && isNotGrey(n+10)) {
                 JButton b3 = (JButton) p.getComponent(n + 10);
                 if (boundscheck(p, n + 10)) {
                     p.getComponent(n + 10).setEnabled(true);
@@ -247,7 +251,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 10) && isGrey(p,n-10)) {
+            if (boundscheck(p, n - 10) && isNotGrey(n-10)) {
                 JButton b4 = (JButton) p.getComponent(n - 10);
                 p.getComponent(n - 10).setEnabled(true);
                 b4.addActionListener(e -> {
@@ -268,7 +272,7 @@ public class PlacingShips implements IView {
         }
         if (selectedItem.equals("Kreuzer")) {
             deactivate(p);
-            if (boundscheck(p, n + 3) && isGrey(p,n+3) && rightplacement(n, n + 3, selectedItem)) {
+            if (boundscheck(p, n + 3) && isNotGrey(n+3) && rightplacement(n, n + 3, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 3);
                 p.getComponent(n + 3).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -289,7 +293,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 3) && isGrey(p,n-3) && rightplacement(n, n - 3, selectedItem)) {
+            if (boundscheck(p, n - 3) && isNotGrey(n-3) && rightplacement(n, n - 3, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n - 3);
                 p.getComponent(n - 3).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -311,7 +315,7 @@ public class PlacingShips implements IView {
                 });
             }
 
-            if (boundscheck(p, n + 30) && isGrey(p,n+ 30)) {
+            if (boundscheck(p, n + 30) && isNotGrey(n+ 30)) {
                 JButton b1 = (JButton) p.getComponent(n + 30);
                 p.getComponent(n + 30).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -332,7 +336,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 30) && isGrey(p,n-30)) {
+            if (boundscheck(p, n - 30) && isNotGrey(n-30)) {
                 JButton b1 = (JButton) p.getComponent(n - 30);
                 p.getComponent(n - 30).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -357,7 +361,7 @@ public class PlacingShips implements IView {
         }
         if (selectedItem.equals("Schlachtschiff")){
             deactivate(p);
-            if (boundscheck(p, n + 4) && isGrey(p,n+4) && rightplacement(n,n +4,selectedItem)) {
+            if (boundscheck(p, n + 4) && isNotGrey(n+4) && rightplacement(n,n +4,selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n+4);
                 p.getComponent(n+4).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -380,7 +384,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n-4) && isGrey(p,n-4) && rightplacement(n, n-4, selectedItem)) {
+            if (boundscheck(p, n-4) && isNotGrey(n-4) && rightplacement(n, n-4, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n-4);
                 p.getComponent(n-4).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -404,7 +408,7 @@ public class PlacingShips implements IView {
                 });
             }
 
-            if (boundscheck(p, n +40) && isGrey(p,n+40)) {
+            if (boundscheck(p, n +40) && isNotGrey(n+40)) {
                 JButton b1 = (JButton) p.getComponent(n +40);
                 p.getComponent(n +40).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -427,7 +431,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n-40) && isGrey(p,n-40)) {
+            if (boundscheck(p, n-40) && isNotGrey(n-40)) {
                 JButton b1 = (JButton) p.getComponent(n-40);
                 p.getComponent(n-40).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -454,7 +458,7 @@ public class PlacingShips implements IView {
         }
         if (selectedItem.equals("Zerstoerer")) {
             deactivate(p);
-            if (boundscheck(p, n + 2) && isGrey(p, n + 2) && rightplacement(n, n + 2, selectedItem)) {
+            if (boundscheck(p, n + 2) && isNotGrey(n + 2) && rightplacement(n, n + 2, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 2);
                 p.getComponent(n + 2).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -473,7 +477,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 2) && isGrey(p, n - 2) && rightplacement(n, n - 2, selectedItem)) {
+            if (boundscheck(p, n - 2) && isNotGrey(n - 2) && rightplacement(n, n - 2, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n - 2);
                 p.getComponent(n - 2).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -493,7 +497,7 @@ public class PlacingShips implements IView {
                 });
             }
 
-            if (boundscheck(p, n + 20) && isGrey(p, n + 20)) {
+            if (boundscheck(p, n + 20) && isNotGrey(n + 20)) {
                 JButton b1 = (JButton) p.getComponent(n + 20);
                 p.getComponent(n + 20).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -512,7 +516,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 20) && isGrey(p, n - 20)) {
+            if (boundscheck(p, n - 20) && isNotGrey(n - 20)) {
                 JButton b1 = (JButton) p.getComponent(n - 20);
                 p.getComponent(n - 20).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -630,7 +634,7 @@ public class PlacingShips implements IView {
         }
         return true;
     }
-    public boolean isGrey(JPanel gameboard, int n){
+    public boolean isNotGrey(int n){
       if (!(gameboard.getComponent(n).getBackground() == Color.GRAY)){
             return true;
         }
@@ -639,7 +643,13 @@ public class PlacingShips implements IView {
 
     @Override
     public void unload() {
-        // todo save ships
-        System.out.println("save ships");
+        ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
+        for (int i = 0; i < gameboard.getComponents().length; i++) {
+            if (!isNotGrey(i)) {
+                int y = i % 10;
+                int x = (i - y) / 10;
+                shipCoords.add(new Tupel<>(x, y));
+            }
+        }
     }
 }
