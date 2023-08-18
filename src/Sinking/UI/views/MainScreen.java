@@ -195,6 +195,11 @@ public class MainScreen implements IView {
         gbcPlayer2Label.insets = new Insets(0, 0, 10, 10);
         bottomContainer.add(player2Label, gbcPlayer2Label);
 
+        Timer boardUpdate = new Timer(2000, e -> {
+            getGameboardUpdate();
+        });
+        boardUpdate.setRepeats(true);
+        boardUpdate.start();
     }
 
     private void colorButton(JButton button, int col, int row) {
@@ -276,6 +281,22 @@ public class MainScreen implements IView {
             }
         });
 
+    }
+
+    private void getGameboardUpdate() {
+        ClientStore store = ClientStore.getInstance();
+        Client client = store.getClient();
+        String gameId = store.getGameId();
+        String token = store.getPlayerToken();
+
+        Request req = client.newRequest("/getBoard");
+        req.setQuery("id", gameId);
+        req.setBody("playerToken", token);
+
+        client.post(req, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+        });
     }
 
     private void setPlayer2(String name) {
