@@ -98,7 +98,7 @@ public class WaitingScreen implements IView {
                 int resCode = response.getStatusCode();
                 if (resCode == 204) {
                     timer.stop();
-                    ViewLoader.getInstance().loadView("MainScreen");
+                    ViewLoader.getInstance().loadView("PlacingShips");
                 }
                 dotCount = (dotCount + 1) % 4;
                 waitLabel.setText(".".repeat(dotCount) + "Warten auf 2. Spieler" + ".".repeat(dotCount));
