@@ -48,4 +48,13 @@ public class ServerGamestate {
         }
         return Optional.empty();
     }
+
+    public Optional<Player> getOpponentByToken(String  token) {
+        if (playerA != null && !playerA.getAccessToken().equals(token) && playerB != null && playerB.getAccessToken().equals(token)) {
+            return Optional.of(playerA.getPlayer());
+        } else if (playerB != null && !playerB.getAccessToken().equals(token) && playerA != null && playerA.getAccessToken().equals(token)) {
+            return Optional.of(playerB.getPlayer());
+        }
+        return Optional.empty();
+    }
 }

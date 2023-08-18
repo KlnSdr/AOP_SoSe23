@@ -47,8 +47,9 @@ public class GameUpdate {
         ResponseCode resCode = ResponseCode.SUCCESS;
 
         try {
-            Tile[][] board = GameRepository.getInstance().getBoard(gameId, playerToken);
-            responsePayload.set("board", boardToString(board));
+            Map<String, Tile[][]> boards = GameRepository.getInstance().getBoard(gameId, playerToken);
+            responsePayload.set("own", boardToString(boards.get("own")));
+            responsePayload.set("opponent", boardToString(boards.get("opponent")));
         } catch (PlayerNotFoundException e) {
             resCode = ResponseCode.NOT_FOUND;
             responsePayload.set("msg", String.format("player with id '%s' not found", playerToken));
