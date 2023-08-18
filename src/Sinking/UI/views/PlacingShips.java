@@ -1,16 +1,25 @@
 package Sinking.UI.views;
 
 import Sinking.Game.Data.ClientStore;
+import Sinking.Game.Data.Server.GameRepository;
 import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
+import Sinking.common.Exceptions.GameNotFoundException;
+import Sinking.common.Exceptions.NeedsPlayerException;
+import Sinking.common.Exceptions.PlayerNotFoundException;
 import Sinking.common.Json;
 import Sinking.common.Tupel;
+import Sinking.http.client.Client;
+import Sinking.http.client.Request;
+import Sinking.http.server.ResponseCode;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class PlacingShips implements IView {
     static int state = 0;
@@ -643,7 +652,7 @@ public class PlacingShips implements IView {
     }
 
     @Override
-    public void unload() {
+    public void unload() throws NeedsPlayerException, PlayerNotFoundException, GameNotFoundException {
         ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             if (!isNotGrey(i)) {
@@ -655,7 +664,30 @@ public class PlacingShips implements IView {
         Tupel<Integer, Integer>[] ships = new Tupel[shipCoords.size()];
         for (int i = 0; i < shipCoords.size(); i++) {
             ships[i] = shipCoords.get(i);
+            System.out.println("Hallo");
         }
-        ClientStore.getInstance().setShips(ships);
+        ClientStore clientstore = ClientStore.getInstance();
+        clientstore.setShips(ships);
+        Client client = clientstore.getClient();
+        UUID gameId = convertUUID(clientstore);
+
+        Request request = client.newRequest("/setShips");
+        request.setQuery("id", (clientstore.getGameId()));
+        request.setBody("playerToken", clientstore.getPlayerToken());
+        request.setBody("ships", Arrays.toString(ships));
+
+        client.post(request, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+        });
+    }
+    public UUID convertUUID (ClientStore client){
+        UUID gameId = null;
+        try {
+            gameId = UUID.fromString(client.getGameId());
+        } catch (IllegalArgumentException e) {
+            System.out.println("unexpected error");
+        }
+        return gameId;
     }
 }
