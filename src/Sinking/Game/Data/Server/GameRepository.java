@@ -7,6 +7,8 @@ import Sinking.common.Exceptions.*;
 import Sinking.Game.Data.Tile;
 import Sinking.common.Tupel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,16 +69,18 @@ public class GameRepository {
         ServerGamestate game = optGame.get();
 
         Optional<Player> optPlayer = game.getPlayerByToken(playerToken);
-        if (optPlayer.isEmpty()) {
+        Optional<Player> optOpponent = game.getOpponentByToken(playerToken);
+        if (optOpponent.isEmpty() || optPlayer.isEmpty()) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
 
         Player player = optPlayer.get();
+        Player opponent = optOpponent.get();
         Gamestate gamestate = game.getGame();
         if (gamestate == null) {
             throw new NeedsPlayerException(gameId);
         }
-        Board gameBoard = gamestate.getspecificBoard(player);
+        Board gameBoard = gamestate.getspecificBoard(opponent);
         if (gameBoard == null) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
@@ -122,7 +126,7 @@ public class GameRepository {
         this.games.remove(id);
     }
 
-    public Tile[][] getBoard(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException {
+    public Map<String, Tile[][]> getBoard(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
@@ -130,16 +134,21 @@ public class GameRepository {
         ServerGamestate game = optGame.get();
 
         Optional<Player> optPlayer = game.getPlayerByToken(playerToken);
-        if (optPlayer.isEmpty()) {
+        Optional<Player> optOpponent = game.getOpponentByToken(playerToken);
+        if (optPlayer.isEmpty() || optOpponent.isEmpty()) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
         Player player = optPlayer.get();
+        Player opponent = optOpponent.get();
 
         Gamestate gamestate = game.getGame();
         if (gamestate == null) {
             throw new NeedsPlayerException(gameId);
         }
-        return gamestate.getspecificBoard(player).getBoard();
+        HashMap<String, Tile[][]> boards = new HashMap<>();
+        boards.put("own", gamestate.getspecificBoard(player).getBoard());
+        boards.put("opponent", gamestate.getspecificBoard(opponent).getBoard());
+        return boards;
     }
 
     public void setShips(UUID gameId, String playerToken, Tupel<Integer, Integer>[] coordinates) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, InternalError {
