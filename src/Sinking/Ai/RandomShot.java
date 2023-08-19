@@ -55,4 +55,9 @@ public class RandomShot extends BaseAi {
         } while(board.getBoard()[x][y].wasHit());
         return new Tupel<>(x, y);
     }
+
+    @Override
+    public Tupel<Integer, Integer>[] setShips() {
+        return new Tupel[0];
+    }
 }
