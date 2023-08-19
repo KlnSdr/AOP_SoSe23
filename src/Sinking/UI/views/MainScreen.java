@@ -1,6 +1,7 @@
 package Sinking.UI.views;
 
 import Sinking.Game.Data.ClientStore;
+import Sinking.Game.Data.Gamestate;
 import Sinking.UI.IView;
 import Sinking.common.Tupel;
 import Sinking.http.client.Client;
@@ -25,16 +26,15 @@ public class MainScreen implements IView {
     private String url;
     private String whosNext;
     private JButton testConnectionButton;
-    private JFrame window;
     private JPanel upperContainer;
     private JLabel whosNextLabel;
     private final Tupel<Integer, Integer>[] ships = ClientStore.getInstance().getShips();
+    private JButton [] buttonMatrixMine = new JButton[100];
+    private JButton [] buttonMatrixEnemie = new JButton[100];
 
 
     @Override
     public void load(JFrame window, Json data) {
-
-        this.window = window;
         window.setTitle(baseTitle);
 
         JPanel container = new JPanel();
@@ -134,10 +134,11 @@ public class MainScreen implements IView {
         GridBagConstraints gbcButton = new GridBagConstraints();
 
         for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+            for (int col = 0; col < 10; col++){
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
                 colorButton(button, row, col);
+                buttonMatrixMine[row * 10 + col] = button;
                 gbcButton.insets = new Insets(0, 0, 0, 0);
                 gbcButton.gridx = col;
                 gbcButton.gridy = row;
@@ -161,6 +162,7 @@ public class MainScreen implements IView {
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
                 button.setBackground(Color.BLUE);
+                buttonMatrixEnemie[10*row+col] = button;
                 GridBagConstraints gbcButtonPlayer2 = new GridBagConstraints();
                 gbcButtonPlayer2.gridx = col;
                 gbcButtonPlayer2.gridy = row;
@@ -171,6 +173,7 @@ public class MainScreen implements IView {
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     source.setText("⌛");
                     shootAt(finalCol, finalRow, source);
+                    // winnerAvailable();
                 });
                 buttonPanelPlayer2.add(button, gbcButtonPlayer2);
             }
@@ -201,6 +204,17 @@ public class MainScreen implements IView {
         boardUpdate.setRepeats(true);
         boardUpdate.start();
     }
+/*
+    private void winnerAvailable() {
+
+        if(Gamestate.hasWinner()) {
+            if (nickname.equals(Gamestate.spieler1)) {
+                ViewLoader.getInstance().loadView("WinningScreen", viewArgs);
+            } else {
+                ViewLoader.getInstance().loadView("LosingScreen", viewArgs);
+            }
+        }
+    }*/
 
     private void colorButton(JButton button, int col, int row) {
         boolean foundShip = false;
@@ -229,7 +243,6 @@ public class MainScreen implements IView {
     private void setWhosNext(String name) {
         whosNext = name;
         whosNextLabel.setText(whosNext);
-        window.repaint();
     }
     private String getWhosNext() {
         return whosNext;
@@ -246,12 +259,10 @@ public class MainScreen implements IView {
     }
 
     private void setResetButtonTestColor(Color color) {
-        testConnectionButton.setForeground(color);
-        this.window.repaint();
+        testConnectionButton.setBackground(color);
 
         ActionListener timerAction = e -> {
-            testConnectionButton.setForeground(Color.BLACK);
-            window.repaint();
+            testConnectionButton.setBackground(null);
         };
         Timer timer = new Timer(2000, timerAction);
         timer.setRepeats(false);
@@ -280,6 +291,7 @@ public class MainScreen implements IView {
                 src.setBackground(Color.RED);
             }
         });
+        disableButton(buttonMatrixEnemie);
 
     }
 
@@ -289,7 +301,7 @@ public class MainScreen implements IView {
         String gameId = store.getGameId();
         String token = store.getPlayerToken();
 
-        Request req = client.newRequest("/getBoard");
+        Request req = client.newRequest("/getGamestate");
         req.setQuery("id", gameId);
         req.setBody("playerToken", token);
 
@@ -297,6 +309,12 @@ public class MainScreen implements IView {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
         });
+    }
+
+    private void disableButton(JButton[] matrix){
+        for (int i = 0; i < matrix.length; i++){
+            matrix[i].setEnabled(false);
+        }
     }
 
     private void setPlayer2(String name) {

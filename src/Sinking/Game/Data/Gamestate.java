@@ -76,6 +76,10 @@ public class Gamestate {
         return false;
     }
 
+    public Player getWinner() {
+        return winner;
+    }
+
     public void ausgabe() {
         System.out.println(winner);
     }
