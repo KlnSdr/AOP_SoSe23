@@ -197,9 +197,17 @@ public class PlacingShips implements IView {
     }
 
     private void updateAvailableShips() {
+        boolean allShipsPlaced = true;
         for (int i = 0; i < shipLabels.length; i++) {
             JLabel lbl = shipLabels[i];
             lbl.setText(shipList.get(i + 1) + ": " + Integer.min(shipAmounts[i], shipMaxAmounts[i]) + "/" + shipMaxAmounts[i]);
+            if (shipAmounts[i] < shipMaxAmounts[i]) {
+                allShipsPlaced = false;
+            }
+        }
+
+        if (allShipsPlaced) {
+            ViewLoader.getInstance().loadView("MainScreen");
         }
     }
 

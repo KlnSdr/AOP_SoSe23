@@ -61,7 +61,7 @@ public class GameRepository {
         return game.addPlayer(player);
     }
 
-    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, CoordinatesOutOfBoundsException {
+    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, CoordinatesOutOfBoundsException, NotYourTurnException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
@@ -80,10 +80,15 @@ public class GameRepository {
         if (gamestate == null) {
             throw new NeedsPlayerException(gameId);
         }
+
+        if (!gamestate.isNext(player)) {
+            throw new NotYourTurnException(gameId, playerToken);
+        }
         Board gameBoard = gamestate.getspecificBoard(opponent);
         if (gameBoard == null) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
+        gamestate.sequence();
 
         return player.shoot(x, y, gameBoard);
     }

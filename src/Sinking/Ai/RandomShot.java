@@ -17,12 +17,17 @@ public class RandomShot extends BaseAi {
     }
 
     @Override
-    public Tupel<Integer, Integer> nextMove(Board board) {
+    public Tupel<Integer, Integer> nextMove() {
         shotsFired++;
         if (shotsFired % 5 == 0) {
             return guaranteedHit(board);
         }
         return randomShot(board);
+    }
+
+    @Override
+    public Tupel<Integer, Integer>[] setShips() {
+        return new Tupel[] {new Tupel(0, 0), new Tupel(0, 1), new Tupel(0, 2), new Tupel(0, 3), new Tupel(0, 4)};
     }
 
     private Tupel<Integer, Integer> guaranteedHit(Board board) {

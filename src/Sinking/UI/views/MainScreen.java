@@ -1,7 +1,6 @@
 package Sinking.UI.views;
 
 import Sinking.Game.Data.ClientStore;
-import Sinking.Game.Data.Gamestate;
 import Sinking.UI.IView;
 import Sinking.common.Tupel;
 import Sinking.http.client.Client;
@@ -13,7 +12,6 @@ import Sinking.http.client.Request;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 import java.awt.event.ActionListener;
 
 import static Sinking.UI.Window.baseTitle;
@@ -31,7 +29,7 @@ public class MainScreen implements IView {
     private final Tupel<Integer, Integer>[] ships = ClientStore.getInstance().getShips();
     private JButton [] buttonMatrixMine = new JButton[100];
     private JButton [] buttonMatrixEnemie = new JButton[100];
-
+    private Timer boardUpdate;
 
     @Override
     public void load(JFrame window, Json data) {
@@ -198,11 +196,13 @@ public class MainScreen implements IView {
         gbcPlayer2Label.insets = new Insets(0, 0, 10, 10);
         bottomContainer.add(player2Label, gbcPlayer2Label);
 
-        Timer boardUpdate = new Timer(2000, e -> {
+        boardUpdate = new Timer(1000, e -> {
             getGameboardUpdate();
         });
         boardUpdate.setRepeats(true);
         boardUpdate.start();
+
+        disableButtons(buttonMatrixEnemie);
     }
 /*
     private void winnerAvailable() {
@@ -270,6 +270,9 @@ public class MainScreen implements IView {
     }
 
     private void shootAt(int x, int y, JButton src) {
+        disableButtons(buttonMatrixEnemie);
+        setWhosNext("Gegner");
+
         ClientStore store = ClientStore.getInstance();
         Client client = store.getClient();
         String gameId = store.getGameId();
@@ -291,8 +294,6 @@ public class MainScreen implements IView {
                 src.setBackground(Color.RED);
             }
         });
-        disableButton(buttonMatrixEnemie);
-
     }
 
     private void getGameboardUpdate() {
@@ -306,14 +307,59 @@ public class MainScreen implements IView {
         req.setBody("playerToken", token);
 
         client.post(req, response -> {
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
+            if (response.getStatusCode() == 200) {
+                analyzeResponse(response.getBody());
+            }
         });
     }
 
-    private void disableButton(JButton[] matrix){
+    private void analyzeResponse(Json body) {
+        if (body.hasKey("hasWinner") && body.get("hasWinner").orElse("false").equals("true")) {
+            boardUpdate.stop();
+            if (body.hasKey("winner") && body.get("winner").orElse("").equals(ClientStore.getInstance().getNickname())) {
+                ViewLoader.getInstance().loadView("WinningScreen");
+            } else {
+                ViewLoader.getInstance().loadView("LosingScreen");
+            }
+            return;
+        }
+
+        if (body.hasKey("isNext") && body.get("isNext").orElse("false").equals("true")) {
+            enableWaterButtons();
+            setWhosNext(ClientStore.getInstance().getNickname());
+        } else {
+            setWhosNext("Gegner");
+        }
+
+        if (body.hasKey("own") && body.get("own").isPresent()) {
+            updateOwnGameboardMatrix(body.get("own").get());
+        }
+    }
+
+    private void disableButtons(JButton[] matrix){
         for (int i = 0; i < matrix.length; i++){
             matrix[i].setEnabled(false);
+        }
+    }
+
+    private void enableWaterButtons() {
+        for (JButton jButton : buttonMatrixEnemie) {
+            if (jButton.getBackground() == Color.BLUE) {
+                jButton.setEnabled(true);
+            }
+        }
+    }
+
+    private void updateOwnGameboardMatrix(String serverResponse) {
+        for(int i = 0; i < serverResponse.length(); i++) {
+            char c = serverResponse.charAt(i);
+            if (c == 'U' && buttonMatrixMine[i].getBackground() != Color.GRAY) {
+                buttonMatrixMine[i].setBackground(Color.BLUE);
+            } else if (c == 'H') {
+                buttonMatrixMine[i].setBackground(Color.RED);
+            } else if (c == 'M') {
+                buttonMatrixMine[i].setBackground(Color.BLACK);
+            }
         }
     }
 

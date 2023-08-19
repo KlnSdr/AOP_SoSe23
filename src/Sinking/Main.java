@@ -39,7 +39,7 @@ public class Main {
         }
     }
 
-    private static void startInServerMode(Json config) {
+    public static void startInServerMode(Json config) {
         int port;
 
         if (config.get("port").isPresent()) {

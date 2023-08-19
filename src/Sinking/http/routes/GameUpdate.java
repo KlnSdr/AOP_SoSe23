@@ -136,6 +136,9 @@ public class GameUpdate {
         } catch (NeedsPlayerException e) {
             connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
             msg.set("msg", String.format("game with id '%s' needs another player", gameId));
+        } catch (NotYourTurnException e) {
+            connection.setResponseCode(ResponseCode.FORBIDDEN);
+            msg.set("msg", "it's not your turn");
         }
 
         connection.sendResponse(msg);
@@ -210,7 +213,6 @@ public class GameUpdate {
                         break;
                 }
             }
-            out.append(";");
         }
         return out.toString();
     }
