@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class GameUpdate {
-    @Post(route = "/getBoard")
+    @Post(route = "/getGamestate")
     public void getBoard(IConnection connection) throws IOException {
         Map<String, List<String>> query = connection.getUriParams();
         Json body = connection.getRequestBody();
@@ -48,8 +48,17 @@ public class GameUpdate {
 
         try {
             Map<String, Tile[][]> boards = GameRepository.getInstance().getBoard(gameId, playerToken);
+            boolean isNext = GameRepository.getInstance().isPlayerNext(gameId, playerToken);
+            boolean hasWinner = GameRepository.getInstance().hasWinner(gameId);
+
             responsePayload.set("own", boardToString(boards.get("own")));
             responsePayload.set("opponent", boardToString(boards.get("opponent")));
+            responsePayload.set("isNext", Boolean.toString(isNext));
+            responsePayload.set("hasWinner", Boolean.toString(hasWinner));
+
+            if (hasWinner) {
+                responsePayload.set("winner", GameRepository.getInstance().getWinnerName(gameId));
+            }
         } catch (PlayerNotFoundException e) {
             resCode = ResponseCode.NOT_FOUND;
             responsePayload.set("msg", String.format("player with id '%s' not found", playerToken));

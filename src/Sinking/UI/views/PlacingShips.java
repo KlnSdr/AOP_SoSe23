@@ -5,36 +5,102 @@ import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
 import Sinking.common.Tupel;
+import Sinking.http.client.Client;
+import Sinking.http.client.Request;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlacingShips implements IView {
     static int state = 0;
     private JButton[] buttons;
-    private JPanel gameboard;
+    private JPanel gameBoardPanel;
+    private ArrayList<String> shipList = new ArrayList<>(List.of(new String[]{"Schiffe", "Schlachtschiff", "Kreuzer", "Zerstoerer", "U-Boot"}));
+    private int[] shipAmounts = new int[]{0, 0, 0, 0};
+    private int[] shipMaxAmounts = new int[]{1, 2, 3, 4};
+    private JLabel[] shipLabels = new JLabel[4];
+
     public void load(JFrame window, Json data) {
-        JPanel centerContainer = new JPanel();
-        centerContainer.setLayout(new GridBagLayout());
-        centerContainer.setBackground(Color.WHITE);
-        centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        window.add(centerContainer);
+        JPanel container = new JPanel();
+        container.setLayout(new GridBagLayout());
+        container.setBackground(Color.WHITE);
+        container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        window.add(container);
 
-        String[] shipList = {"Schiffe", "Schlachtschiff", "Kreuzer", "Zerstoerer", "U-Boot"};
-        JComboBox<String> ships = new JComboBox<>(shipList);
-        ships.setSize(100, 50);
+        //Übrige Schiffe anzeigen
+        JPanel leftContainer = new JPanel();
+        leftContainer.setLayout(new GridBagLayout());
+        leftContainer.setBackground(Color.WHITE);
+        leftContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbcLeftContainer = new GridBagConstraints();
+        gbcLeftContainer.gridx = 0;
+        gbcLeftContainer.gridy = 0;
+        //gbcLeftContainer.weightx = 1.0;
+        gbcLeftContainer.insets = new Insets(10, 10, 10, 10);
+        gbcLeftContainer.fill = GridBagConstraints.HORIZONTAL;
+        container.add(leftContainer, gbcLeftContainer);
 
-        centerContainer.add(ships, 0);
+        for (int i = 1; i < 5; i++ ) {
+            JLabel ship = new JLabel(shipList.get(i) + ": 0/" + shipMaxAmounts[i - 1]);
+            GridBagConstraints gbcShipLabel = new GridBagConstraints();
+            gbcShipLabel.gridx = 0;
+            gbcShipLabel.gridy = i - 1;
+            gbcShipLabel.fill = GridBagConstraints.CENTER;
+            leftContainer.add(ship, gbcShipLabel);
+            shipLabels[i - 1] = ship;
+        }
 
-        gameboard = new JPanel();
-        gameboard.setLayout(new GridBagLayout());
-        GridBagConstraints gbcButtonPanel = new GridBagConstraints();
-        gbcButtonPanel.gridx = 0;
-        gbcButtonPanel.gridy = 0;
-        gameboard.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        //Schiffe platzieren
+        JPanel rightContainer = new JPanel();
+        rightContainer.setLayout(new GridBagLayout());
+        rightContainer.setBackground(Color.WHITE);
+        rightContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbcUpperContainer = new GridBagConstraints();
+        gbcUpperContainer.gridx = 1;
+        gbcUpperContainer.gridy = 0;
+        gbcUpperContainer.weightx = 1.0;
+        gbcUpperContainer.fill = GridBagConstraints.HORIZONTAL;
+        container.add(rightContainer, gbcUpperContainer);
+
+        JComboBox<String> shipComboBox = new JComboBox<>(shipList.toArray(new String[0]));
+        shipComboBox.setPreferredSize(new Dimension(100, 20));
+        GridBagConstraints gbcShipsComboBox = new GridBagConstraints();
+        gbcShipsComboBox.gridx = 0;
+        gbcShipsComboBox.gridy = 0;
+        gbcShipsComboBox.anchor = GridBagConstraints.CENTER;
+        gbcShipsComboBox.insets = new Insets (10, 10, 10, 10);
+        rightContainer.add(shipComboBox, gbcShipsComboBox);
+
+
+//        GridBagLayout grid = new GridBagLayout();
+//        GridBagConstraints gridg = new GridBagConstraints();
+//        window.setLayout(grid);
+//        JPanel centerContainer = new JPanel();
+//        centerContainer.setLayout(new GridBagLayout());
+//        centerContainer.setBackground(Color.WHITE);
+//        centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        window.add(centerContainer);
+//        JPanel shipAvailability = new JPanel();
+//        shipAvailability.setSize(new Dimension(200, 25));
+//        shipAvailability.add(availableUboot);
+//        shipAvailability.add(availableKreuzer);
+//        shipAvailability.add(availableZerstoerer);
+//        shipAvailability.add(availableSchlachtschiff);
+//        gridg.gridx=0;
+//        gridg.gridy=0;
+//        gridg.gridwidth = 2;
+//        window.add(shipAvailability);
+
+        gameBoardPanel = new JPanel();
+        gameBoardPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbcGameBoardPanel = new GridBagConstraints();
+        gbcGameBoardPanel.gridx = 1;
+        gbcGameBoardPanel.gridy = 0;
+        gameBoardPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbcButton = new GridBagConstraints();
         buttons = new JButton[100];
 
@@ -54,9 +120,10 @@ public class PlacingShips implements IView {
                         System.out.println(n);
                         System.out.println("Player clicked on " + finalRow + " " + finalCol);
                         if (state% 2 == 0) {
-                            placingship(gameboard, n, ships.getSelectedItem());
+                            placingship(gameBoardPanel, n, shipComboBox.getSelectedItem());
+                            checkPlacedShips(shipComboBox.getSelectedItem());
                             state++;
-                        } else {
+                        } else{
                             for(int i = 0; i < buttons.length; i++){
                                 if(buttons[i].getActionListeners().length == 2){
                                     ActionListener[] actions = buttons[i].getActionListeners();
@@ -64,27 +131,77 @@ public class PlacingShips implements IView {
                                     buttons[i].removeActionListener(a);
                                 }
                             }
+                            adjustJbox(shipComboBox);
+                            updateAvailableShips();
                             state++;
                         }
                     });
 
-                gameboard.add(button, gbcButton);
+                gameBoardPanel.add(button, gbcButton);
 
             }
-            gbcButtonPanel.insets = new Insets(0, 0, 0, 10);
+            gbcGameBoardPanel.insets = new Insets(0, 0, 0, 10);
         }
-        for (int i = 0; i < gameboard.getComponents().length; i++) {
-            gameboard.getComponent(i).setBackground(Color.BLUE);
+        for (int i = 0; i < gameBoardPanel.getComponents().length; i++) {
+            gameBoardPanel.getComponent(i).setBackground(Color.BLUE);
         }
-        centerContainer.add(gameboard);
+        rightContainer.add(gameBoardPanel);
 
-        JButton bttn = new JButton("zurueck");
-        bttn.addActionListener(e -> {
-            ViewLoader.getInstance().loadView("MainScreen");
+
+        JButton backButton = new JButton("Zurück zum Hauptmenü");
+        backButton.setPreferredSize(new Dimension(200, 20));
+        GridBagConstraints gbcBackButton = new GridBagConstraints();
+        gbcBackButton.gridx = 2;
+        gbcBackButton.gridy = 0;
+        gbcBackButton.insets = new Insets(10, 10, 10, 10);
+        backButton.addActionListener(e -> {
+            ViewLoader.getInstance().loadView("MainMenu");
         });
-        centerContainer.add(bttn);
+        rightContainer.add(backButton, gbcBackButton);
+
     }
 
+    private void checkPlacedShips(Object selectedItem) {
+        if (selectedItem.equals("U-Boot")){
+            shipAmounts[3]++;
+        }
+        if (selectedItem.equals("Kreuzer")){
+            shipAmounts[1]++;
+        }
+        if (selectedItem.equals("Schlachtschiff")){
+            shipAmounts[0]++;
+        }
+        if (selectedItem.equals("Zerstoerer")){
+            shipAmounts[2]++;
+        }
+    }
+
+    private void adjustJbox(JComboBox ships){
+        Object selectedItem = ships.getSelectedItem();
+        if(shipAmounts[3] == 4){
+            ships.removeItem(selectedItem);
+            shipAmounts[3]++;
+        }
+        if(shipAmounts[2] == 3){
+            ships.removeItem(selectedItem);
+            shipAmounts[2]++;
+        }
+        if(shipAmounts[1] == 2){
+            ships.removeItem(selectedItem);
+            shipAmounts[1]++;
+        }
+        if(shipAmounts[0] == 1){
+            ships.removeItem(selectedItem);
+            shipAmounts[0]++;
+        }
+    }
+
+    private void updateAvailableShips() {
+        for (int i = 0; i < shipLabels.length; i++) {
+            JLabel lbl = shipLabels[i];
+            lbl.setText(shipList.get(i + 1) + ": " + Integer.min(shipAmounts[i], shipMaxAmounts[i]) + "/" + shipMaxAmounts[i]);
+        }
+    }
 
     public boolean placingship(JPanel p, int n, Object selectedItem) {
         if (selectedItem == null) {
@@ -636,7 +753,7 @@ public class PlacingShips implements IView {
         return true;
     }
     public boolean isNotGrey(int n){
-      if (!(gameboard.getComponent(n).getBackground() == Color.GRAY)){
+      if (!(gameBoardPanel.getComponent(n).getBackground() == Color.GRAY)){
             return true;
         }
       return false;
@@ -645,7 +762,7 @@ public class PlacingShips implements IView {
     @Override
     public void unload() {
         ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
-        for (int i = 0; i < gameboard.getComponents().length; i++) {
+        for (int i = 0; i < gameBoardPanel.getComponents().length; i++) {
             if (!isNotGrey(i)) {
                 int y = i % 10;
                 int x = (i - y) / 10;
@@ -656,6 +773,35 @@ public class PlacingShips implements IView {
         for (int i = 0; i < shipCoords.size(); i++) {
             ships[i] = shipCoords.get(i);
         }
-        ClientStore.getInstance().setShips(ships);
+
+        String s = makeItString(ships);
+        ClientStore clientstore = ClientStore.getInstance();
+        clientstore.setShips(ships);
+        Client client = clientstore.getClient();
+
+        Request request = client.newRequest("/setShips");
+        request.setQuery("id", (clientstore.getGameId()));
+        request.setBody("playerToken", clientstore.getPlayerToken());
+        request.setBody("ships", s);
+
+        client.post(request, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+        });
+    }
+
+    public String makeItString (Tupel<Integer, Integer>[] ships){
+        String s = new String();
+        String s1 = "";
+
+        for (int i = 0; i < ships.length;i++){
+            s= String.valueOf(ships[i]._1());
+            s1 = s1 + s;
+            s1 = s1 + ",";
+            s= String.valueOf(ships[i]._2());
+            s1 = s1 + s;
+            s1 = s1 + "|";
+        }
+        return s1;
     }
 }

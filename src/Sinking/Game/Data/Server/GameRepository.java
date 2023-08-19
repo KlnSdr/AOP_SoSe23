@@ -88,13 +88,31 @@ public class GameRepository {
         return player.shoot(x, y, gameBoard);
     }
 
-    public boolean hasWinner(UUID gameId) throws GameNotFoundException {
+    public boolean hasWinner(UUID gameId) throws GameNotFoundException, NeedsPlayerException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
         }
         ServerGamestate game = optGame.get();
+        Gamestate gamestate = game.getGame();
+        if (gamestate == null) {
+            throw new NeedsPlayerException(gameId);
+        }
         return game.getGame().hasWinner();
+    }
+
+    public String getWinnerName(UUID gameId) throws GameNotFoundException, NeedsPlayerException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()){
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+        Gamestate gamestate = game.getGame();
+        if (gamestate == null) {
+            throw new NeedsPlayerException(gameId);
+        }
+        Player winner = game.getGame().getWinner();
+        return winner.getName();
     }
 
     public boolean isPlayerNext(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
