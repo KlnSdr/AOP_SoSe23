@@ -664,30 +664,38 @@ public class PlacingShips implements IView {
         Tupel<Integer, Integer>[] ships = new Tupel[shipCoords.size()];
         for (int i = 0; i < shipCoords.size(); i++) {
             ships[i] = shipCoords.get(i);
-            System.out.println("Hallo");
+            System.out.println(ships[1]);
         }
+
+        String s = makeItString(ships);
         ClientStore clientstore = ClientStore.getInstance();
         clientstore.setShips(ships);
         Client client = clientstore.getClient();
-        UUID gameId = convertUUID(clientstore);
 
         Request request = client.newRequest("/setShips");
         request.setQuery("id", (clientstore.getGameId()));
         request.setBody("playerToken", clientstore.getPlayerToken());
-        request.setBody("ships", Arrays.toString(ships));
+        request.setBody("ships", s);
 
         client.post(request, response -> {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
         });
     }
-    public UUID convertUUID (ClientStore client){
-        UUID gameId = null;
-        try {
-            gameId = UUID.fromString(client.getGameId());
-        } catch (IllegalArgumentException e) {
-            System.out.println("unexpected error");
+
+    public String makeItString (Tupel<Integer, Integer>[] ships){
+        String s = new String();
+        String s1 = "";
+
+        for (int i = 0; i < ships.length;i++){
+            s= String.valueOf(ships[i]._1());
+            s1 = s1 + s;
+            s1 = s1 + ",";
+            s= String.valueOf(ships[i]._2());
+            s1 = s1 + s;
+            s1 = s1 + "|";
         }
-        return gameId;
+
+        return s1;
     }
 }
