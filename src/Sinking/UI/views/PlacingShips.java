@@ -652,7 +652,7 @@ public class PlacingShips implements IView {
     }
 
     @Override
-    public void unload() throws NeedsPlayerException, PlayerNotFoundException, GameNotFoundException {
+    public void unload() {
         ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             if (!isNotGrey(i)) {
@@ -664,7 +664,6 @@ public class PlacingShips implements IView {
         Tupel<Integer, Integer>[] ships = new Tupel[shipCoords.size()];
         for (int i = 0; i < shipCoords.size(); i++) {
             ships[i] = shipCoords.get(i);
-            System.out.println(ships[1]);
         }
 
         String s = makeItString(ships);
@@ -695,7 +694,6 @@ public class PlacingShips implements IView {
             s1 = s1 + s;
             s1 = s1 + "|";
         }
-
         return s1;
     }
 }
