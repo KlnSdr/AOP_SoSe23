@@ -65,8 +65,8 @@ public class Gamestate {
         if (spieler1 == null || spieler2 == null) {
             return false;
         }
-        if (spieler1.getHitEnemyShips() == 2 || spieler2.getHitEnemyShips() == 2) {
-            if (spieler1.getHitEnemyShips() == 2) {
+        if (spieler1.getHitEnemyShips() == 30 || spieler2.getHitEnemyShips() == 30) {
+            if (spieler1.getHitEnemyShips() == 30) {
                 winner = spieler1;
             } else {
                 winner = spieler2;
