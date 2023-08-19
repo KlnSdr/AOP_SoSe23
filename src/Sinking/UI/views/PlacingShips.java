@@ -18,9 +18,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.UUID;
-
 public class PlacingShips implements IView {
     static int state = 0;
     private JButton[] buttons;
