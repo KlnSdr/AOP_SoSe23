@@ -65,7 +65,7 @@ public class PlacingShips implements IView {
         container.add(rightContainer, gbcUpperContainer);
 
         JComboBox<String> shipComboBox = new JComboBox<>(shipList.toArray(new String[0]));
-        shipComboBox.setPreferredSize(new Dimension(100, 20));
+        shipComboBox.setPreferredSize(new Dimension(150, 20));
         GridBagConstraints gbcShipsComboBox = new GridBagConstraints();
         gbcShipsComboBox.gridx = 0;
         gbcShipsComboBox.gridy = 0;
@@ -193,9 +193,7 @@ public class PlacingShips implements IView {
         if (selectedItem == null) {
             return false;
         }
-        if (selectedItem.equals("Schiffe")) {
-            state++;
-        }
+
         boolean status = false;
         if ((preventSoftlock(selectedItem, n, p))) {
             if (selectedItem.equals("U-Boot")) {
@@ -302,7 +300,9 @@ public class PlacingShips implements IView {
                 return true;
             }
         } else {
-            shipAmounts[shipList.indexOf(selectedItem) - 1]--;
+            if (!selectedItem.equals("Schiffe")) {
+                shipAmounts[shipList.indexOf(selectedItem) - 1]--;
+            }
             state++;
         }
         return false;

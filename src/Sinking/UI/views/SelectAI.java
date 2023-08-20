@@ -32,7 +32,7 @@ public class SelectAI implements IView {
 
         JComboBox<String> aiListComboBox = new JComboBox<>();
         AiLoader.getInstance().getAiNames().forEach(aiListComboBox::addItem);
-        aiListComboBox.setPreferredSize(new Dimension(200, 20));
+        aiListComboBox.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcAiListComboBox = new GridBagConstraints();
         gbcAiListComboBox.gridx = 0;
         gbcAiListComboBox.gridy = 1;
@@ -41,7 +41,7 @@ public class SelectAI implements IView {
         container.add(aiListComboBox, gbcAiListComboBox);
 
         JButton startButton = new JButton("Start");
-        startButton.setPreferredSize(new Dimension(200, 20));
+        startButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcStartButton = new GridBagConstraints();
         gbcStartButton.gridx = 0;
         gbcStartButton.gridy = 2;
@@ -57,7 +57,7 @@ public class SelectAI implements IView {
         container.add(startButton, gbcStartButton);
 
         JButton backButton = new JButton("Zurück zum Hauptmenü");
-        backButton.setPreferredSize(new Dimension(200, 20));
+        backButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcBackButton = new GridBagConstraints();
         gbcBackButton.gridx = 0;
         gbcBackButton.gridy = 3;

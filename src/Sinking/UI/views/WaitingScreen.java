@@ -43,7 +43,7 @@ public class WaitingScreen implements IView {
         centerContainer.add(linkLabel, gbcLinkLabel);
 
         JButton copyButton = new JButton("Link kopieren");
-        copyButton.setPreferredSize(new Dimension(200, 20));
+        copyButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcCopyButton = new GridBagConstraints();
         gbcCopyButton.gridx = 0;
         gbcCopyButton.gridy = 1;
@@ -65,7 +65,7 @@ public class WaitingScreen implements IView {
         centerContainer.add(waitLabel, gbcWaitLabel);
 
         JButton backButton = new JButton("Zurück zum Hauptmenü");
-        backButton.setPreferredSize(new Dimension(200, 20));
+        backButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcBackButton = new GridBagConstraints();
         gbcBackButton.gridx = 0;
         gbcBackButton.gridy = 3;

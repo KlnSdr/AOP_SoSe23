@@ -72,7 +72,7 @@ public class MainScreen implements IView {
         upperContainer.add(whosNextLabel, gbcWhosNextLabel);
 
         testConnectionButton = new JButton("Verbindung prüfen");
-        testConnectionButton.setPreferredSize(new Dimension(140, 20));
+        testConnectionButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcTestConnectionButton = new GridBagConstraints();
         gbcTestConnectionButton.gridx = 2;
         gbcTestConnectionButton.gridy = 0;

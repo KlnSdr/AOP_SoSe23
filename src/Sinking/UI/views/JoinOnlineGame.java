@@ -60,7 +60,7 @@ public class JoinOnlineGame implements IView {
         centerContainer.add(nicknameField, gbcNicknameField);
 
         JButton confirmButton = new JButton("Bestätigen");
-        confirmButton.setPreferredSize(new Dimension(200, 20));
+        confirmButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcConfirmButton = new GridBagConstraints();
         gbcConfirmButton.gridx = 1;
         gbcConfirmButton.gridy = 2;
@@ -78,7 +78,7 @@ public class JoinOnlineGame implements IView {
         centerContainer.add(confirmButton, gbcConfirmButton);
 
         JButton backButton = new JButton("Zurück zum Hauptmenü");
-        backButton.setPreferredSize(new Dimension(200, 20));
+        backButton.setPreferredSize(new Dimension(250, 20));
         GridBagConstraints gbcBackButton = new GridBagConstraints();
         gbcBackButton.gridx = 0;
         gbcBackButton.gridy = 2;

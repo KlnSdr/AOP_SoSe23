@@ -4,6 +4,8 @@ import Sinking.Game.Data.Board;
 import Sinking.common.BaseAi;
 import Sinking.common.Tupel;
 
+import java.util.ArrayList;
+
 public class ExampleAI extends BaseAi {
     private int x = -1;
     private int y = 0;
@@ -28,7 +30,13 @@ public class ExampleAI extends BaseAi {
 
     @Override
     public Tupel<Integer, Integer>[] setShips() {
-        return new Tupel[]{new Tupel(0, 0), new Tupel(0, 1), new Tupel(0, 2), new Tupel(0, 3), new Tupel(0, 4), new Tupel(0, 5), new Tupel(1, 0)};
+        ArrayList<Tupel<Integer, Integer>> ships = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 10; j++) {
+                ships.add(new Tupel<>(i, j));
+            }
+        }
+        return ships.toArray(new Tupel[0]);
     }
 
 }
