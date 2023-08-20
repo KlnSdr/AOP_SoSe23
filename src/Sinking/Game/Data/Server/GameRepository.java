@@ -3,8 +3,8 @@ package Sinking.Game.Data.Server;
 import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Gamestate;
 import Sinking.Game.Data.Player;
-import Sinking.common.Exceptions.*;
 import Sinking.Game.Data.Tile;
+import Sinking.common.Exceptions.*;
 import Sinking.common.Tupel;
 
 import java.util.HashMap;
@@ -112,7 +112,7 @@ public class GameRepository {
 
     public String getWinnerName(UUID gameId) throws GameNotFoundException, NeedsPlayerException {
         Optional<ServerGamestate> optGame = get(gameId);
-        if (optGame.isEmpty()){
+        if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
         }
         ServerGamestate game = optGame.get();

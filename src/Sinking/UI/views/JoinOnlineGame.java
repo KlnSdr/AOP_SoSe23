@@ -17,6 +17,7 @@ import static Sinking.UI.Window.baseTitle;
 
 public class JoinOnlineGame implements IView {
     protected String linkLabelText = "Einladungslink:";
+
     @Override
     public void load(JFrame window, Json data) {
         window.setTitle(baseTitle);

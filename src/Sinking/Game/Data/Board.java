@@ -41,11 +41,7 @@ public class Board {
     }
 
     public boolean hit(int x, int y) {
-        if (board[x][y].state == TileState.HIT) {
-            return true;
-        } else {
-            return false;
-        }
+        return board[x][y].state == TileState.HIT;
     }
 
     public boolean bounces(int x, int y) {

@@ -8,6 +8,7 @@ import java.util.Arrays;
 public class ArgsLoader {
     public static ArrayList<String> twoPartArgs = new ArrayList<>(Arrays.asList("port", "p"));
     public static ArrayList<String> singlePartArgs = new ArrayList<>(Arrays.asList("server", "s", "test", "t"));
+
     public static Json load(String[] args) {
         Json json = new Json();
         // Parsing command line arguments

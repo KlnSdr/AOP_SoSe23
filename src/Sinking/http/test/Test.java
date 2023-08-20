@@ -8,5 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Test {
     String name();
+
     int order() default Integer.MAX_VALUE;
 }

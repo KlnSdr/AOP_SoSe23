@@ -60,7 +60,7 @@ public class FireAtTest {
                 return;
             }
             resolve.returnResult(true);
-        } , error -> resolve.returnResult(false));
+        }, error -> resolve.returnResult(false));
     }
 
     @Test(name = "join second player", order = 3)
@@ -102,6 +102,6 @@ public class FireAtTest {
                 return;
             }
             resolve.returnResult(true);
-        } , error -> resolve.returnResult(false));
+        }, error -> resolve.returnResult(false));
     }
 }

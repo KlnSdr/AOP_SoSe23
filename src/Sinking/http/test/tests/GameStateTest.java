@@ -6,7 +6,6 @@ import Sinking.http.client.Request;
 import Sinking.http.test.ITestResult;
 import Sinking.http.test.Test;
 import Sinking.http.test.tests.TestStore.GameStateTestStore;
-import Sinking.http.test.tests.TestStore.JoinGameTestStore;
 
 public class GameStateTest {
     @Test(name = "(PRE) create game", order = 0)
@@ -106,7 +105,7 @@ public class GameStateTest {
                 return;
             }
             resolve.returnResult(true);
-        } , error -> resolve.returnResult(false));
+        }, error -> resolve.returnResult(false));
     }
 
     @Test(name = "get gamestate after shot", order = 5)

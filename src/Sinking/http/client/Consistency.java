@@ -5,7 +5,8 @@ public class Consistency {
     private int requestCount = 0;
     private int failedRequests = 0;
 
-    private Consistency() {}
+    private Consistency() {
+    }
 
     public static Consistency getInstance() {
         if (instance == null) {

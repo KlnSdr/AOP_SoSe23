@@ -8,8 +8,7 @@ public class WaterTile extends Tile {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Water";
     }
 }

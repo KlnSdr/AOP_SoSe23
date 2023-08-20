@@ -71,7 +71,7 @@ public abstract class Classloader<T> {
     }
 
     private boolean isJar() {
-        try (JarFile ignored = new JarFile(new File(Classloader.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath())){
+        try (JarFile ignored = new JarFile(new File(Classloader.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath())) {
             return true;
         } catch (IOException | URISyntaxException e) {
             return false;

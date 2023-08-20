@@ -1,14 +1,14 @@
 package Sinking.http.routes;
 
 import Sinking.Game.Data.Player;
+import Sinking.Game.Data.Server.GameRepository;
 import Sinking.common.Exceptions.GameFinishedException;
 import Sinking.common.Exceptions.GameNotFoundException;
 import Sinking.common.Exceptions.NoPlayerNeededException;
-import Sinking.Game.Data.Server.GameRepository;
 import Sinking.common.Exceptions.PlayerNotFoundException;
 import Sinking.common.Json;
-import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.Annotations.Get;
+import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.IConnection;
 import Sinking.http.server.ResponseCode;
 
@@ -23,7 +23,7 @@ public class GameSetup {
         Json msg = new Json();
 
         GameRepository spielstand = GameRepository.getInstance();
-        UUID gameId= spielstand.newGame();
+        UUID gameId = spielstand.newGame();
 
 
         msg.set("gameUUID", gameId.toString());
@@ -130,8 +130,8 @@ public class GameSetup {
         connection.sendResponse(responsePayload);
     }
 
-    @Post(route ="/getName")
-    public void getNameEnemie (IConnection connection) throws IOException, GameNotFoundException, PlayerNotFoundException {
+    @Post(route = "/getName")
+    public void getNameEnemie(IConnection connection) throws IOException, GameNotFoundException, PlayerNotFoundException {
         Map<String, List<String>> query = connection.getUriParams();
         Json body = connection.getRequestBody();
 
@@ -159,8 +159,8 @@ public class GameSetup {
         String opponetName = "Gegner";
         Json msg = new Json();
         ResponseCode resCode = ResponseCode.SUCCESS;
-        try{
-            opponetName= GameRepository.getInstance().getNameOpponent(gameId, playertoken);
+        try {
+            opponetName = GameRepository.getInstance().getNameOpponent(gameId, playertoken);
         } catch (GameNotFoundException e) {
             connection.setResponseCode(ResponseCode.NOT_FOUND);
             msg.set("msg", String.format("game with id '%s' not found", gameId));
@@ -179,16 +179,15 @@ public class GameSetup {
         }
         return body.hasKey("nickname");
     }
+
     private boolean isValidCheckGameStartStatusRequest(Map<String, List<String>> query) {
         return query.containsKey("id") && !query.get("id").isEmpty();
     }
+
     private boolean isValidNameRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()) {
             return false;
         }
-        if (!body.hasKey("playerToken")){
-            return false;
-        }
-        return true;
+        return body.hasKey("playerToken");
     }
 }

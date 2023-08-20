@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class RandomShot extends BaseAi {
-    private int shotsFired = 0;
     private final Random rng = new Random();
+    private int shotsFired = 0;
+
     public RandomShot() {
         // this.name = "Admiral Glückskoordinate";
         this.name = "You have no choice!";
@@ -37,10 +38,9 @@ public class RandomShot extends BaseAi {
     private ArrayList<Tupel<Integer, Integer>> filterBoard(Board board) {
         Tile[][] rawBoard = board.getBoard();
         ArrayList<Tupel<Integer, Integer>> out = new ArrayList<>();
-        for (int x  = 0; x < rawBoard.length; x++) {
+        for (int x = 0; x < rawBoard.length; x++) {
             for (int y = 0; y < rawBoard[x].length; y++) {
-                if (!rawBoard[x][y].wasHit() && rawBoard[x][y].toString().equals("Ship") /*it hurts sooooo much!*/)
-                {
+                if (!rawBoard[x][y].wasHit() && rawBoard[x][y].toString().equals("Ship") /*it hurts sooooo much!*/) {
                     out.add(new Tupel<>(x, y));
                 }
             }
@@ -54,7 +54,7 @@ public class RandomShot extends BaseAi {
         do {
             x = rng.nextInt(10);
             y = rng.nextInt(10);
-        } while(board.getBoard()[x][y].getState() != TileState.UNKNOWN);
+        } while (board.getBoard()[x][y].getState() != TileState.UNKNOWN);
         return new Tupel<>(x, y);
     }
 

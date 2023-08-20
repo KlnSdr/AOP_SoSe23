@@ -20,6 +20,7 @@ public class WaitingScreen implements IView {
     private int dotCount = 0;
     private JLabel waitLabel;
     private JFrame window;
+
     @Override
     public void load(JFrame window, Json data) {
         this.window = window;
@@ -134,11 +135,14 @@ public class WaitingScreen implements IView {
         dialog.setVisible(true);
         System.out.println("Text wurde in den Zwischenspeicher kopiert.");
     }
+
     private String getGameUrl(Json data) {
         Optional<String> url = data.get("gameUrl");
         return url.orElse("https://placeholder.de/join?id={gameId}");
     }
 
     @Override
-    public void unload() {System.out.println("Unloading WaitingScreen");}
+    public void unload() {
+        System.out.println("Unloading WaitingScreen");
+    }
 }

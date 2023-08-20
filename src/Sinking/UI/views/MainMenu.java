@@ -4,7 +4,6 @@ import Sinking.UI.IView;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
 
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -64,6 +63,8 @@ public class MainMenu implements IView {
     }
 
     @Override
-    public void unload() {System.out.println("Unloading MainMenu"); }
+    public void unload() {
+        System.out.println("Unloading MainMenu");
+    }
 
 }

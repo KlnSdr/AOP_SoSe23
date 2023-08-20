@@ -12,16 +12,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class TestRunner extends Classloader<Object> {
     //#region colors
     public static final String RED = "\033[0;31m";     // RED
     public static final String GREEN = "\033[0;32m";   // GREEN
+    private final ArrayList<Tripel<Class<?>, String, Method>> tests = new ArrayList<>();
     //#endregion
     private Client client;
     private Server server;
-    private final ArrayList<Tripel<Class<?>, String, Method>> tests = new ArrayList<>();
     private int executedTests = 0;
     private int passedTests = 0; // don't track failed test, think positive and track passed tests
     private int longestTestName = -1;

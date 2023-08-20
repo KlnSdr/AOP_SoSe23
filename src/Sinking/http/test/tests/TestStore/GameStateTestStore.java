@@ -15,19 +15,19 @@ public class GameStateTestStore {
         return instance;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public void setPlayerToken(String player1Id) {
-        this.player1Token = player1Id;
-    }
-
     public String getGameId() {
         return gameId;
     }
 
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
+
     public String getPlayerToken() {
         return player1Token;
+    }
+
+    public void setPlayerToken(String player1Id) {
+        this.player1Token = player1Id;
     }
 }

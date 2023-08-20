@@ -9,7 +9,6 @@ import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,10 +18,10 @@ public class PlacingShips implements IView {
     static int state = 0;
     private JButton[] buttons;
     private JPanel gameBoardPanel;
-    private ArrayList<String> shipList = new ArrayList<>(List.of(new String[]{"Schiffe", "Schlachtschiff", "Kreuzer", "Zerstoerer", "U-Boot"}));
-    private int[] shipAmounts = new int[]{0, 0, 0, 0};
-    private int[] shipMaxAmounts = new int[]{1, 2, 3, 4};
-    private JLabel[] shipLabels = new JLabel[4];
+    private final ArrayList<String> shipList = new ArrayList<>(List.of(new String[]{"Schiffe", "Schlachtschiff", "Kreuzer", "Zerstoerer", "U-Boot"}));
+    private final int[] shipAmounts = new int[]{0, 0, 0, 0};
+    private final int[] shipMaxAmounts = new int[]{1, 2, 3, 4};
+    private final JLabel[] shipLabels = new JLabel[4];
 
     public void load(JFrame window, Json data) {
         JPanel container = new JPanel();
@@ -43,7 +42,7 @@ public class PlacingShips implements IView {
         gbcLeftContainer.fill = GridBagConstraints.HORIZONTAL;
         container.add(leftContainer, gbcLeftContainer);
 
-        for (int i = 1; i < 5; i++ ) {
+        for (int i = 1; i < 5; i++) {
             JLabel ship = new JLabel(shipList.get(i) + ": 0/" + shipMaxAmounts[i - 1]);
             GridBagConstraints gbcShipLabel = new GridBagConstraints();
             gbcShipLabel.gridx = 0;
@@ -71,7 +70,7 @@ public class PlacingShips implements IView {
         gbcShipsComboBox.gridx = 0;
         gbcShipsComboBox.gridy = 0;
         gbcShipsComboBox.anchor = GridBagConstraints.CENTER;
-        gbcShipsComboBox.insets = new Insets (10, 10, 10, 10);
+        gbcShipsComboBox.insets = new Insets(10, 10, 10, 10);
         rightContainer.add(shipComboBox, gbcShipsComboBox);
 
         gameBoardPanel = new JPanel();
@@ -95,26 +94,26 @@ public class PlacingShips implements IView {
                 int finalRow = row;
                 int finalCol = col;
                 int n = (10 * finalRow + finalCol);
-                    button.addActionListener(e1 -> {
-                        System.out.println(n);
-                        System.out.println("Player clicked on " + finalRow + " " + finalCol);
-                        if (state% 2 == 0) {
-                            placingship(gameBoardPanel, n, shipComboBox.getSelectedItem());
-                            checkPlacedShips(shipComboBox.getSelectedItem());
-                            state++;
-                        } else{
-                            for(int i = 0; i < buttons.length; i++){
-                                if(buttons[i].getActionListeners().length == 2){
-                                    ActionListener[] actions = buttons[i].getActionListeners();
-                                    ActionListener a = actions[0];
-                                    buttons[i].removeActionListener(a);
-                                }
+                button.addActionListener(e1 -> {
+                    System.out.println(n);
+                    System.out.println("Player clicked on " + finalRow + " " + finalCol);
+                    if (state % 2 == 0) {
+                        placingship(gameBoardPanel, n, shipComboBox.getSelectedItem());
+                        checkPlacedShips(shipComboBox.getSelectedItem());
+                        state++;
+                    } else {
+                        for (int i = 0; i < buttons.length; i++) {
+                            if (buttons[i].getActionListeners().length == 2) {
+                                ActionListener[] actions = buttons[i].getActionListeners();
+                                ActionListener a = actions[0];
+                                buttons[i].removeActionListener(a);
                             }
-                            adjustJbox(shipComboBox);
-                            updateAvailableShips();
-                            state++;
                         }
-                    });
+                        adjustJbox(shipComboBox);
+                        updateAvailableShips();
+                        state++;
+                    }
+                });
 
                 gameBoardPanel.add(button, gbcButton);
 
@@ -141,35 +140,35 @@ public class PlacingShips implements IView {
     }
 
     private void checkPlacedShips(Object selectedItem) {
-        if (selectedItem.equals("U-Boot")){
+        if (selectedItem.equals("U-Boot")) {
             shipAmounts[3]++;
         }
-        if (selectedItem.equals("Kreuzer")){
+        if (selectedItem.equals("Kreuzer")) {
             shipAmounts[1]++;
         }
-        if (selectedItem.equals("Schlachtschiff")){
+        if (selectedItem.equals("Schlachtschiff")) {
             shipAmounts[0]++;
         }
-        if (selectedItem.equals("Zerstoerer")){
+        if (selectedItem.equals("Zerstoerer")) {
             shipAmounts[2]++;
         }
     }
 
-    private void adjustJbox(JComboBox ships){
+    private void adjustJbox(JComboBox ships) {
         Object selectedItem = ships.getSelectedItem();
-        if(shipAmounts[3] == 4){
+        if (shipAmounts[3] == 4) {
             ships.removeItem(selectedItem);
             shipAmounts[3]++;
         }
-        if(shipAmounts[2] == 3){
+        if (shipAmounts[2] == 3) {
             ships.removeItem(selectedItem);
             shipAmounts[2]++;
         }
-        if(shipAmounts[1] == 2){
+        if (shipAmounts[1] == 2) {
             ships.removeItem(selectedItem);
             shipAmounts[1]++;
         }
-        if(shipAmounts[0] == 1){
+        if (shipAmounts[0] == 1) {
             ships.removeItem(selectedItem);
             shipAmounts[0]++;
         }
@@ -194,12 +193,11 @@ public class PlacingShips implements IView {
         if (selectedItem == null) {
             return false;
         }
-        if (selectedItem.equals("Schiffe"))
-        {
+        if (selectedItem.equals("Schiffe")) {
             state++;
         }
         boolean status = false;
-        if ((preventSoftlock(selectedItem,n,p))) {
+        if ((preventSoftlock(selectedItem, n, p))) {
             if (selectedItem.equals("U-Boot")) {
                 if (isNotGrey(n)) {
                     p.getComponent(n).setBackground(Color.GREEN);
@@ -303,7 +301,7 @@ public class PlacingShips implements IView {
                 confirm(p, n, selectedItem);
                 return true;
             }
-        }else{
+        } else {
             shipAmounts[shipList.indexOf(selectedItem) - 1]--;
             state++;
         }
@@ -313,9 +311,9 @@ public class PlacingShips implements IView {
 
     public boolean confirm(JPanel p, int n, Object selectedItem) {
 
-        if (selectedItem.equals("U-Boot")){
+        if (selectedItem.equals("U-Boot")) {
             deactivate(p);
-            if (boundscheck(p, n + 1) && isNotGrey(n+1) && rightplacement(n, n + 1, selectedItem)) {
+            if (boundscheck(p, n + 1) && isNotGrey(n + 1) && rightplacement(n, n + 1, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 1);
                 p.getComponent(n + 1).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -331,7 +329,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 1) && isNotGrey(n-1) && rightplacement(n, n -1, selectedItem)) {
+            if (boundscheck(p, n - 1) && isNotGrey(n - 1) && rightplacement(n, n - 1, selectedItem)) {
                 JButton b2 = (JButton) p.getComponent(n - 1);
                 p.getComponent(n - 1).setEnabled(true);
                 b2.addActionListener(e -> {
@@ -347,7 +345,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n + 10) && isNotGrey(n+10)) {
+            if (boundscheck(p, n + 10) && isNotGrey(n + 10)) {
                 JButton b3 = (JButton) p.getComponent(n + 10);
                 if (boundscheck(p, n + 10)) {
                     p.getComponent(n + 10).setEnabled(true);
@@ -365,7 +363,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 10) && isNotGrey(n-10)) {
+            if (boundscheck(p, n - 10) && isNotGrey(n - 10)) {
                 JButton b4 = (JButton) p.getComponent(n - 10);
                 p.getComponent(n - 10).setEnabled(true);
                 b4.addActionListener(e -> {
@@ -386,7 +384,7 @@ public class PlacingShips implements IView {
         }
         if (selectedItem.equals("Kreuzer")) {
             deactivate(p);
-            if (boundscheck(p, n + 3) && isNotGrey(n+3) && rightplacement(n, n + 3, selectedItem)) {
+            if (boundscheck(p, n + 3) && isNotGrey(n + 3) && rightplacement(n, n + 3, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 3);
                 p.getComponent(n + 3).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -407,7 +405,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 3) && isNotGrey(n-3) && rightplacement(n, n - 3, selectedItem)) {
+            if (boundscheck(p, n - 3) && isNotGrey(n - 3) && rightplacement(n, n - 3, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n - 3);
                 p.getComponent(n - 3).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -429,7 +427,7 @@ public class PlacingShips implements IView {
                 });
             }
 
-            if (boundscheck(p, n + 30) && isNotGrey(n+ 30)) {
+            if (boundscheck(p, n + 30) && isNotGrey(n + 30)) {
                 JButton b1 = (JButton) p.getComponent(n + 30);
                 p.getComponent(n + 30).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -450,7 +448,7 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n - 30) && isNotGrey(n-30)) {
+            if (boundscheck(p, n - 30) && isNotGrey(n - 30)) {
                 JButton b1 = (JButton) p.getComponent(n - 30);
                 p.getComponent(n - 30).setEnabled(true);
                 b1.addActionListener(e -> {
@@ -473,11 +471,11 @@ public class PlacingShips implements IView {
             }
             return true;
         }
-        if (selectedItem.equals("Schlachtschiff")){
+        if (selectedItem.equals("Schlachtschiff")) {
             deactivate(p);
-            if (boundscheck(p, n + 4) && isNotGrey(n+4) && rightplacement(n,n +4,selectedItem)) {
-                JButton b1 = (JButton) p.getComponent(n+4);
-                p.getComponent(n+4).setEnabled(true);
+            if (boundscheck(p, n + 4) && isNotGrey(n + 4) && rightplacement(n, n + 4, selectedItem)) {
+                JButton b1 = (JButton) p.getComponent(n + 4);
+                p.getComponent(n + 4).setEnabled(true);
                 b1.addActionListener(e -> {
                     for (int i = 0; i < p.getComponents().length; i++) {
                         if (p.getComponent(i).getBackground() == Color.GREEN) {
@@ -498,9 +496,9 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n-4) && isNotGrey(n-4) && rightplacement(n, n-4, selectedItem)) {
-                JButton b1 = (JButton) p.getComponent(n-4);
-                p.getComponent(n-4).setEnabled(true);
+            if (boundscheck(p, n - 4) && isNotGrey(n - 4) && rightplacement(n, n - 4, selectedItem)) {
+                JButton b1 = (JButton) p.getComponent(n - 4);
+                p.getComponent(n - 4).setEnabled(true);
                 b1.addActionListener(e -> {
                     for (int i = 0; i < p.getComponents().length; i++) {
                         if (p.getComponent(i).getBackground() == Color.GREEN) {
@@ -522,9 +520,9 @@ public class PlacingShips implements IView {
                 });
             }
 
-            if (boundscheck(p, n +40) && isNotGrey(n+40)) {
-                JButton b1 = (JButton) p.getComponent(n +40);
-                p.getComponent(n +40).setEnabled(true);
+            if (boundscheck(p, n + 40) && isNotGrey(n + 40)) {
+                JButton b1 = (JButton) p.getComponent(n + 40);
+                p.getComponent(n + 40).setEnabled(true);
                 b1.addActionListener(e -> {
                     for (int i = 0; i < p.getComponents().length; i++) {
                         if (p.getComponent(i).getBackground() == Color.GREEN) {
@@ -545,9 +543,9 @@ public class PlacingShips implements IView {
                     }
                 });
             }
-            if (boundscheck(p, n-40) && isNotGrey(n-40)) {
-                JButton b1 = (JButton) p.getComponent(n-40);
-                p.getComponent(n-40).setEnabled(true);
+            if (boundscheck(p, n - 40) && isNotGrey(n - 40)) {
+                JButton b1 = (JButton) p.getComponent(n - 40);
+                p.getComponent(n - 40).setEnabled(true);
                 b1.addActionListener(e -> {
                     for (int i = 0; i < p.getComponents().length; i++) {
                         if (p.getComponent(i).getBackground() == Color.GREEN) {
@@ -653,11 +651,13 @@ public class PlacingShips implements IView {
         }
         return false;
     }
+
     public void deactivate(JPanel gameboard) {
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             gameboard.getComponent(i).setEnabled(false);
         }
     }
+
     public void activate(JPanel gameboard) {
         for (int i = 0; i < gameboard.getComponents().length; i++) {
             if (gameboard.getComponent(i).getBackground() == Color.BLUE) {
@@ -665,6 +665,7 @@ public class PlacingShips implements IView {
             }
         }
     }
+
     public boolean boundscheck(JPanel gameboard, int n) {
         try {
             gameboard.getComponent(n);
@@ -673,6 +674,7 @@ public class PlacingShips implements IView {
             return false;
         }
     }
+
     public boolean rightplacement(int n, int n1, Object selectedItem) {
 
         if (selectedItem.equals("U-Boot")) {
@@ -683,139 +685,134 @@ public class PlacingShips implements IView {
                 return false;
             }
         }
-        if (selectedItem.equals("Kreuzer")){
+        if (selectedItem.equals("Kreuzer")) {
             if (n % 10 == 0 && ((n1 + 3) % 10 == 0)) {
                 return false;
             }
-            if (((n1-2) % 10 == 0 && ((n + 1) % 10 == 0))) {
+            if (((n1 - 2) % 10 == 0 && ((n + 1) % 10 == 0))) {
                 return false;
             }
 
-            if ((n-1) % 10 == 0 && ((n1 + 2) % 10 == 0)) {
+            if ((n - 1) % 10 == 0 && ((n1 + 2) % 10 == 0)) {
                 return false;
             }
-            if (((n1-1) % 10 == 0 && ((n + 2) % 10 == 0))) {
+            if (((n1 - 1) % 10 == 0 && ((n + 2) % 10 == 0))) {
                 return false;
             }
 
-            if ((n-2) % 10 == 0 && ((n1 + 1) % 10 == 0)) {
+            if ((n - 2) % 10 == 0 && ((n1 + 1) % 10 == 0)) {
                 return false;
             }
             if ((n1 % 10 == 0 && ((n + 3) % 10 == 0))) {
                 return false;
             }
         }
-        if (selectedItem.equals("Schlachtschiff")){
-            if ((n+4) % 10 == 0 && (n1 % 10 == 0)) {
+        if (selectedItem.equals("Schlachtschiff")) {
+            if ((n + 4) % 10 == 0 && (n1 % 10 == 0)) {
                 return false;
             }
-            if (((n1+4) % 10 == 0 && ((n) % 10 == 0))) {
+            if (((n1 + 4) % 10 == 0 && ((n) % 10 == 0))) {
                 return false;
             }
-            if (((n1-1) % 10 == 0 && ((n+3) % 10 == 0))) {
+            if (((n1 - 1) % 10 == 0 && ((n + 3) % 10 == 0))) {
                 return false;
             }
-            if (((n1-3) % 10 == 0 && ((n + 1) % 10 == 0))) {
+            if (((n1 - 3) % 10 == 0 && ((n + 1) % 10 == 0))) {
                 return false;
             }
-            if (((n1+1) % 10 == 0 && ((n-3) % 10 == 0))) {
+            if (((n1 + 1) % 10 == 0 && ((n - 3) % 10 == 0))) {
                 return false;
             }
 
-            if ((n-1) % 10 == 0 && ((n1+3) % 10 == 0)) {
+            if ((n - 1) % 10 == 0 && ((n1 + 3) % 10 == 0)) {
                 return false;
             }
-            if (((n1-2) % 10 == 0 && ((n + 2) % 10 == 0))) {
+            if (((n1 - 2) % 10 == 0 && ((n + 2) % 10 == 0))) {
                 return false;
             }
-            if ((n-2) % 10 == 0 && ((n1+2) % 10 == 0)) {
+            if ((n - 2) % 10 == 0 && ((n1 + 2) % 10 == 0)) {
                 return false;
             }
         }
         if (selectedItem.equals("Zerstoerer")) {
-            if ((n+2)% 10 == 0 && ((n1) % 10 == 0)) {
+            if ((n + 2) % 10 == 0 && ((n1) % 10 == 0)) {
                 return false;
             }
-            if (((n1-1) % 10 == 0 && ((n+1) % 10 == 0))) {
+            if (((n1 - 1) % 10 == 0 && ((n + 1) % 10 == 0))) {
                 return false;
             }
-            if (((n1+1) % 10 == 0 && ((n-1) % 10 == 0))) {
+            if (((n1 + 1) % 10 == 0 && ((n - 1) % 10 == 0))) {
                 return false;
             }
-            if (((n1+2) % 10 == 0 && ((n) % 10 == 0))) {
-                return false;
-            }
+            return (n1 + 2) % 10 != 0 || ((n) % 10 != 0);
         }
         return true;
     }
-    public boolean preventSoftlock(Object selectedItem, int n, JPanel gameboard){
-        if (selectedItem.equals("U-Boot")){
-            if (boundscheck(gameboard, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n+1)){
+
+    public boolean preventSoftlock(Object selectedItem, int n, JPanel gameboard) {
+        if (selectedItem.equals("U-Boot")) {
+            if (boundscheck(gameboard, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n + 1)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 10) && isNotGrey(n-10)){
+            if (boundscheck(gameboard, n - 10) && isNotGrey(n - 10)) {
                 return true;
             }
-            if (boundscheck(gameboard, n + 10) && isNotGrey(n+10)){
+            if (boundscheck(gameboard, n + 10) && isNotGrey(n + 10)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n-1)){
+            if (boundscheck(gameboard, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n - 1)) {
                 return true;
             }
 
         }
-        if (selectedItem.equals("Kreuzer")){
-            if (boundscheck(gameboard, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)) {
+        if (selectedItem.equals("Kreuzer")) {
+            if (boundscheck(gameboard, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n + 3) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
+            if (boundscheck(gameboard, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n - 3) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 30) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
+            if (boundscheck(gameboard, n - 30) && isNotGrey(n - 30) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
                 return true;
             }
-            if (boundscheck(gameboard, n + 30) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
-                return true;
-            }
-
-        }
-        if (selectedItem.equals("Schlachtschiff")){
-            if (boundscheck(gameboard, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n+4) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)){
-               return true;
-            }
-            if (boundscheck(gameboard, n - 4) && rightplacement(n, n-4, selectedItem) && isNotGrey(n-4) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
-               return true;
-            }
-            if (boundscheck(gameboard, n - 40) && isNotGrey(n-40) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)){
-                return true;
-            }
-            if (boundscheck(gameboard, n + 40) && isNotGrey(n+40) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)){
+            if (boundscheck(gameboard, n + 30) && isNotGrey(n + 30) && isNotGrey(n + 20) && isNotGrey(n + 10)) {
                 return true;
             }
 
         }
-        if (selectedItem.equals("Zerstoerer")){
-            if (boundscheck(gameboard, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n+2) && isNotGrey(n+1)){
+        if (selectedItem.equals("Schlachtschiff")) {
+            if (boundscheck(gameboard, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n + 4) && isNotGrey(n + 3) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n-2) && isNotGrey(n-1)){
+            if (boundscheck(gameboard, n - 4) && rightplacement(n, n - 4, selectedItem) && isNotGrey(n - 4) && isNotGrey(n - 3) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
                 return true;
             }
-            if (boundscheck(gameboard, n - 20) && isNotGrey(n-20) && isNotGrey(n-10)) {
+            if (boundscheck(gameboard, n - 40) && isNotGrey(n - 40) && isNotGrey(n - 30) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
                 return true;
             }
-            if (boundscheck(gameboard, n + 20) && isNotGrey(n+20) && isNotGrey(n+10)) {
+            if (boundscheck(gameboard, n + 40) && isNotGrey(n + 40) && isNotGrey(n + 30) && isNotGrey(n + 20) && isNotGrey(n + 10)) {
                 return true;
             }
+
         }
-        return  false;
+        if (selectedItem.equals("Zerstoerer")) {
+            if (boundscheck(gameboard, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n - 20) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
+                return true;
+            }
+            return boundscheck(gameboard, n + 20) && isNotGrey(n + 20) && isNotGrey(n + 10);
+        }
+        return false;
 
     }
-    public boolean isNotGrey(int n){
-      if (!(gameBoardPanel.getComponent(n).getBackground() == Color.GRAY)){
-            return true;
-        }
-      return false;
+
+    public boolean isNotGrey(int n) {
+        return !(gameBoardPanel.getComponent(n).getBackground() == Color.GRAY);
     }
 
     @Override
@@ -849,15 +846,15 @@ public class PlacingShips implements IView {
         });
     }
 
-    public String makeItString (Tupel<Integer, Integer>[] ships){
+    public String makeItString(Tupel<Integer, Integer>[] ships) {
         String s;
         String s1 = "";
 
-        for (int i = 0; i < ships.length;i++){
-            s= String.valueOf(ships[i]._1());
+        for (int i = 0; i < ships.length; i++) {
+            s = String.valueOf(ships[i]._1());
             s1 = s1 + s;
             s1 = s1 + ",";
-            s= String.valueOf(ships[i]._2());
+            s = String.valueOf(ships[i]._2());
             s1 = s1 + s;
             s1 = s1 + "|";
         }

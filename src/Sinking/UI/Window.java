@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public class Window extends JFrame {
     public static final String baseTitle = "Schiffe versenken";
+
     public Window() {
         this.setSize(900, 600);
         this.setLocation(100, 100);

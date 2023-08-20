@@ -3,13 +3,14 @@ package Sinking.Game.Data;
 import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
 
 public class Player {
+    protected boolean isHuman = false;
     private String name;
     private int hitEnemyShips = 0;
-    protected boolean isHuman = false;
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -20,15 +21,16 @@ public class Player {
 
     public boolean shoot(int x, int y, Board gameboard) throws CoordinatesOutOfBoundsException {
         boolean didHitShip;
-        gameboard.fire(x,y);
-       didHitShip= gameboard.hit(x,y);
+        gameboard.fire(x, y);
+        didHitShip = gameboard.hit(x, y);
         if (didHitShip) {
             hitEnemyShips++;
         }
         return didHitShip;
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return (name);
     }
 }

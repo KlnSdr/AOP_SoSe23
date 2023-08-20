@@ -4,16 +4,18 @@ import Sinking.Game.Data.Server.GameRepository;
 import Sinking.Game.Data.Tile;
 import Sinking.Game.Data.TileState;
 import Sinking.common.Exceptions.*;
-import Sinking.common.Exceptions.CoordinatesOutOfBoundsException;
-import Sinking.http.server.Annotations.Get;
 import Sinking.common.Json;
 import Sinking.common.Tupel;
+import Sinking.http.server.Annotations.Get;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.IConnection;
 import Sinking.http.server.ResponseCode;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class GameUpdate {
     @Post(route = "/getGamestate")
@@ -83,7 +85,7 @@ public class GameUpdate {
         Map<String, List<String>> query = connection.getUriParams();
         Json body = connection.getRequestBody();
 
-        if (!correctRequest(query, body)){
+        if (!correctRequest(query, body)) {
             connection.setResponseCode(ResponseCode.BAD_REQUEST);
             Json msg = new Json();
             msg.set("msg", "malformed request object. missing gameId, player nick name, x-coordinate or y-coordinate");
@@ -119,9 +121,9 @@ public class GameUpdate {
         try {
             boolean status = GameRepository.getInstance().fireAt(x, y, gameId, playertoken);
             connection.setResponseCode(ResponseCode.SUCCESS);
-            if (status == true /*uh ich bin sebastian und ich mache das so weil ich will und das schöner finde*/) {
+            if (status /*uh ich bin sebastian und ich mache das so weil ich will und das schöner finde*/) {
                 msg.set("hitShip", "true");
-            } else{
+            } else {
                 msg.set("hitShip", "false");
             }
         } catch (GameNotFoundException e) {
@@ -132,7 +134,7 @@ public class GameUpdate {
             msg.set("msg", "player not found with token" + playertoken);
         } catch (CoordinatesOutOfBoundsException e) {
             connection.setResponseCode(ResponseCode.INTERNAL_ERROR);
-            msg.set("msg", "\uD83D\uDD95 invalid coordinates (" +x+ ", " +y+ ")");
+            msg.set("msg", "\uD83D\uDD95 invalid coordinates (" + x + ", " + y + ")");
         } catch (NeedsPlayerException e) {
             connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
             msg.set("msg", String.format("game with id '%s' needs another player", gameId));
@@ -235,16 +237,13 @@ public class GameUpdate {
     }
 
     private boolean correctRequest(Map<String, List<String>> query, Json body) {
-        if (!query.containsKey("id") || query.get("id").isEmpty()){
+        if (!query.containsKey("id") || query.get("id").isEmpty()) {
             return false;
         }
-            if (!body.hasKey("playerToken") || !body.hasKey("x") || !body.hasKey("y")){
+        if (!body.hasKey("playerToken") || !body.hasKey("x") || !body.hasKey("y")) {
             return false;
         }
-        if(body.get("x").isEmpty() || body.get("y").isEmpty() || body.get("playerToken").isEmpty()){
-            return false;
-        }
-        return true;
+        return body.get("x").isPresent() && body.get("y").isPresent() && body.get("playerToken").isPresent();
     }
 
     private boolean isValidGetBoardRequest(Map<String, List<String>> query, Json body) {

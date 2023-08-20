@@ -12,19 +12,19 @@ public class SetShipsTestStore {
         return instance;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public void setPlayerToken(String playerToken) {
-        this.playerToken = playerToken;
-    }
-
     public String getGameId() {
         return gameId;
     }
 
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
+
     public String getPlayerToken() {
         return playerToken;
+    }
+
+    public void setPlayerToken(String playerToken) {
+        this.playerToken = playerToken;
     }
 }

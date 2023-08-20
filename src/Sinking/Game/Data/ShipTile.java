@@ -8,8 +8,7 @@ public class ShipTile extends Tile {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Ship";
     }
 }

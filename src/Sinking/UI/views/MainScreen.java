@@ -2,13 +2,12 @@ package Sinking.UI.views;
 
 import Sinking.Game.Data.ClientStore;
 import Sinking.UI.IView;
-import Sinking.common.Tupel;
-import Sinking.http.client.Client;
 import Sinking.UI.ViewLoader;
 import Sinking.common.Json;
+import Sinking.common.Tupel;
+import Sinking.http.client.Client;
 import Sinking.http.client.Consistency;
 import Sinking.http.client.Request;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +18,7 @@ import static Sinking.UI.Window.baseTitle;
 
 public class MainScreen implements IView {
 
+    private final Tupel<Integer, Integer>[] ships = ClientStore.getInstance().getShips();
     private String player1;
     private String player2;
     private String url;
@@ -26,9 +26,8 @@ public class MainScreen implements IView {
     private JButton testConnectionButton;
     private JPanel upperContainer;
     private JLabel whosNextLabel;
-    private final Tupel<Integer, Integer>[] ships = ClientStore.getInstance().getShips();
-    private JButton [] buttonMatrixMine = new JButton[100];
-    private JButton [] buttonMatrixEnemie = new JButton[100];
+    private final JButton[] buttonMatrixMine = new JButton[100];
+    private final JButton[] buttonMatrixEnemie = new JButton[100];
     private Timer boardUpdate;
 
     @Override
@@ -54,7 +53,7 @@ public class MainScreen implements IView {
         container.add(upperContainer, gbcUpperContainer);
 
         getEnemieName();
-        JLabel playingAgainstLabel = new JLabel( "Gegner: " + getPlayer2());
+        JLabel playingAgainstLabel = new JLabel("Gegner: " + getPlayer2());
         GridBagConstraints gbcPlayingAgainstLabel = new GridBagConstraints();
         gbcPlayingAgainstLabel.gridx = 0;
         gbcPlayingAgainstLabel.gridy = 0;
@@ -129,11 +128,11 @@ public class MainScreen implements IView {
         gbcButtonPanel.gridx = 0;
         gbcButtonPanel.gridy = 0;
         gbcButtonPanel.weightx = 1.0;
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder( 20, 20, 20, 20));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbcButton = new GridBagConstraints();
 
         for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++){
+            for (int col = 0; col < 10; col++) {
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
                 colorButton(button, row, col);
@@ -155,20 +154,20 @@ public class MainScreen implements IView {
         gbcButtonPanelPlayer2.gridx = 1;
         gbcButtonPanelPlayer2.gridy = 0;
         gbcButtonPanelPlayer2.weightx = 1.0;
-        buttonPanelPlayer2.setBorder(BorderFactory.createEmptyBorder( 20, 20, 20, 20));
+        buttonPanelPlayer2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
                 button.setBackground(Color.BLUE);
-                buttonMatrixEnemie[10*row+col] = button;
+                buttonMatrixEnemie[10 * row + col] = button;
                 GridBagConstraints gbcButtonPlayer2 = new GridBagConstraints();
                 gbcButtonPlayer2.gridx = col;
                 gbcButtonPlayer2.gridy = row;
                 int finalRow = row;
                 int finalCol = col;
                 button.addActionListener(e -> {
-                    JButton source = ((JButton)e.getSource());
+                    JButton source = ((JButton) e.getSource());
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     source.setText("⌛");
                     shootAt(finalRow, finalCol, source);
@@ -223,15 +222,18 @@ public class MainScreen implements IView {
             button.setBackground(Color.BLUE);
         }
     }
+
     private String getServerUrl() {
         return url;
     }
+
+    private String getWhosNext() {
+        return whosNext;
+    }
+
     private void setWhosNext(String name) {
         whosNext = name;
         whosNextLabel.setText(whosNext);
-    }
-    private String getWhosNext() {
-        return whosNext;
     }
 
     private void checkConnection() {
@@ -322,8 +324,8 @@ public class MainScreen implements IView {
         }
     }
 
-    private void disableButtons(JButton[] matrix){
-        for (int i = 0; i < matrix.length; i++){
+    private void disableButtons(JButton[] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
             matrix[i].setEnabled(false);
         }
     }
@@ -337,7 +339,7 @@ public class MainScreen implements IView {
     }
 
     private void updateOwnGameboardMatrix(String serverResponse) {
-        for(int i = 0; i < serverResponse.length(); i++) {
+        for (int i = 0; i < serverResponse.length(); i++) {
             char c = serverResponse.charAt(i);
             if (c == 'U' && buttonMatrixMine[i].getBackground() != Color.GRAY) {
                 buttonMatrixMine[i].setBackground(Color.BLUE);
@@ -349,13 +351,15 @@ public class MainScreen implements IView {
         }
     }
 
+    private String getPlayer2() {
+        return player2;
+    }
+
     private void setPlayer2(String name) {
         player2 = name;
     }
-    private String getPlayer2(){
-        return player2;
-    }
-    public void getEnemieName(){
+
+    public void getEnemieName() {
         ClientStore store = ClientStore.getInstance();
         Client client = store.getClient();
         String gameId = store.getGameId();
@@ -369,13 +373,15 @@ public class MainScreen implements IView {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
             String name;
-            if(response.getBody().hasKey("Opponentname")){
+            if (response.getBody().hasKey("Opponentname")) {
                 setPlayer2(response.getBody().get("Opponentname").orElse(""));
             }
         });
     }
 
     @Override
-    public void unload() {System.out.println("Unloading MainScreen"); }
+    public void unload() {
+        System.out.println("Unloading MainScreen");
+    }
 
 }

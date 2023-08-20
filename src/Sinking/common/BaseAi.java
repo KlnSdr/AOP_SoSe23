@@ -21,6 +21,7 @@ public abstract class BaseAi implements IAi {
     public Tupel<Integer, Integer> nextMove() {
         return new Tupel<>(0, 0);
     }
+
     protected void updateBoard(boolean didHitShip, int x, int y) {
         if (didHitShip) {
             board.setShip(x, y);
