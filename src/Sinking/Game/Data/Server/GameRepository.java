@@ -61,7 +61,7 @@ public class GameRepository {
         return game.addPlayer(player);
     }
 
-    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, CoordinatesOutOfBoundsException {
+    public boolean fireAt(int x, int y, UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException, CoordinatesOutOfBoundsException, NotYourTurnException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {
             throw new GameNotFoundException(gameId);
@@ -80,10 +80,15 @@ public class GameRepository {
         if (gamestate == null) {
             throw new NeedsPlayerException(gameId);
         }
+
+        if (!gamestate.isNext(player)) {
+            throw new NotYourTurnException(gameId, playerToken);
+        }
         Board gameBoard = gamestate.getspecificBoard(opponent);
         if (gameBoard == null) {
             throw new PlayerNotFoundException(gameId, playerToken);
         }
+        gamestate.sequence();
 
         return player.shoot(x, y, gameBoard);
     }
@@ -196,6 +201,22 @@ public class GameRepository {
         for (Tupel<Integer, Integer> coordinate : coordinates) {
             board.setShip(coordinate._1(), coordinate._2());
         }
+    }
+
+    public String getNameOpponent(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+
+        Optional<Player> optPlayer = game.getOpponentByToken(playerToken);
+        if (optPlayer.isEmpty()) {
+            throw new PlayerNotFoundException(gameId, playerToken);
+        }
+
+        Player player = optPlayer.get();
+        return player.getName();
     }
 
     private static class Holder {

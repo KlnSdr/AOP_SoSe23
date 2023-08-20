@@ -2,6 +2,7 @@ package Sinking.Ai;
 
 import Sinking.Game.Data.Board;
 import Sinking.Game.Data.Tile;
+import Sinking.Game.Data.TileState;
 import Sinking.common.BaseAi;
 import Sinking.common.Tupel;
 
@@ -13,11 +14,12 @@ public class RandomShot extends BaseAi {
     private int shotsFired = 0;
     private final Random rng = new Random();
     public RandomShot() {
-        this.name = "Admiral Glückskoordinate";
+        // this.name = "Admiral Glückskoordinate";
+        this.name = "You have no choice!";
     }
 
     @Override
-    public Tupel<Integer, Integer> nextMove(Board board) {
+    public Tupel<Integer, Integer> nextMove() {
         shotsFired++;
         if (shotsFired % 5 == 0) {
             return guaranteedHit(board);
@@ -53,7 +55,7 @@ public class RandomShot extends BaseAi {
         do {
             x = rng.nextInt(10);
             y = rng.nextInt(10);
-        } while(board.getBoard()[x][y].wasHit());
+        } while(board.getBoard()[x][y].getState() != TileState.UNKNOWN);
         return new Tupel<>(x, y);
     }
 

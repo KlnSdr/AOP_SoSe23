@@ -197,9 +197,17 @@ public class PlacingShips implements IView {
     }
 
     private void updateAvailableShips() {
+        boolean allShipsPlaced = true;
         for (int i = 0; i < shipLabels.length; i++) {
             JLabel lbl = shipLabels[i];
             lbl.setText(shipList.get(i + 1) + ": " + Integer.min(shipAmounts[i], shipMaxAmounts[i]) + "/" + shipMaxAmounts[i]);
+            if (shipAmounts[i] < shipMaxAmounts[i]) {
+                allShipsPlaced = false;
+            }
+        }
+
+        if (allShipsPlaced) {
+            ViewLoader.getInstance().loadView("MainScreen");
         }
     }
 
@@ -207,109 +215,118 @@ public class PlacingShips implements IView {
         if (selectedItem == null) {
             return false;
         }
+        if (selectedItem.equals("Schiffe"))
+        {
+            state++;
+        }
         boolean status = false;
-        if (selectedItem.equals("U-Boot")) {
-            if (isNotGrey(n)) {
-                p.getComponent(n).setBackground(Color.GREEN);
+        if ((preventSoftlock(selectedItem,n,p))) {
+            if (selectedItem.equals("U-Boot")) {
+                if (isNotGrey(n)) {
+                    p.getComponent(n).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n + 1)) {
+                    p.getComponent(n + 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 10) && isNotGrey(n - 10)) {
+                    p.getComponent(n - 10).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 10) && isNotGrey(n + 10)) {
+                    p.getComponent(n + 10).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n - 1)) {
+                    p.getComponent(n - 1).setBackground(Color.GREEN);
+                }
+                confirm(p, n, selectedItem);
+                return true;
             }
-            if (boundscheck(p, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n+1)) {
-                p.getComponent(n + 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 10) && isNotGrey(n-10)) {
-                p.getComponent(n - 10).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n + 10) && isNotGrey(n+10)) {
-                p.getComponent(n + 10).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n-1)) {
-                p.getComponent(n - 1).setBackground(Color.GREEN);
-            }
-            confirm(p, n, selectedItem);
-            return true;
-        }
-        if (selectedItem.equals("Kreuzer")) {
+            if (selectedItem.equals("Kreuzer")) {
 
-            if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
-                p.getComponent(n).setBackground(Color.GREEN);
+                if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
+                    p.getComponent(n).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n + 3) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
+                    p.getComponent(n + 3).setBackground(Color.GREEN);
+                    p.getComponent(n + 2).setBackground(Color.GREEN);
+                    p.getComponent(n + 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n - 3) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
+                    p.getComponent(n - 3).setBackground(Color.GREEN);
+                    p.getComponent(n - 2).setBackground(Color.GREEN);
+                    p.getComponent(n - 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 30) && isNotGrey(n - 30) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
+                    p.getComponent(n - 30).setBackground(Color.GREEN);
+                    p.getComponent(n - 20).setBackground(Color.GREEN);
+                    p.getComponent(n - 10).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 30) && isNotGrey(n + 30) && isNotGrey(n + 20) && isNotGrey(n + 10)) {
+                    p.getComponent(n + 30).setBackground(Color.GREEN);
+                    p.getComponent(n + 20).setBackground(Color.GREEN);
+                    p.getComponent(n + 10).setBackground(Color.GREEN);
+                }
+                confirm(p, n, selectedItem);
+                return true;
             }
-            if (boundscheck(p, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)) {
-                p.getComponent(n + 3).setBackground(Color.GREEN);
-                p.getComponent(n + 2).setBackground(Color.GREEN);
-                p.getComponent(n + 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
-                p.getComponent(n - 3).setBackground(Color.GREEN);
-                p.getComponent(n - 2).setBackground(Color.GREEN);
-                p.getComponent(n - 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 30) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
-                p.getComponent(n - 30).setBackground(Color.GREEN);
-                p.getComponent(n - 20).setBackground(Color.GREEN);
-                p.getComponent(n - 10).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n + 30) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
-                p.getComponent(n + 30).setBackground(Color.GREEN);
-                p.getComponent(n + 20).setBackground(Color.GREEN);
-                p.getComponent(n + 10).setBackground(Color.GREEN);
-            }
-            confirm(p, n, selectedItem);
-            return true;
-        }
 
-        if (selectedItem.equals("Schlachtschiff")) {
-            if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
-                p.getComponent(n).setBackground(Color.GREEN);
+            if (selectedItem.equals("Schlachtschiff")) {
+                if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
+                    p.getComponent(n).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n + 4) && isNotGrey(n + 3) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
+                    p.getComponent(n + 4).setBackground(Color.GREEN);
+                    p.getComponent(n + 3).setBackground(Color.GREEN);
+                    p.getComponent(n + 2).setBackground(Color.GREEN);
+                    p.getComponent(n + 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 4) && rightplacement(n, n - 4, selectedItem) && isNotGrey(n - 4) && isNotGrey(n - 3) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
+                    p.getComponent(n - 4).setBackground(Color.GREEN);
+                    p.getComponent(n - 3).setBackground(Color.GREEN);
+                    p.getComponent(n - 2).setBackground(Color.GREEN);
+                    p.getComponent(n - 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 40) && isNotGrey(n - 40) && isNotGrey(n - 30) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
+                    p.getComponent(n - 40).setBackground(Color.GREEN);
+                    p.getComponent(n - 30).setBackground(Color.GREEN);
+                    p.getComponent(n - 20).setBackground(Color.GREEN);
+                    p.getComponent(n - 10).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 40) && isNotGrey(n + 40) && isNotGrey(n + 30) && isNotGrey(n + 20) && isNotGrey(n + 10)) {
+                    p.getComponent(n + 40).setBackground(Color.GREEN);
+                    p.getComponent(n + 30).setBackground(Color.GREEN);
+                    p.getComponent(n + 20).setBackground(Color.GREEN);
+                    p.getComponent(n + 10).setBackground(Color.GREEN);
+                }
+                confirm(p, n, selectedItem);
+                return true;
             }
-            if (boundscheck(p, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n+4) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)){
-                p.getComponent(n + 4).setBackground(Color.GREEN);
-                p.getComponent(n + 3).setBackground(Color.GREEN);
-                p.getComponent(n + 2).setBackground(Color.GREEN);
-                p.getComponent(n + 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 4) && rightplacement(n, n-4, selectedItem) && isNotGrey(n-4) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
-                p.getComponent(n - 4).setBackground(Color.GREEN);
-                p.getComponent(n - 3).setBackground(Color.GREEN);
-                p.getComponent(n - 2).setBackground(Color.GREEN);
-                p.getComponent(n - 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 40) && isNotGrey(n-40) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
-                p.getComponent(n - 40).setBackground(Color.GREEN);
-                p.getComponent(n - 30).setBackground(Color.GREEN);
-                p.getComponent(n - 20).setBackground(Color.GREEN);
-                p.getComponent(n - 10).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n + 40) && isNotGrey(n+40) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
-                p.getComponent(n + 40).setBackground(Color.GREEN);
-                p.getComponent(n + 30).setBackground(Color.GREEN);
-                p.getComponent(n + 20).setBackground(Color.GREEN);
-                p.getComponent(n + 10).setBackground(Color.GREEN);
-            }
-            confirm(p, n, selectedItem);
-            return true;
-        }
 
-        if (selectedItem.equals("Zerstoerer")) {
-            if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
-                p.getComponent(n).setBackground(Color.GREEN);
+            if (selectedItem.equals("Zerstoerer")) {
+                if (!(p.getComponent(n).getBackground() == Color.GRAY)) {
+                    p.getComponent(n).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n + 2) && isNotGrey(n + 1)) {
+                    p.getComponent(n + 2).setBackground(Color.GREEN);
+                    p.getComponent(n + 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n - 2) && isNotGrey(n - 1)) {
+                    p.getComponent(n - 2).setBackground(Color.GREEN);
+                    p.getComponent(n - 1).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n - 20) && isNotGrey(n - 20) && isNotGrey(n - 10)) {
+                    p.getComponent(n - 20).setBackground(Color.GREEN);
+                    p.getComponent(n - 10).setBackground(Color.GREEN);
+                }
+                if (boundscheck(p, n + 20) && isNotGrey(n + 20) && isNotGrey(n + 10)) {
+                    p.getComponent(n + 20).setBackground(Color.GREEN);
+                    p.getComponent(n + 10).setBackground(Color.GREEN);
+                }
+                confirm(p, n, selectedItem);
+                return true;
             }
-            if (boundscheck(p, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n+2) && isNotGrey(n+1)) {
-                p.getComponent(n + 2).setBackground(Color.GREEN);
-                p.getComponent(n + 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n-2) && isNotGrey(n-1)) {
-                p.getComponent(n - 2).setBackground(Color.GREEN);
-                p.getComponent(n - 1).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n - 20) && isNotGrey(n-20) && isNotGrey(n-10)) {
-                p.getComponent(n - 20).setBackground(Color.GREEN);
-                p.getComponent(n - 10).setBackground(Color.GREEN);
-            }
-            if (boundscheck(p, n + 20) && isNotGrey(n+20) && isNotGrey(n+10)) {
-                p.getComponent(n + 20).setBackground(Color.GREEN);
-                p.getComponent(n + 10).setBackground(Color.GREEN);
-            }
-            confirm(p, n, selectedItem);
-            return true;
+        }else{
+            shipAmounts[shipList.indexOf(selectedItem) - 1]--;
+            state++;
         }
         return false;
 
@@ -317,7 +334,7 @@ public class PlacingShips implements IView {
 
     public boolean confirm(JPanel p, int n, Object selectedItem) {
 
-        if (selectedItem.equals("U-Boot")) {
+        if (selectedItem.equals("U-Boot")){
             deactivate(p);
             if (boundscheck(p, n + 1) && isNotGrey(n+1) && rightplacement(n, n + 1, selectedItem)) {
                 JButton b1 = (JButton) p.getComponent(n + 1);
@@ -751,6 +768,69 @@ public class PlacingShips implements IView {
             }
         }
         return true;
+    }
+    public boolean preventSoftlock(Object selectedItem, int n, JPanel gameboard){
+        if (selectedItem.equals("U-Boot")){
+            if (boundscheck(gameboard, n + 1) && rightplacement(n, n + 1, selectedItem) && isNotGrey(n+1)){
+                return true;
+            }
+            if (boundscheck(gameboard, n - 10) && isNotGrey(n-10)){
+                return true;
+            }
+            if (boundscheck(gameboard, n + 10) && isNotGrey(n+10)){
+                return true;
+            }
+            if (boundscheck(gameboard, n - 1) && rightplacement(n, n - 1, selectedItem) && isNotGrey(n-1)){
+                return true;
+            }
+
+        }
+        if (selectedItem.equals("Kreuzer")){
+            if (boundscheck(gameboard, n + 3) && rightplacement(n, n + 3, selectedItem) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n - 3) && rightplacement(n, n - 3, selectedItem) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n - 30) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n + 30) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)) {
+                return true;
+            }
+
+        }
+        if (selectedItem.equals("Schlachtschiff")){
+            if (boundscheck(gameboard, n + 4) && rightplacement(n, n + 4, selectedItem) && isNotGrey(n+4) && isNotGrey(n+3) && isNotGrey(n+2) && isNotGrey(n+1)){
+               return true;
+            }
+            if (boundscheck(gameboard, n - 4) && rightplacement(n, n-4, selectedItem) && isNotGrey(n-4) && isNotGrey(n-3) && isNotGrey(n-2) && isNotGrey(n-1)) {
+               return true;
+            }
+            if (boundscheck(gameboard, n - 40) && isNotGrey(n-40) && isNotGrey(n-30) && isNotGrey(n-20) && isNotGrey(n-10)){
+                return true;
+            }
+            if (boundscheck(gameboard, n + 40) && isNotGrey(n+40) && isNotGrey(n+30) && isNotGrey(n+20) && isNotGrey(n+10)){
+                return true;
+            }
+
+        }
+        if (selectedItem.equals("Zerstoerer")){
+            if (boundscheck(gameboard, n + 2) && rightplacement(n, n + 2, selectedItem) && isNotGrey(n+2) && isNotGrey(n+1)){
+                return true;
+            }
+            if (boundscheck(gameboard, n - 2) && rightplacement(n, n - 2, selectedItem) && isNotGrey(n-2) && isNotGrey(n-1)){
+                return true;
+            }
+            if (boundscheck(gameboard, n - 20) && isNotGrey(n-20) && isNotGrey(n-10)) {
+                return true;
+            }
+            if (boundscheck(gameboard, n + 20) && isNotGrey(n+20) && isNotGrey(n+10)) {
+                return true;
+            }
+        }
+        return  false;
+
     }
     public boolean isNotGrey(int n){
       if (!(gameBoardPanel.getComponent(n).getBackground() == Color.GRAY)){

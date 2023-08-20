@@ -156,7 +156,7 @@ public class JoinGameTest {
     public void addThirdPlayerFailTest(Client client, ITestResult resolve) {
         Request req = client.newRequest("/join");
         req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
-        req.setBody("nickname", "John Wick");
+        req.setBody("nickname", "Jane Doe");
 
         client.post(req, response -> {
             if (response.getStatusCode() != 500) {

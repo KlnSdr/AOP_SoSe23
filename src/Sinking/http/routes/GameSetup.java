@@ -5,6 +5,7 @@ import Sinking.common.Exceptions.GameFinishedException;
 import Sinking.common.Exceptions.GameNotFoundException;
 import Sinking.common.Exceptions.NoPlayerNeededException;
 import Sinking.Game.Data.Server.GameRepository;
+import Sinking.common.Exceptions.PlayerNotFoundException;
 import Sinking.common.Json;
 import Sinking.http.server.Annotations.Post;
 import Sinking.http.server.Annotations.Get;
@@ -129,6 +130,47 @@ public class GameSetup {
         connection.sendResponse(responsePayload);
     }
 
+    @Post(route ="/getName")
+    public void getNameEnemie (IConnection connection) throws IOException, GameNotFoundException, PlayerNotFoundException {
+        Map<String, List<String>> query = connection.getUriParams();
+        Json body = connection.getRequestBody();
+
+        if (!isValidNameRequest(query, body)) {
+            connection.setResponseCode(ResponseCode.BAD_REQUEST);
+            Json responsePayload = new Json();
+            responsePayload.set("msg", "malformed request object. missing gameId or playertoken");
+            connection.sendResponse(responsePayload);
+            return;
+        }
+
+        String gameIdStr = query.get("id").get(0);
+
+        UUID gameId;
+        try {
+            gameId = UUID.fromString(gameIdStr);
+        } catch (IllegalArgumentException e) {
+            Json responsePayload = new Json();
+            responsePayload.set("msg", String.format("invalid game id '%s'", gameIdStr));
+            connection.setResponseCode(ResponseCode.UNPROCESSABLE_ENTITY);
+            connection.sendResponse(responsePayload);
+            return;
+        }
+        String playertoken = body.get("playerToken").orElse("Gegner");
+        String opponetName = "Gegner";
+        Json msg = new Json();
+        ResponseCode resCode = ResponseCode.SUCCESS;
+        try{
+            opponetName= GameRepository.getInstance().getNameOpponent(gameId, playertoken);
+        } catch (GameNotFoundException e) {
+            connection.setResponseCode(ResponseCode.NOT_FOUND);
+            msg.set("msg", String.format("game with id '%s' not found", gameId));
+        } catch (PlayerNotFoundException e) {
+            connection.setResponseCode(ResponseCode.NOT_FOUND);
+            msg.set("msg", "player not found with token" + playertoken);
+        }
+        msg.set("Opponetname", opponetName);
+    }
+
     private boolean isValidJoinRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()) {
             return false;
@@ -137,5 +179,14 @@ public class GameSetup {
     }
     private boolean isValidCheckGameStartStatusRequest(Map<String, List<String>> query) {
         return query.containsKey("id") && !query.get("id").isEmpty();
+    }
+    private boolean isValidNameRequest(Map<String, List<String>> query, Json body) {
+        if (!query.containsKey("id") || query.get("id").isEmpty()) {
+            return false;
+        }
+        if (!body.hasKey("playerToken")){
+            return false;
+        }
+        return true;
     }
 }
