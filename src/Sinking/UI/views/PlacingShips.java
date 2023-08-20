@@ -82,8 +82,8 @@ public class PlacingShips implements IView {
         GridBagConstraints gbcButton = new GridBagConstraints();
         buttons = new JButton[100];
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < 10; row++) { // y
+            for (int col = 0; col < 10; col++) { // x
                 JButton button = new JButton();
                 buttons[10 * row + col] = button;
                 button.setPreferredSize(new Dimension(30, 30));
@@ -96,7 +96,7 @@ public class PlacingShips implements IView {
                 int n = (10 * finalRow + finalCol);
                 button.addActionListener(e1 -> {
                     System.out.println(n);
-                    System.out.println("Player clicked on " + finalRow + " " + finalCol);
+                    System.out.println("Player clicked on " + finalCol + " " + finalRow);
                     if (state % 2 == 0) {
                         placingship(gameBoardPanel, n, shipComboBox.getSelectedItem());
                         checkPlacedShips(shipComboBox.getSelectedItem());
@@ -820,8 +820,9 @@ public class PlacingShips implements IView {
         ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
         for (int i = 0; i < gameBoardPanel.getComponents().length; i++) {
             if (!isNotGrey(i)) {
-                int y = i % 10;
-                int x = (i - y) / 10;
+                int x = i % 10;
+                int y = (i - x) / 10;
+                System.out.println(x + "/" + y);
                 shipCoords.add(new Tupel<>(x, y));
             }
         }

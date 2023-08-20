@@ -36,6 +36,7 @@ public class PlayerAiWrapper extends Player {
         this.token = playerToken;
 
         setupClient();
+        aiBackbone.onBeforeGameStart();
         this.ships = aiBackbone.setShips();
         submitShipsTimer();
     }
@@ -96,6 +97,7 @@ public class PlayerAiWrapper extends Player {
     private void doNextAction(Json body, Timer timer) {
         if (body.hasKey("hasWinner") && body.get("hasWinner").orElse("false").equals("true")) {
             timer.stop();
+            aiBackbone.onGameEnd();
             return;
         }
 

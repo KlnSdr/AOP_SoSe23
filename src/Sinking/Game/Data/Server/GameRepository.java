@@ -7,10 +7,7 @@ import Sinking.Game.Data.Tile;
 import Sinking.common.Exceptions.*;
 import Sinking.common.Tupel;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*
@@ -34,6 +31,17 @@ public class GameRepository {
         ServerGamestate game = new ServerGamestate();
         this.games.put(id, game);
         return id;
+    }
+
+    public Optional<ServerGamestate> getFirstGame() {
+        Enumeration<UUID> keys = this.games.keys();
+
+        if (keys.hasMoreElements()) {
+            UUID key = this.games.keys().nextElement();
+            return Optional.ofNullable(this.games.get(key));
+        } else {
+            return Optional.empty();
+        }
     }
 
     private Optional<ServerGamestate> get(UUID id) {

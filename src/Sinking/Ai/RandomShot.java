@@ -1,17 +1,23 @@
 package Sinking.Ai;
 
 import Sinking.Game.Data.Board;
+import Sinking.Game.Data.Gamestate;
+import Sinking.Game.Data.Server.GameRepository;
+import Sinking.Game.Data.Server.ServerGamestate;
 import Sinking.Game.Data.Tile;
 import Sinking.Game.Data.TileState;
 import Sinking.common.BaseAi;
 import Sinking.common.Tupel;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Random;
 
 public class RandomShot extends BaseAi {
     private final Random rng = new Random();
     private int shotsFired = 0;
+    private ArrayList<Tupel<Integer, Integer>> opponentShips = new ArrayList<>();
+    private boolean didReadShips = false;
 
     public RandomShot() {
         // this.name = "Admiral Glückskoordinate";
@@ -19,7 +25,12 @@ public class RandomShot extends BaseAi {
     }
 
     @Override
-    public Tupel<Integer, Integer> nextMove() {
+    public Tupel<Integer, Integer> nextMove(){
+        if (opponentShips.isEmpty() && !didReadShips) {
+            readShipsFromGameRepo();
+            didReadShips = true;
+        }
+
         shotsFired++;
         if (shotsFired % 5 == 0) {
             return guaranteedHit(board);
@@ -28,24 +39,37 @@ public class RandomShot extends BaseAi {
     }
 
     private Tupel<Integer, Integer> guaranteedHit(Board board) {
-        ArrayList<Tupel<Integer, Integer>> ships = filterBoard(board);
-        if (ships.isEmpty()) {
+        if (opponentShips.isEmpty()) {
             return randomShot(board);
         }
-        return ships.get(rng.nextInt(ships.size()));
+
+        Tupel<Integer, Integer> coord = opponentShips.get(rng.nextInt(opponentShips.size()));
+        opponentShips.remove(coord);
+        return coord;
     }
 
-    private ArrayList<Tupel<Integer, Integer>> filterBoard(Board board) {
+    private void readShipsFromGameRepo() {
+        GameRepository repo = GameRepository.getInstance();
+        Optional<ServerGamestate> optGame = repo.getFirstGame();
+
+        if (optGame.isEmpty()) {
+            return; // something is wrong, i can feel it
+        }
+
+        ServerGamestate game = optGame.get();
+        Gamestate gamestate = game.getGame();
+        Board board = gamestate.getGameboardSpieler2();
         Tile[][] rawBoard = board.getBoard();
-        ArrayList<Tupel<Integer, Integer>> out = new ArrayList<>();
-        for (int x = 0; x < rawBoard.length; x++) {
-            for (int y = 0; y < rawBoard[x].length; y++) {
-                if (!rawBoard[x][y].wasHit() && rawBoard[x][y].toString().equals("Ship") /*it hurts sooooo much!*/) {
-                    out.add(new Tupel<>(x, y));
+
+        for (int y = 0; y < rawBoard.length; y++) {
+            for (int x = 0; x < rawBoard[y].length; x++) {
+                if (rawBoard[y][x].toString().equals("Ship")/*it hurts soooooo much!*/) {
+                    this.opponentShips.add(new Tupel<>(x, y));
                 }
             }
         }
-        return out;
+
+        didReadShips = true;
     }
 
     private Tupel<Integer, Integer> randomShot(Board board) {
@@ -54,8 +78,19 @@ public class RandomShot extends BaseAi {
         do {
             x = rng.nextInt(10);
             y = rng.nextInt(10);
-        } while (board.getBoard()[x][y].getState() != TileState.UNKNOWN);
+        } while (board.getBoard()[y][x].getState() != TileState.UNKNOWN);
+        checkIfIsKnownShip(x, y);
         return new Tupel<>(x, y);
+    }
+
+    private void checkIfIsKnownShip(int x, int y) {
+        for (int i = 0; i < opponentShips.size(); i++) {
+            Tupel<Integer, Integer> shipCoord = opponentShips.get(i);
+            if (shipCoord._1() == x && shipCoord._2() == y) {
+                opponentShips.remove(shipCoord);
+                break;
+            }
+        }
     }
 
     @Override

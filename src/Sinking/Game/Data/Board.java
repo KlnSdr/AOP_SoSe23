@@ -25,7 +25,7 @@ public class Board {
     public boolean setShip(int x, int y) {
         boolean status = bounces(x, y);
         if (status) {
-            board[x][y] = new ShipTile();
+            board[y][x] = new ShipTile();
         }
         return status;
     }
@@ -33,7 +33,7 @@ public class Board {
     public boolean fire(int x, int y) throws CoordinatesOutOfBoundsException {
         boolean status = bounces(x, y);
         if (status) {
-            board[x][y].shoot();
+            board[y][x].shoot();
         } else {
             throw new CoordinatesOutOfBoundsException(x, y);
         }
@@ -41,7 +41,7 @@ public class Board {
     }
 
     public boolean hit(int x, int y) {
-        return board[x][y].state == TileState.HIT;
+        return board[y][x].state == TileState.HIT;
     }
 
     public boolean bounces(int x, int y) {

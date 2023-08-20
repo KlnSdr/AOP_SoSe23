@@ -131,11 +131,11 @@ public class MainScreen implements IView {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbcButton = new GridBagConstraints();
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < 10; row++) { // y
+            for (int col = 0; col < 10; col++) { // x
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
-                colorButton(button, row, col);
+                colorButton(button, col, row);
                 buttonMatrixMine[row * 10 + col] = button;
                 gbcButton.insets = new Insets(0, 0, 0, 0);
                 gbcButton.gridx = col;
@@ -155,8 +155,8 @@ public class MainScreen implements IView {
         gbcButtonPanelPlayer2.gridy = 0;
         gbcButtonPanelPlayer2.weightx = 1.0;
         buttonPanelPlayer2.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < 10; row++) { // y
+            for (int col = 0; col < 10; col++) { // x
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(30, 30));
                 button.setBackground(Color.BLUE);
@@ -168,9 +168,9 @@ public class MainScreen implements IView {
                 int finalCol = col;
                 button.addActionListener(e -> {
                     JButton source = ((JButton) e.getSource());
-                    System.out.println("Player clicked on " + finalRow + " " + finalCol);
+                    System.out.println("Player clicked on " + finalCol + " " + finalRow);
                     source.setText("⌛");
-                    shootAt(finalRow, finalCol, source);
+                    shootAt(finalCol, finalRow, source);
                 });
                 buttonPanelPlayer2.add(button, gbcButtonPlayer2);
             }
@@ -204,7 +204,7 @@ public class MainScreen implements IView {
         disableButtons(buttonMatrixEnemie);
     }
 
-    private void colorButton(JButton button, int col, int row) {
+    private void colorButton(JButton button, int col /*x*/, int row /*y*/) {
         boolean foundShip = false;
 
         for (Tupel<Integer, Integer> ship : ships) {

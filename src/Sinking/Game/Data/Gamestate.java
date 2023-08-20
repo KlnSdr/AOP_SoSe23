@@ -8,6 +8,10 @@ public class Gamestate {
 
     Board gameboardSpieler1 = new Board();
 
+    public Board getGameboardSpieler2() {
+        return gameboardSpieler2;
+    }
+
     Board gameboardSpieler2 = new Board();
     int move = 0;
 
