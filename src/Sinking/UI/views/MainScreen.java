@@ -233,7 +233,7 @@ public class MainScreen implements IView {
 
     private void setWhosNext(String name) {
         whosNext = name;
-        whosNextLabel.setText(whosNext);
+        whosNextLabel.setText(whosNext + " ist dran");
     }
 
     private void checkConnection() {
