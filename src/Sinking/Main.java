@@ -6,9 +6,7 @@ import Sinking.http.server.HttpRouteLoader;
 import Sinking.http.server.Server;
 import Sinking.http.test.TestRunner;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {

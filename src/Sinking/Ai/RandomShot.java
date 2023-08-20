@@ -7,7 +7,6 @@ import Sinking.common.BaseAi;
 import Sinking.common.Tupel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class RandomShot extends BaseAi {

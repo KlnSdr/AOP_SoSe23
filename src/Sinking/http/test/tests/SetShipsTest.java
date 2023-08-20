@@ -4,8 +4,6 @@ import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 import Sinking.http.test.ITestResult;
 import Sinking.http.test.Test;
-import Sinking.http.test.tests.TestStore.FireAtTestStore;
-import Sinking.http.test.tests.TestStore.JoinGameTestStore;
 import Sinking.http.test.tests.TestStore.SetShipsTestStore;
 
 public class SetShipsTest {
