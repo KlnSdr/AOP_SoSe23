@@ -42,8 +42,6 @@ public class MainMenu implements IView {
         gbcNewOnlineGame.insets = new Insets(0, 0, 10, 10);
         newOnlineGameButton.addActionListener(e -> {
             System.out.println("Loading New Online Game");
-            // todo call to server to create new online game
-            // todo get join link from response
             Json viewArgs = new Json();
             viewArgs.set("gameUrl", "example.com/join?id=noId");
             ViewLoader.getInstance().loadView("NewOnlineGame", viewArgs);

@@ -11,15 +11,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
 
 import static Sinking.UI.Window.baseTitle;
 
 public class WaitingScreen implements IView {
-
-    private String url;
     private int dotCount = 0;
     private JLabel waitLabel;
     private JFrame window;
@@ -130,12 +127,7 @@ public class WaitingScreen implements IView {
         gbcLabel.anchor = GridBagConstraints.CENTER;
         dialog.add(label, gbcLabel);
 
-        ActionListener timerAction = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        };
+        ActionListener timerAction = e -> dialog.dispose();
         Timer timer = new Timer(2000, timerAction);
         timer.setRepeats(false);
         timer.start();

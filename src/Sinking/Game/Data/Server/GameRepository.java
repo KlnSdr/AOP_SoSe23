@@ -149,10 +149,6 @@ public class GameRepository {
         return game.needsPlayer();
     }
 
-    public void deleteGame(UUID id) {
-        this.games.remove(id);
-    }
-
     public Map<String, Tile[][]> getBoard(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException, NeedsPlayerException {
         Optional<ServerGamestate> optGame = get(gameId);
         if (optGame.isEmpty()) {

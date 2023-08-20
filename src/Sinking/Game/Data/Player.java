@@ -19,7 +19,7 @@ public class Player {
     }
 
     public boolean shoot(int x, int y, Board gameboard) throws CoordinatesOutOfBoundsException {
-        boolean didHitShip = false;
+        boolean didHitShip;
         gameboard.fire(x,y);
        didHitShip= gameboard.hit(x,y);
         if (didHitShip) {
@@ -30,9 +30,5 @@ public class Player {
     @Override
     public String toString(){
         return (name);
-    }
-
-    public boolean isHuman() {
-        return this.isHuman;
     }
 }

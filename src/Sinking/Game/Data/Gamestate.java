@@ -16,22 +16,6 @@ public class Gamestate {
         this.spieler2 = s2;
     }
 
-    public Board getGameboardSpieler1() {
-        return gameboardSpieler1;
-    }
-
-    public void setGameboardSpieler1(Board gameboardSpieler1) {
-        this.gameboardSpieler1 = gameboardSpieler1;
-    }
-
-    public Board getGameboardSpieler2() {
-        return gameboardSpieler2;
-    }
-
-    public void setGameboardSpieler2(Board gameboardSpieler2) {
-        this.gameboardSpieler2 = gameboardSpieler2;
-    }
-
     public Board getspecificBoard(Player spieler) {
         if (spieler.equals(spieler1)) {
             return gameboardSpieler1;
@@ -79,10 +63,4 @@ public class Gamestate {
     public Player getWinner() {
         return winner;
     }
-
-    public void ausgabe() {
-        System.out.println(winner);
-    }
-
-
 }

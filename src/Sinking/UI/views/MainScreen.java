@@ -172,7 +172,6 @@ public class MainScreen implements IView {
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     source.setText("⌛");
                     shootAt(finalRow, finalCol, source);
-                    // winnerAvailable();
                 });
                 buttonPanelPlayer2.add(button, gbcButtonPlayer2);
             }
@@ -205,17 +204,6 @@ public class MainScreen implements IView {
 
         disableButtons(buttonMatrixEnemie);
     }
-/*
-    private void winnerAvailable() {
-
-        if(Gamestate.hasWinner()) {
-            if (nickname.equals(Gamestate.spieler1)) {
-                ViewLoader.getInstance().loadView("WinningScreen", viewArgs);
-            } else {
-                ViewLoader.getInstance().loadView("LosingScreen", viewArgs);
-            }
-        }
-    }*/
 
     private void colorButton(JButton button, int col, int row) {
         boolean foundShip = false;
@@ -234,9 +222,6 @@ public class MainScreen implements IView {
         } else {
             button.setBackground(Color.BLUE);
         }
-    }
-    private void setServerUrl(String url) {
-        this.url = url;
     }
     private String getServerUrl() {
         return url;
@@ -389,22 +374,7 @@ public class MainScreen implements IView {
             }
         });
     }
-    private void setPlayer1(String name) {
-        player1 = name;
-    }
-    private String getPlayer1() {
-        return player1;
-    }
 
-    /*public int placingship(JPanel p, int r, int c){
-        int n = r*10 +c;
-       /* p.getComponent(n).setBackground(Color.GREEN);
-        p.getComponent(n+1).setBackground(Color.GREEN);
-        p.getComponent(n+2).setBackground(Color.GREEN);
-        System.out.println(n);
-        return n;*/
-
-    //}
     @Override
     public void unload() {System.out.println("Unloading MainScreen"); }
 

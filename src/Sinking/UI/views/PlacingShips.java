@@ -39,7 +39,6 @@ public class PlacingShips implements IView {
         GridBagConstraints gbcLeftContainer = new GridBagConstraints();
         gbcLeftContainer.gridx = 0;
         gbcLeftContainer.gridy = 0;
-        //gbcLeftContainer.weightx = 1.0;
         gbcLeftContainer.insets = new Insets(10, 10, 10, 10);
         gbcLeftContainer.fill = GridBagConstraints.HORIZONTAL;
         container.add(leftContainer, gbcLeftContainer);
@@ -74,26 +73,6 @@ public class PlacingShips implements IView {
         gbcShipsComboBox.anchor = GridBagConstraints.CENTER;
         gbcShipsComboBox.insets = new Insets (10, 10, 10, 10);
         rightContainer.add(shipComboBox, gbcShipsComboBox);
-
-
-//        GridBagLayout grid = new GridBagLayout();
-//        GridBagConstraints gridg = new GridBagConstraints();
-//        window.setLayout(grid);
-//        JPanel centerContainer = new JPanel();
-//        centerContainer.setLayout(new GridBagLayout());
-//        centerContainer.setBackground(Color.WHITE);
-//        centerContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//        window.add(centerContainer);
-//        JPanel shipAvailability = new JPanel();
-//        shipAvailability.setSize(new Dimension(200, 25));
-//        shipAvailability.add(availableUboot);
-//        shipAvailability.add(availableKreuzer);
-//        shipAvailability.add(availableZerstoerer);
-//        shipAvailability.add(availableSchlachtschiff);
-//        gridg.gridx=0;
-//        gridg.gridy=0;
-//        gridg.gridwidth = 2;
-//        window.add(shipAvailability);
 
         gameBoardPanel = new JPanel();
         gameBoardPanel.setLayout(new GridBagLayout());
@@ -871,7 +850,7 @@ public class PlacingShips implements IView {
     }
 
     public String makeItString (Tupel<Integer, Integer>[] ships){
-        String s = new String();
+        String s;
         String s1 = "";
 
         for (int i = 0; i < ships.length;i++){
