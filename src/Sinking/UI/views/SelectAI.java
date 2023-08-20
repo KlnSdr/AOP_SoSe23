@@ -11,40 +11,63 @@ import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SelectAI implements IView {
     @Override
     public void load(JFrame window, Json data) {
         JPanel container = new JPanel();
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        container.setLayout(new GridBagLayout());
+        container.setBackground(Color.WHITE);
+        container.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         window.add(container);
 
-        JLabel msg = new JLabel("Wähle eine KI aus:");
-        msg.setBounds(10, 10, 200, 20);
-        container.add(msg);
+        JLabel aiSelectLabel = new JLabel("Wähle eine KI aus:");
+        GridBagConstraints gbcAiSelectLabel = new GridBagConstraints();
+        gbcAiSelectLabel.gridx = 0;
+        gbcAiSelectLabel.gridy = 0;
+        gbcAiSelectLabel.anchor = GridBagConstraints.CENTER;
+        gbcAiSelectLabel.insets = new Insets(10, 10, 10, 10);
+        container.add(aiSelectLabel, gbcAiSelectLabel);
 
-        JComboBox<String> aiList = new JComboBox<>();
-        aiList.setBounds(10, 40, 200, 20);
-        AiLoader.getInstance().getAiNames().forEach(aiList::addItem);
-        container.add(aiList);
+        JComboBox<String> aiListComboBox = new JComboBox<>();
+        AiLoader.getInstance().getAiNames().forEach(aiListComboBox::addItem);
+        aiListComboBox.setPreferredSize(new Dimension(200, 20));
+        GridBagConstraints gbcAiListComboBox = new GridBagConstraints();
+        gbcAiListComboBox.gridx = 0;
+        gbcAiListComboBox.gridy = 1;
+        gbcAiListComboBox.anchor = GridBagConstraints.CENTER;
+        gbcAiListComboBox.insets = new Insets(10, 10, 10, 10);
+        container.add(aiListComboBox, gbcAiListComboBox);
 
-        JButton start = new JButton("Start");
-        start.setBounds(10, 70, 200, 20);
-        start.addActionListener(e -> {
-            String aiName = (String) aiList.getSelectedItem();
+        JButton startButton = new JButton("Start");
+        startButton.setPreferredSize(new Dimension(200, 20));
+        GridBagConstraints gbcStartButton = new GridBagConstraints();
+        gbcStartButton.gridx = 0;
+        gbcStartButton.gridy = 2;
+        gbcStartButton.anchor = GridBagConstraints.CENTER;
+        gbcStartButton.insets = new Insets(10, 10, 10, 10);
+        startButton.addActionListener(e -> {
+            String aiName = (String) aiListComboBox.getSelectedItem();
             System.out.println("Selected AI: " + aiName);
             initLocalServer();
             setupClientStore();
             createAndJoinLocalGame(aiName);
         });
-        container.add(start);
+        container.add(startButton, gbcStartButton);
 
-        JButton back = new JButton("Zurück");
-        back.setBounds(10, 100, 200, 20);
-        back.addActionListener(e -> {
+        JButton backButton = new JButton("Zurück zum Hauptmenü");
+        backButton.setPreferredSize(new Dimension(200, 20));
+        GridBagConstraints gbcBackButton = new GridBagConstraints();
+        gbcBackButton.gridx = 0;
+        gbcBackButton.gridy = 3;
+        gbcBackButton.anchor = GridBagConstraints.CENTER;
+        gbcBackButton.insets = new Insets(10, 10, 10, 10);
+        backButton.addActionListener(e -> {
+            System.out.println("Loading Main Menu");
             ViewLoader.getInstance().loadView("MainMenu");
         });
-        container.add(back);
+        container.add(backButton, gbcBackButton);
     }
 
     private void initLocalServer() {

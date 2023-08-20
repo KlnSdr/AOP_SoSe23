@@ -203,6 +203,22 @@ public class GameRepository {
         }
     }
 
+    public String getNameOpponent(UUID gameId, String playerToken) throws GameNotFoundException, PlayerNotFoundException {
+        Optional<ServerGamestate> optGame = get(gameId);
+        if (optGame.isEmpty()) {
+            throw new GameNotFoundException(gameId);
+        }
+        ServerGamestate game = optGame.get();
+
+        Optional<Player> optPlayer = game.getOpponentByToken(playerToken);
+        if (optPlayer.isEmpty()) {
+            throw new PlayerNotFoundException(gameId, playerToken);
+        }
+
+        Player player = optPlayer.get();
+        return player.getName();
+    }
+
     private static class Holder {
         public static GameRepository instance = new GameRepository();
     }

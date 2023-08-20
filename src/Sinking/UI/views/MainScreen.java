@@ -366,7 +366,23 @@ public class MainScreen implements IView {
     private void setPlayer2(String name) {
         player2 = name;
     }
-    private String getPlayer2() {
+    private String getPlayer2(){
+        ClientStore store = ClientStore.getInstance();
+        Client client = store.getClient();
+        String gameId = store.getGameId();
+        String token = store.getPlayerToken();
+
+        Request req = client.newRequest("/getName");
+        req.setQuery("id", gameId);
+        req.setBody("playerToken", token);
+
+        client.post(req, response -> {
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            response.getBody().hasKey()
+
+        });
+
         return player2;
     }
     private void setPlayer1(String name) {

@@ -12,20 +12,6 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-
-        IAi ai = AiLoader.getInstance().getInstanceOf("Admiral Glückskoordinate");
-        System.out.println(Arrays.toString(ai.setShips()));
-        System.exit(0);
-
-        try {
-            // Set the Nimbus look and feel
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            // Handle the exception
-        }
-
-
-
         Json config = ArgsLoader.load(args);
         if (config.get("test").isPresent()) {
             TestRunner.runTests();

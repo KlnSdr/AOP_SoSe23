@@ -215,6 +215,10 @@ public class PlacingShips implements IView {
         if (selectedItem == null) {
             return false;
         }
+        if (selectedItem.equals("Schiffe"))
+        {
+            state++;
+        }
         boolean status = false;
         if ((preventSoftlock(selectedItem,n,p))) {
             if (selectedItem.equals("U-Boot")) {
@@ -321,6 +325,7 @@ public class PlacingShips implements IView {
                 return true;
             }
         }else{
+            shipAmounts[shipList.indexOf(selectedItem) - 1]--;
             state++;
         }
         return false;
