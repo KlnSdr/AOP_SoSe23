@@ -70,8 +70,12 @@ public class GameRepository {
 
         Optional<Player> optPlayer = game.getPlayerByToken(playerToken);
         Optional<Player> optOpponent = game.getOpponentByToken(playerToken);
-        if (optOpponent.isEmpty() || optPlayer.isEmpty()) {
+        if (optPlayer.isEmpty()) {
             throw new PlayerNotFoundException(gameId, playerToken);
+        }
+
+        if (optOpponent.isEmpty()) {
+            throw new NeedsPlayerException(gameId);
         }
 
         Player player = optPlayer.get();

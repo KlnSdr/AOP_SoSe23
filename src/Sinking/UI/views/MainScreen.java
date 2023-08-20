@@ -290,9 +290,9 @@ public class MainScreen implements IView {
             System.out.println(response.getBody());
             src.setText("");
             if (response.getBody().hasKey("hitShip") && response.getBody().get("hitShip").orElse("false").equals("true")) {
-                src.setBackground(Color.RED);
-            } else {
                 src.setBackground(Color.BLACK);
+            } else {
+                src.setBackground(Color.RED);
             }
         });
     }
@@ -357,9 +357,9 @@ public class MainScreen implements IView {
             if (c == 'U' && buttonMatrixMine[i].getBackground() != Color.GRAY) {
                 buttonMatrixMine[i].setBackground(Color.BLUE);
             } else if (c == 'H') {
-                buttonMatrixMine[i].setBackground(Color.RED);
-            } else if (c == 'M') {
                 buttonMatrixMine[i].setBackground(Color.BLACK);
+            } else if (c == 'M') {
+                buttonMatrixMine[i].setBackground(Color.RED);
             }
         }
     }

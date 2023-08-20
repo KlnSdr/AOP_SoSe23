@@ -5,6 +5,7 @@ import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 import Sinking.http.test.ITestResult;
 import Sinking.http.test.Test;
+import Sinking.http.test.tests.TestStore.GameStateTestStore;
 import Sinking.http.test.tests.TestStore.JoinGameTestStore;
 
 public class GameStateTest {
@@ -21,16 +22,16 @@ public class GameStateTest {
                 return;
             }
             String gameId = response.getBody().get("gameUUID").orElse("");
-            JoinGameTestStore.getInstance().setGameId(gameId);
+            GameStateTestStore.getInstance().setGameId(gameId);
             resolve.returnResult(true);
         }, error -> resolve.returnResult(false));
     }
 
-    @Test(name = "join first player", order = 2)
+    @Test(name = "join first player", order = 1)
     public void joinFirstPlayer(Client client, ITestResult resolve) {
         Request req = client.newRequest("/join");
         req.setBody("nickname", "Manny");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
+        req.setQuery("id", GameStateTestStore.getInstance().getGameId());
         client.post(req, response -> resolve.returnResult(response.getStatusCode() == 200), error -> resolve.returnResult(false));
     }
 
@@ -38,15 +39,28 @@ public class GameStateTest {
     public void joinSecondPlayer(Client client, ITestResult resolve) {
         Request req = client.newRequest("/join");
         req.setBody("nickname", "Eleven");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
-        client.post(req, response -> resolve.returnResult(response.getStatusCode() == 200), error -> resolve.returnResult(false));
+        req.setQuery("id", GameStateTestStore.getInstance().getGameId());
+        client.post(req, response -> {
+            if (response.getStatusCode() != 200) {
+                resolve.returnResult(false);
+                return;
+            }
+
+            if (!response.getBody().hasKey("playerToken")) {
+                resolve.returnResult(false);
+                return;
+            }
+            String playerToken = response.getBody().get("playerToken").orElse("");
+            GameStateTestStore.getInstance().setPlayerToken(playerToken);
+            resolve.returnResult(true);
+        }, error -> resolve.returnResult(false));
     }
 
-    @Test(name = "get gamestate initial")
+    @Test(name = "get gamestate initial", order = 3)
     public void getInitialGameState(Client client, ITestResult resolve) {
-        Request req = client.newRequest("/gameState");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
-        //todo req.setBody("playerToken", JoinGameTestStore.getInstance().getFirstPlayerToken());
+        Request req = client.newRequest("/getGamestate");
+        req.setQuery("id", GameStateTestStore.getInstance().getGameId());
+        req.setBody("playerToken", GameStateTestStore.getInstance().getPlayerToken());
 
         client.post(req, response -> {
             if (response.getStatusCode() != 200) {
@@ -73,11 +87,11 @@ public class GameStateTest {
         }, error -> resolve.returnResult(false));
     }
 
-    @Test(name = "fire at (0, 0)")
+    @Test(name = "fire at (0, 0)", order = 4)
     public void fireAtTest(Client client, ITestResult resolve) {
         Request req = client.newRequest("/fireAt");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
-        // todo req.setBody("playerToken",);
+        req.setQuery("id", GameStateTestStore.getInstance().getGameId());
+        req.setBody("playerToken", GameStateTestStore.getInstance().getPlayerToken());
         req.setBody("x", "0");
         req.setBody("y", "0");
 
@@ -95,11 +109,11 @@ public class GameStateTest {
         } , error -> resolve.returnResult(false));
     }
 
-    @Test(name = "get gamestate after shot")
+    @Test(name = "get gamestate after shot", order = 5)
     public void getGameStateAfterShot(Client client, ITestResult resolve) {
-        Request req = client.newRequest("/gameState");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
-        //todo req.setBody("playerToken", JoinGameTestStore.getInstance().getFirstPlayerToken()); // opponent
+        Request req = client.newRequest("/getGamestate");
+        req.setQuery("id", GameStateTestStore.getInstance().getGameId());
+        req.setBody("playerToken", GameStateTestStore.getInstance().getPlayerToken());
 
         client.post(req, response -> {
             if (response.getStatusCode() != 200) {

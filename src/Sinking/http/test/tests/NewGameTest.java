@@ -23,9 +23,4 @@ public class NewGameTest {
             resolve.returnResult(false);
         });
     }
-    // failing test
-    @Test(name = "Failing test")
-    public void failingTest(Client client, ITestResult resolve){
-        resolve.returnResult(false);
-    }
 }

@@ -4,7 +4,7 @@ import Sinking.http.client.Client;
 import Sinking.http.client.Request;
 import Sinking.http.test.ITestResult;
 import Sinking.http.test.Test;
-import Sinking.http.test.tests.TestStore.JoinGameTestStore;
+import Sinking.http.test.tests.TestStore.GameReadyTestStore;
 
 public class GameReadyTest {
     @Test(name = "(PRE) create game", order = 0)
@@ -20,7 +20,7 @@ public class GameReadyTest {
                 return;
             }
             String gameId = response.getBody().get("gameUUID").orElse("");
-            JoinGameTestStore.getInstance().setGameId(gameId);
+            GameReadyTestStore.getInstance().setGameId(gameId);
             resolve.returnResult(true);
         }, error -> {
             resolve.returnResult(false);
@@ -30,6 +30,7 @@ public class GameReadyTest {
     @Test(name = "game needs player test", order = 1)
     public void needsPlayerTest(Client client, ITestResult resolve) {
         Request req = client.newRequest("/gameReady");
+        req.setQuery("id", GameReadyTestStore.getInstance().getGameId());
         client.get(req, response -> resolve.returnResult(response.getStatusCode() == 202), error -> resolve.returnResult(false));
     }
 
@@ -37,27 +38,29 @@ public class GameReadyTest {
     public void joinFirstPlayer(Client client, ITestResult resolve) {
         Request req = client.newRequest("/join");
         req.setBody("nickname", "Goodra");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
+        req.setQuery("id", GameReadyTestStore.getInstance().getGameId());
         client.post(req, response -> resolve.returnResult(response.getStatusCode() == 200), error -> resolve.returnResult(false));
     }
 
-    @Test(name = "game still needs player test", order = 1)
+    @Test(name = "game still needs player test", order = 3)
     public void stillNeedsPlayerTest(Client client, ITestResult resolve) {
         Request req = client.newRequest("/gameReady");
+        req.setQuery("id", GameReadyTestStore.getInstance().getGameId());
         client.get(req, response -> resolve.returnResult(response.getStatusCode() == 202), error -> resolve.returnResult(false));
     }
 
-    @Test(name = "join second player", order = 2)
+    @Test(name = "join second player", order = 4)
     public void joinSecondPlayer(Client client, ITestResult resolve) {
         Request req = client.newRequest("/join");
         req.setBody("nickname", "Torracat");
-        req.setQuery("id", JoinGameTestStore.getInstance().getGameId());
+        req.setQuery("id", GameReadyTestStore.getInstance().getGameId());
         client.post(req, response -> resolve.returnResult(response.getStatusCode() == 200), error -> resolve.returnResult(false));
     }
 
-    @Test(name = "game is ready test", order = 1)
+    @Test(name = "game is ready test", order = 5)
     public void gameReadyTest(Client client, ITestResult resolve) {
         Request req = client.newRequest("/gameReady");
+        req.setQuery("id", GameReadyTestStore.getInstance().getGameId());
         client.get(req, response -> resolve.returnResult(response.getStatusCode() == 204), error -> resolve.returnResult(false));
     }
 }
