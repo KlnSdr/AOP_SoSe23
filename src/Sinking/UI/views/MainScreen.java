@@ -53,6 +53,7 @@ public class MainScreen implements IView {
         gbcUpperContainer.fill = GridBagConstraints.HORIZONTAL;
         container.add(upperContainer, gbcUpperContainer);
 
+        getEnemieName();
         JLabel playingAgainstLabel = new JLabel( "Gegner: " + getPlayer2());
         GridBagConstraints gbcPlayingAgainstLabel = new GridBagConstraints();
         gbcPlayingAgainstLabel.gridx = 0;
@@ -271,7 +272,7 @@ public class MainScreen implements IView {
 
     private void shootAt(int x, int y, JButton src) {
         disableButtons(buttonMatrixEnemie);
-        setWhosNext("Gegner");
+        setWhosNext(getPlayer2());
 
         ClientStore store = ClientStore.getInstance();
         Client client = store.getClient();
@@ -328,7 +329,7 @@ public class MainScreen implements IView {
             enableWaterButtons();
             setWhosNext(ClientStore.getInstance().getNickname());
         } else {
-            setWhosNext("Gegner");
+            setWhosNext(getPlayer2());
         }
 
         if (body.hasKey("own") && body.get("own").isPresent()) {
@@ -367,6 +368,9 @@ public class MainScreen implements IView {
         player2 = name;
     }
     private String getPlayer2(){
+        return player2;
+    }
+    public void getEnemieName(){
         ClientStore store = ClientStore.getInstance();
         Client client = store.getClient();
         String gameId = store.getGameId();
@@ -379,11 +383,11 @@ public class MainScreen implements IView {
         client.post(req, response -> {
             System.out.println(response.getStatusCode());
             System.out.println(response.getBody());
-            response.getBody().hasKey()
-
+            String name;
+            if(response.getBody().hasKey("Opponentname")){
+                setPlayer2(response.getBody().get("Opponentname").orElse(""));
+            }
         });
-
-        return player2;
     }
     private void setPlayer1(String name) {
         player1 = name;

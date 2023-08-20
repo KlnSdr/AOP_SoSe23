@@ -168,7 +168,9 @@ public class GameSetup {
             connection.setResponseCode(ResponseCode.NOT_FOUND);
             msg.set("msg", "player not found with token" + playertoken);
         }
-        msg.set("Opponetname", opponetName);
+        msg.set("Opponentname", opponetName);
+        connection.setResponseCode(resCode);
+        connection.sendResponse(msg);
     }
 
     private boolean isValidJoinRequest(Map<String, List<String>> query, Json body) {
