@@ -86,9 +86,9 @@ public class RandomShot extends BaseAi {
     private boolean isPlacementValid(int shipSize, ArrayList<Tupel<Integer, Integer>> shipCoords, int x, int y, int orientation) {
         boolean validPlacement = true;
 
-        if (orientation == 0 && x + shipSize > 10) {
+        if (orientation == 0 && x + shipSize > 9) {
             return false;
-        } else if (orientation == 1 && y + shipSize > 10) {
+        } else if (orientation == 1 && y + shipSize > 9) {
             return false;
         } else if (orientation == 2 && x - shipSize < 0) {
             return false;
