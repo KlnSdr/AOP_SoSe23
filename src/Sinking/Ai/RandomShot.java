@@ -14,7 +14,8 @@ public class RandomShot extends BaseAi {
     private int shotsFired = 0;
     private final Random rng = new Random();
     public RandomShot() {
-        this.name = "Admiral Glückskoordinate";
+        // this.name = "Admiral Glückskoordinate";
+        this.name = "You have no choice!";
     }
 
     @Override
