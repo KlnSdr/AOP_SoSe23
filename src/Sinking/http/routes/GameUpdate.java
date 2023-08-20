@@ -225,6 +225,15 @@ public class GameUpdate {
 
         connection.sendResponse(payload);
     }
+
+    @Get(route = "/giveUp")
+    public void giveUp(IConnection connection) throws IOException {
+        connection.setResponseCode(ResponseCode.ACCEPTED);
+        Json payload = new Json();
+        payload.set("msg", "https://youtu.be/dQw4w9WgXcQ");
+        connection.sendResponse(payload);
+    }
+
     private boolean correctRequest(Map<String, List<String>> query, Json body) {
         if (!query.containsKey("id") || query.get("id").isEmpty()){
             return false;
