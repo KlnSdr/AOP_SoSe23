@@ -171,7 +171,7 @@ public class MainScreen implements IView {
                     JButton source = ((JButton)e.getSource());
                     System.out.println("Player clicked on " + finalRow + " " + finalCol);
                     source.setText("⌛");
-                    shootAt(finalCol, finalRow, source);
+                    shootAt(finalRow, finalCol, source);
                     // winnerAvailable();
                 });
                 buttonPanelPlayer2.add(button, gbcButtonPlayer2);
@@ -290,9 +290,9 @@ public class MainScreen implements IView {
             System.out.println(response.getBody());
             src.setText("");
             if (response.getBody().hasKey("hitShip") && response.getBody().get("hitShip").orElse("false").equals("true")) {
-                src.setBackground(Color.GRAY);
-            } else {
                 src.setBackground(Color.RED);
+            } else {
+                src.setBackground(Color.BLACK);
             }
         });
     }
