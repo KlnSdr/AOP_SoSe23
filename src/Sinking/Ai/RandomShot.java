@@ -6,6 +6,7 @@ import Sinking.common.BaseAi;
 import Sinking.common.Tupel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class RandomShot extends BaseAi {
@@ -55,4 +56,88 @@ public class RandomShot extends BaseAi {
         } while(board.getBoard()[x][y].wasHit());
         return new Tupel<>(x, y);
     }
+
+    @Override
+    public Tupel<Integer, Integer>[] setShips() {
+        ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
+        int[] shipSizes = {5, 4, 4, 3, 3, 3, 2, 2, 2, 2};
+
+        for (int size : shipSizes) {
+            boolean placed = false;
+            do {
+                int x = rng.nextInt(10);
+                int y = rng.nextInt(10);
+                int orientation = rng.nextInt(4);
+                placed = isPlacementValid(size, shipCoords, x, y, orientation);
+                if (placed) {
+                    ArrayList<Tupel<Integer, Integer>> newShip = generateShipCoords(x, y, size, orientation);
+                    addShipToCoords(shipCoords, newShip);
+                }
+            } while (!placed);
+        }
+
+        if (shipCoords.size() != 30) {
+            setShips();
+        }
+
+        return shipCoords.toArray(new Tupel[0]);
+    }
+
+    private boolean isPlacementValid(int shipSize, ArrayList<Tupel<Integer, Integer>> shipCoords, int x, int y, int orientation) {
+        boolean validPlacement = true;
+
+        if (orientation == 0 && x + shipSize > 9) {
+            return false;
+        } else if (orientation == 1 && y + shipSize > 9) {
+            return false;
+        } else if (orientation == 2 && x - shipSize < 0) {
+            return false;
+        } else if (orientation == 3 && y - shipSize < 0) {
+            return false;
+        }
+
+        ArrayList<Tupel<Integer, Integer>> newShip = generateShipCoords(x, y, shipSize, orientation);
+
+        for (Tupel<Integer, Integer> ship : shipCoords) {
+            int existingX = ship._1();
+            int existingY = ship._2();
+
+            for (Tupel<Integer, Integer> newCoord : newShip) {
+                int newX = newCoord._1();
+                int newY = newCoord._2();
+
+                if (Math.abs(newX - existingX) <= 1 && Math.abs(newY - existingY) <= 1) {
+                    validPlacement = false;
+                    break;
+                }
+            }
+
+            if (!validPlacement) {
+                break;
+            }
+        }
+
+        return validPlacement;
+    }
+
+    private ArrayList<Tupel<Integer, Integer>> generateShipCoords(int x, int y, int size, int orientation) {
+        ArrayList<Tupel<Integer, Integer>> shipCoords = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            if (orientation == 0) {
+                shipCoords.add(new Tupel<>(x + i, y));
+            } else if (orientation == 1) {
+                shipCoords.add(new Tupel<>(x, y + i));
+            } else if (orientation == 2) {
+                shipCoords.add(new Tupel<>(x - i, y));
+            } else if (orientation == 3) {
+                shipCoords.add(new Tupel<>(x, y - i));
+            }
+        }
+        return shipCoords;
+    }
+
+    private void addShipToCoords(ArrayList<Tupel<Integer, Integer>> shipCoords, ArrayList<Tupel<Integer, Integer>> newShip) {
+        shipCoords.addAll(newShip);
+    }
+
 }
